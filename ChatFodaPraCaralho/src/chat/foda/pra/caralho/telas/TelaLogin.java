@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import chat.foda.pra.caralho.clienteServidor.Cliente;
+import chat.foda.pra.caralho.clienteServidor.ClienteOffLine;
 import chat.foda.pra.caralho.modelo.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
@@ -136,7 +136,7 @@ public class TelaLogin extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!jtfId.getText().isEmpty()) {
-					new TelaCliente(new Cliente(new Usuario(jtfId.getText(), jpfSenha.getPassword().toString())));
+					new TelaCliente(new ClienteOffLine(new Usuario(jtfId.getText(), jpfSenha.getPassword().toString())));
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Preencha o campo de login!");

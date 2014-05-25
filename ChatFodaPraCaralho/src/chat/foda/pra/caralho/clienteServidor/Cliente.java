@@ -1,21 +1,11 @@
 package chat.foda.pra.caralho.clienteServidor;
 
-import chat.foda.pra.caralho.modelo.Usuario;
+import chat.foda.pra.caralho.modelo.Chat;
 
-public class Cliente {
+public interface Cliente {
 	
-	private Usuario usuario;
+	void enviaMensagem(Chat chat, String mensagem);
 	
-	public Cliente(Usuario usuario) {
-		this.usuario = usuario;
-	}
-	
-	public Usuario getUsuario() {
-		return usuario;
-	}
-	
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+	String recebeMensagem();
 	
 }

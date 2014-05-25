@@ -24,7 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 
-import chat.foda.pra.caralho.clienteServidor.Cliente;
+import chat.foda.pra.caralho.clienteServidor.ClienteOffLine;
 import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.modelo.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
@@ -63,10 +63,10 @@ public class TelaCliente extends JFrame {
 	private ArrayList<JToggleButton> chatListButtons = new ArrayList<JToggleButton>();
 	
 	private ArrayList<TelaChat> chatList = new ArrayList<TelaChat>();	
-	private Cliente cliente;
+	private ClienteOffLine cliente;
 	private String nickName;
 	
-	public TelaCliente(Cliente cliente) {
+	public TelaCliente(ClienteOffLine cliente) {
 		super("Chat Foda Pra Caralho");
 		
 		this.cliente = cliente;
@@ -326,7 +326,7 @@ public class TelaCliente extends JFrame {
 		return chatList;
 	}
 
-	public Cliente getCliente() {
+	public ClienteOffLine getCliente() {
 		return cliente;
 	}
 
@@ -335,6 +335,6 @@ public class TelaCliente extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new TelaCliente(new Cliente(new Usuario("Luiz", "123")));
+		new TelaCliente(new ClienteOffLine(new Usuario("Luiz", "123")));
 	}
 }
