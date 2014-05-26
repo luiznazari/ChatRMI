@@ -314,14 +314,6 @@ public class TelaCliente extends JFrame {
 		return 0;
 	}
 
-	private void enviaMensagem() {
-		
-	}
-	
-	public void recebeMensagem(TelaChat chat, String mensagem) {
-		chat.recebeMensagem(mensagem);
-	}
-	
 	public ArrayList<TelaChat> getChatList() {
 		return chatList;
 	}

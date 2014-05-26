@@ -21,7 +21,7 @@ public class ClienteOffLine implements Cliente{
 	}
 
 	@Override
-	public String recebeMensagem() {
+	public String recebeMensagem(Chat chat, String mensagem) {
 		return null;
 	}
 	
@@ -41,7 +41,7 @@ public class ClienteOffLine implements Cliente{
 		this.servidor = servidor;
 	}
 
-	private class ServerListener implements Runnable{
+	private class ServerListener implements Runnable {
 
 		private String mensagem;
 		

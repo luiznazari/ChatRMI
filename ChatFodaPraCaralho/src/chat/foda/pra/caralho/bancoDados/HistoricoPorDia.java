@@ -1,4 +1,4 @@
-package chat.foda.pra.caralho.service;
+package chat.foda.pra.caralho.bancoDados;
 
 import java.util.List;
 

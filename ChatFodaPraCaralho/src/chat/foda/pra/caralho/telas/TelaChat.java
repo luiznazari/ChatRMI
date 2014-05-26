@@ -31,10 +31,10 @@ public class TelaChat extends JFrame{
 	private JButton jbtEnviar;
 	
 	private Chat chat;
-	private TelaCliente cliente;
+	private TelaCliente telaCliente;
 	
 	public TelaChat(TelaCliente client) {
-		this.cliente = client;
+		this.telaCliente = client;
 		pnlMain = new JPanel();
 		pnlMain.setLayout(new GridBagLayout());
 		
@@ -107,7 +107,7 @@ public class TelaChat extends JFrame{
 	private void enviaMensagem() {
 		String mensagem = jtaMensagem.getText();
 		if (!mensagem.isEmpty()) {
-			cliente.recebeMensagem(this, cliente.getNickName() + ": " + mensagem);
+			telaCliente.getCliente().recebeMensagem(this.chat, telaCliente.getNickName() + ": " + mensagem);
 			jtaMensagem.setText("");
 			jtaMensagem.requestFocus();
 		}
@@ -158,11 +158,11 @@ public class TelaChat extends JFrame{
 	}
 
 	public TelaCliente getClient() {
-		return cliente;
+		return telaCliente;
 	}
 
 	public void setClient(TelaCliente client) {
-		this.cliente = client;
+		this.telaCliente = client;
 	}
 
 	public static void main(String[] arqs) {

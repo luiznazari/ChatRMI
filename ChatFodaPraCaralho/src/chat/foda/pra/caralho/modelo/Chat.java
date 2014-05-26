@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import chat.foda.pra.caralho.service.HistoricoPorDia;
+import chat.foda.pra.caralho.bancoDados.HistoricoPorDia;
 
 public class Chat {
 
@@ -41,6 +41,10 @@ public class Chat {
 	
 	public Integer getCodigo() {
 		return codigo;
+	}
+	
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
 	}
 
 	public List<Usuario> getUsuarios() {

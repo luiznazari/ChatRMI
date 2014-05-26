@@ -7,6 +7,10 @@ public class ServidorOffLine {
 
 	private List<Cliente> clientes;
 	
+	private synchronized void enviaMensagem(ClienteOffLine Cliente, String mensagem) {
+		
+	}
+	
 	public void adicionaCliente(ClienteOffLine cliente) {
 		if (clientes == null) {
 			clientes = new ArrayList<Cliente>();

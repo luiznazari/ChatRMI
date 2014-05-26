@@ -5,7 +5,7 @@ import chat.foda.pra.caralho.modelo.Chat;
 public interface Cliente {
 	
 	void enviaMensagem(Chat chat, String mensagem);
-	
-	String recebeMensagem();
+
+	String recebeMensagem(Chat chat, String mensagem);
 	
 }
