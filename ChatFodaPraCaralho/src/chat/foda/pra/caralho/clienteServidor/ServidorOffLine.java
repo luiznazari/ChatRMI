@@ -3,11 +3,13 @@ package chat.foda.pra.caralho.clienteServidor;
 import java.util.ArrayList;
 import java.util.List;
 
+import chat.foda.pra.caralho.modelo.Chat;
+
 public class ServidorOffLine {
 
 	private List<Cliente> clientes;
 	
-	private synchronized void enviaMensagem(ClienteOffLine Cliente, String mensagem) {
+	public synchronized void enviaMensagem(Chat chat, String mensagem) {
 		
 	}
 	
@@ -36,9 +38,4 @@ public class ServidorOffLine {
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
 	}
-
-	public static void main(String[] args) {
-
-	}
-
 }

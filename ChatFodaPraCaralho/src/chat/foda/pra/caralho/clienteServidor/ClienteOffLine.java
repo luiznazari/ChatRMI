@@ -45,9 +45,14 @@ public class ClienteOffLine implements Cliente{
 
 		private String mensagem;
 		
+		public ServerListener() {
+			
+		}
+		
 		@Override
 		public void run() {
 			try {
+				//servidor.enviaMensagem(, mensagem);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
