@@ -39,7 +39,7 @@ public class GerenciadorDoBanco {
 		try {
 			for(Chat c : main.listarChats()) {
 				System.out.println(c.getCodigo());
-			}			
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			main.sair();
