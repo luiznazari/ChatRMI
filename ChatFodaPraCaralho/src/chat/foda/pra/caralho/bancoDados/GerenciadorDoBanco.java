@@ -1,6 +1,5 @@
 package chat.foda.pra.caralho.bancoDados;
 
-import chat.foda.pra.caralho.clienteServidor.ClienteOffLine;
 import chat.foda.pra.caralho.modelo.Chat;
 
 import com.db4o.Db4oEmbedded;
@@ -18,10 +17,6 @@ public class GerenciadorDoBanco {
 
 	public ObjectSet<Chat> listarChats() {
 		return bancoDeDados.query(Chat.class);
-	}
-	
-	public ObjectSet<ClienteOffLine> listarClientes() {
-		return bancoDeDados.query(ClienteOffLine.class);
 	}
 
 	public void sair() {

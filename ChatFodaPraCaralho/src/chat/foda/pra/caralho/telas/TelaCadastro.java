@@ -16,7 +16,7 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 public class TelaCadastro extends JFrame {
 
 	/**
-	 * @author luiznazari
+	 * @author nazari.L.F
 	 */
 	private static final long serialVersionUID = 1L;
 	

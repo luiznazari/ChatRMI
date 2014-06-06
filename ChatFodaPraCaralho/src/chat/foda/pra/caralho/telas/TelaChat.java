@@ -107,7 +107,7 @@ public class TelaChat extends JFrame{
 	private void enviaMensagem() {
 		String mensagem = jtaMensagem.getText();
 		if (!mensagem.isEmpty()) {
-			telaCliente.getCliente().recebeMensagem(this.chat, telaCliente.getNickName() + ": " + mensagem);
+//			telaCliente.getCliente().recebeMensagem(this.chat, telaCliente.getNickName() + ": " + mensagem);
 			jtaMensagem.setText("");
 			jtaMensagem.requestFocus();
 		}
