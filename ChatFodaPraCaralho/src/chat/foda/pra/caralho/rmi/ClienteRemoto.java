@@ -9,8 +9,8 @@ import java.rmi.RemoteException;
  * @author luiznazari
  */
 public interface ClienteRemoto extends Remote {
-
-	public String escuta() throws RemoteException;
 	
 	public void enviaMensagem(String mensagem) throws RemoteException;
+	
+	public boolean login(String nome, String senha) throws RemoteException;
 }

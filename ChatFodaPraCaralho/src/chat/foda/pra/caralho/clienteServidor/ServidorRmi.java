@@ -14,17 +14,19 @@ public class ServidorRmi {
 	 * Para gerar um novo STUB:
 	 * rmic chat.foda.pra.caralho.ClienteRemotoImpl
 	 */
-	public ServidorRmi() {
+	
+	private ClienteRemotoImpl service;
+	
+	public ServidorRmi(String ip) {
 		try {
-			ClienteRemoto remoto = new ClienteRemotoImpl();
-			//Naming.rebind("rmi://172.18.33.99:5000/remoto", remoto);
-			Naming.rebind("rmi://192.168.1.101:5000/remoto", remoto);
+			service = new ClienteRemotoImpl();
+			Naming.rebind("rmi://" + ip + ":5000/remoto", service);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void main(String[] args) {
-		new ServidorRmi();
+	public ClienteRemotoImpl getService() {
+		return service;
 	}
 }

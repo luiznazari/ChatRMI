@@ -24,8 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 
-import chat.foda.pra.caralho.modelo.Chat;
-import chat.foda.pra.caralho.modelo.Usuario;
+import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
@@ -59,14 +58,14 @@ public class TelaCliente extends JFrame {
 	private JPanel pnlTemp;
 	private JLabel jlbTemp;
 	private JPanel pnlMensagem;
+	
+	private ArrayList<TelaChat> chatList = new ArrayList<TelaChat>();
 	private ArrayList<JToggleButton> chatListButtons = new ArrayList<JToggleButton>();
+	private ClienteRmi cliente;
 	private String nickName;
 	
-	public TelaCliente(ClienteOffLine cliente) {
+	public TelaCliente(ClienteRmi cliente) {
 		super("Chat Foda Pra Caralho");
-		
-		this.cliente = cliente;
-		nickName = cliente.getUsuario().getNickName();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(550, 400));
@@ -75,6 +74,9 @@ public class TelaCliente extends JFrame {
 		setJMenuBar(getMenu());
 		setSize(550, 400);
 		setVisible(true);
+		
+		this.cliente = cliente;
+		nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 	}
 	
 	private JMenuBar getMenu() {
@@ -267,21 +269,11 @@ public class TelaCliente extends JFrame {
 				} else {					
 					pnlMensagem.setVisible(false);
 					pnlTemp.setVisible(true);
-					
 				}
 			}
 		});
 	
 		pnlChat.revalidate();
-	}
-	
-	private boolean isAlgumChatAberto(String friend) {
-		for (JToggleButton b : chatListButtons) {
-			if (b.getText().equals(friend)) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	private void fecharTodosOsChats(JToggleButton jtb) {
@@ -311,6 +303,10 @@ public class TelaCliente extends JFrame {
 		return 0;
 	}
 
+	public ClienteRmi getCliente() {
+		return this.cliente;
+	}
+	
 	public String getNickName() {
 		return nickName;
 	}

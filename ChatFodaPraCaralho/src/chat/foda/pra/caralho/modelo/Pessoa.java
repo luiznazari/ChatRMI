@@ -2,22 +2,12 @@ package chat.foda.pra.caralho.modelo;
 
 public abstract class Pessoa {
 
-	private Integer codigo;
-
 	private String cpf;
 	private String email;
 	private Integer idade;
 	private String telefone;
 	private String nomeCompleto;
-
-	public Integer getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(Integer codigo) {
-		this.codigo = codigo;
-	}
-
+	
 	public String getCpf() {
 		return cpf;
 	}

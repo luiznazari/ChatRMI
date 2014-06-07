@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,7 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.modelo.Usuario;
+import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaLogin extends JFrame{
@@ -44,10 +47,12 @@ public class TelaLogin extends JFrame{
 	private JTextField jtfId;
 	private JLabel jlbSenha;
 	private JPasswordField jpfSenha;
-	private JButton jbtEnter;
+	private JButton jbtConfirmar;
 	
 	private JLabel jlbRegistrar;
 	private JLabel jlbLink;
+	
+	private ClienteRmi cliente;
 	
 	public TelaLogin() {
 		super("Chat Foda Pra Caralho");
@@ -59,6 +64,12 @@ public class TelaLogin extends JFrame{
 		setResizable(false);
 		setSize(300, 220);
 		setVisible(true);
+		
+		String[] opcoes = {"192.168.1.100","192.168.1.101","172.18.33.99"};
+		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
+					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
+		
+		cliente = new ClienteRmi(ip);
 	}
 	
 	public JMenuBar getMenu() {
@@ -128,16 +139,58 @@ public class TelaLogin extends JFrame{
 		return pnlMain;
 	}
 	
-	public void actions() {
+	private JPanel getLogin() {
+		pnlLogin = new JPanel();
+		pnlLogin.setLayout(new GridBagLayout());
+		pnlLogin.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2), "Login"));
 		
-		jbtEnter.addActionListener(new ActionListener() {
+		jlbId = new JLabel("ID: ");
+		pnlLogin.add(jlbId, new GridConstraints()
+					.setInsets(5).setAnchor(GridConstraints.EAST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
+		
+		jtfId = new JTextField();
+		pnlLogin.add(jtfId, new GridConstraints()
+					.setInsets(0, 0, 0, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
+					.setGridWeight(1, 1));
+		
+		jlbSenha = new JLabel("Senha: ");
+		pnlLogin.add(jlbSenha, new GridConstraints()
+					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
+		
+		jpfSenha = new JPasswordField();
+		pnlLogin.add(jpfSenha, new GridConstraints()
+					.setInsets(5, 0, 5, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
+					.setGridWeight(1, 1));
+		
+		jbtConfirmar = new JButton("Confirmar");		
+		pnlLogin.add(jbtConfirmar, new GridConstraints()
+					.setInsets(5).setAnchor(GridConstraints.EAST).setGridSize(GridConstraints.REMAINDER, 1).setGridLocation(2, 1));
+		
+		return pnlLogin;
+	}
+
+public void actions() {
+		
+		jbtConfirmar.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!jtfId.getText().isEmpty()) {
-					dispose();
+				String nome = jtfId.getText();
+				String senha = new String(jpfSenha.getPassword());
+				if (!nome.isEmpty() && !senha.isEmpty()) {
+					try {
+						if (cliente.getService().login(nome, senha)) {
+							cliente.setUsuarioLogado(new UsuarioLogado(new Usuario(nome, senha)));
+							new TelaCliente(cliente);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");
+						}
+					} catch (RemoteException e) {
+						JOptionPane.showMessageDialog(null, "Erro ao realizar login.");
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Preencha o campo de login!");
+					JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");
 				}
 			}
 		});
@@ -170,36 +223,6 @@ public class TelaLogin extends JFrame{
 		});		
 	}
 	
-	private JPanel getLogin() {
-		pnlLogin = new JPanel();
-		pnlLogin.setLayout(new GridBagLayout());
-		pnlLogin.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2), "Login"));
-		
-		jlbId = new JLabel("ID: ");
-		pnlLogin.add(jlbId, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
-		
-		jtfId = new JTextField();
-		pnlLogin.add(jtfId, new GridConstraints()
-					.setInsets(0, 0, 0, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
-					.setGridWeight(1, 1));
-		
-		jlbSenha = new JLabel("Senha: ");
-		pnlLogin.add(jlbSenha, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
-		
-		jpfSenha = new JPasswordField();
-		pnlLogin.add(jpfSenha, new GridConstraints()
-					.setInsets(5, 0, 5, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
-					.setGridWeight(1, 1));
-		
-		jbtEnter = new JButton("Confirmar");		
-		pnlLogin.add(jbtEnter, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.EAST).setGridSize(GridConstraints.REMAINDER, 1).setGridLocation(2, 1));
-		
-		return pnlLogin;
-	}
-
 	public static void main(String[] args) {
 		new TelaLogin();
 	}
