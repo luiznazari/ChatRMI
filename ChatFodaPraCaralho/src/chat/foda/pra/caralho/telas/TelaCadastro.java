@@ -3,20 +3,25 @@ package chat.foda.pra.caralho.telas;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
+import chat.foda.pra.caralho.modelo.Usuario;
+import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCadastro extends JFrame {
 
 	/**
-	 * @author nazari.L.F
+	 * @author luiznazari
 	 */
 	private static final long serialVersionUID = 1L;
 	
@@ -32,7 +37,9 @@ public class TelaCadastro extends JFrame {
 	private JButton jbtConfirmar;
 	private JButton jbtCancelar;
 	
-	public TelaCadastro() {
+	private ClienteRmi cliente;
+
+	public TelaCadastro(ClienteRmi cliente) {
 		super("Cadastrar Conta");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(getMain());
@@ -40,6 +47,8 @@ public class TelaCadastro extends JFrame {
 		setSize(300, 190);
 		setResizable(false);
 		setLocationRelativeTo(null);
+		
+		this.cliente = cliente;
 	}
 	
 	public JPanel getMain() {
@@ -78,6 +87,7 @@ public class TelaCadastro extends JFrame {
 					.setAnchor(GridConstraints.WEST).setInsets(5).setGridSize(2, 1));
 		
 		jtfSerial = new JTextField();
+		jtfSerial.setEditable(false);
 		pnlMain.add(jtfSerial, new GridConstraints()
 					.setAnchor(GridConstraints.WEST).setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
 					.setFill(GridConstraints.BOTH).setGridWeight(1, 0));
@@ -98,26 +108,39 @@ public class TelaCadastro extends JFrame {
 	
 	public void actions () {
 		
-		jbtConfirmar.addActionListener(new ActionListener() {
-			
+		jbtConfirmar.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String nome = jtfNome.getText();
+				String senha = new String(jpfSenha.getPassword());
+				String confirmaSenha = new String(jpfConfirmaSenha.getPassword());
+				if (!nome.isEmpty() && !senha.isEmpty()) {
+					if (senha.equals(confirmaSenha)) {
+						try {
+							if (cliente.getService().cadastrarUsuario(nome, senha)) {
+								JOptionPane.showMessageDialog(null, "Cadastro efetuado com sucesso!");
+								dispose();
+							} else {
+								JOptionPane.showMessageDialog(null, "Nome de usuário já cadastrado!");
+							}
+						} catch (RemoteException ex) {
+							JOptionPane.showMessageDialog(null, "Erro ao realizar cadastro.");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "As senhas não conferem.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Nome ou senha inválidos ou vazios!");
+				}
 			}
 		});
 		
 		jbtCancelar.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				jlbNome.setText("");
-				jpfSenha.setText("");
-				jpfConfirmaSenha.setText("");
-				jtfSerial.setText("");
 				dispose();
 			}
 		});
 	}
 	
-	public static void main(String[] args) {
-		new TelaCadastro();
-	}
 }

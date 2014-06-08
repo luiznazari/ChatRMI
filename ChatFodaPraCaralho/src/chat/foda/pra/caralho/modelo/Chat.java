@@ -9,9 +9,16 @@ import chat.foda.pra.caralho.bancoDados.HistoricoPorDia;
 
 public class Chat {
 
+	private static Integer numChats = 0;
+	
 	private Integer codigo;
 	private List<Usuario> usuarios;
 	private List<HistoricoPorDia> historico;
+	
+	public Chat() {
+		this.codigo = numChats;
+		numChats++;
+	}
 	
 	public void adicionaUsuario(Usuario usuario) {
 		if (this.usuarios == null) {

@@ -5,10 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.rmi.RemoteException;
 
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -31,10 +33,10 @@ public class TelaChat extends JFrame{
 	private JButton jbtEnviar;
 	
 	private Chat chat;
-	private TelaCliente telaCliente;
+	private TelaCliente telaPai;
 	
-	public TelaChat(TelaCliente client) {
-		this.telaCliente = client;
+	public TelaChat(TelaCliente telaPai) {
+		this.telaPai = telaPai;
 		pnlMain = new JPanel();
 		pnlMain.setLayout(new GridBagLayout());
 		
@@ -107,7 +109,12 @@ public class TelaChat extends JFrame{
 	private void enviaMensagem() {
 		String mensagem = jtaMensagem.getText();
 		if (!mensagem.isEmpty()) {
-//			telaCliente.getCliente().recebeMensagem(this.chat, telaCliente.getNickName() + ": " + mensagem);
+			try {
+				recebeMensagem(telaPai.getCliente().getService().enviaMensagem(telaPai.getNickName() + ": " + mensagem));
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Erro ao enviar mensagem.");
+			}
 			jtaMensagem.setText("");
 			jtaMensagem.requestFocus();
 		}
@@ -115,30 +122,6 @@ public class TelaChat extends JFrame{
 	
 	public void recebeMensagem(String mensagem) {
 		jtaConversa.append(mensagem +"\n");
-	}
-	
-	private void testaEnviaMensagem() {
-		String message = jtaMensagem.getText();
-		if (!message.equals("")) {
-			jtaConversa.append("Nameless: "+ message +"\n");
-			jtaMensagem.requestFocus();
-			jtaMensagem.setText("");
-		}
-	}
-	
-	private void createWindow() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setContentPane(pnlMain);
-		setSize(550, 400);
-		setVisible(true);
-		
-		jtaMensagem.requestFocus();
-	}
-	
-	public void setMessageAreaEditable() {
-		this.jtaMensagem.setText("");
-		this.jtaMensagem.setEditable(true);
 	}
 	
 	public void setFocus() {
@@ -158,15 +141,11 @@ public class TelaChat extends JFrame{
 	}
 
 	public TelaCliente getClient() {
-		return telaCliente;
+		return telaPai;
 	}
 
 	public void setClient(TelaCliente client) {
-		this.telaCliente = client;
-	}
-
-	public static void main(String[] arqs) {
-		new TelaChat(null).createWindow();
+		this.telaPai = client;
 	}
 	
 }

@@ -229,21 +229,19 @@ public class TelaCliente extends JFrame {
 		jbtAbrirChat.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				novoChat();
-//				if (!jlstAmigos.isSelectionEmpty()) {
-//					if (!isAlgumChatAberto(jlstAmigos.getSelectedValue())) {
-//						novoChat();
-//					} else {
-//						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
-//					}
-//				} else {
-//					JOptionPane.showMessageDialog(null,"Para fazer isso, selecione um amigo!");
-//				}
+				if (!jlstAmigos.isSelectionEmpty()) {
+					if (!amigoTemChatAberto(jlstAmigos.getSelectedValue())) {
+						novoChat();
+					} else {
+						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");
+				}
 			}
 		});
 	}
 	
-	//Rever as lógicas
 	private void novoChat() {
 		final TelaChat c = new TelaChat(this);
 		chatList.add(c);
@@ -257,7 +255,7 @@ public class TelaCliente extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (jtb.isSelected()) {
 					TelaChat c = chatList.get(getToggleButtonIndex(jtb));
-					fecharTodosOsChats(jtb);
+					fecharChatAberto();
 					pnlTemp.setVisible(false);
 					pnlChat.remove(pnlMensagem);
 					pnlMensagem = c.getChatPanel();
@@ -276,12 +274,13 @@ public class TelaCliente extends JFrame {
 		pnlChat.revalidate();
 	}
 	
-	private void fecharTodosOsChats(JToggleButton jtb) {
+	private void fecharChatAberto() {
 		for (JToggleButton b : chatListButtons) {
-			if (b.isSelected() && b != jtb) {
+			if (b.isSelected()) {
 				b.setSelected(false);
 				pnlMensagem.setVisible(false);
-			}				
+				break;
+			}			
 		}
 	}
 	

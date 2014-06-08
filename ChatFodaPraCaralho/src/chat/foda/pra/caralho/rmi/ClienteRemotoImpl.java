@@ -27,10 +27,11 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public void enviaMensagem(String mensagem) throws RemoteException {
-		System.out.println("Cliente disse: " + mensagem);
+	public String enviaMensagem(String mensagem) throws RemoteException {
+		System.out.println(mensagem);
+		return mensagem;
 	}
-
+	
 	@Override
 	public boolean login(String nome, String senha) throws RemoteException {
 		if (usuarios.containsKey(nome)) {
@@ -44,6 +45,15 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	
 	public Integer getNumeroUsuariosLogados() {
 		return this.usuariosLogados.size();
+	}
+
+	@Override
+	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException {
+		if (!usuarios.containsKey(nome)) {
+			usuarios.put(nome, senha);
+			return true;
+		}
+		return false;
 	}
 
 }

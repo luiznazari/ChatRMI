@@ -10,7 +10,9 @@ import java.rmi.RemoteException;
  */
 public interface ClienteRemoto extends Remote {
 	
-	public void enviaMensagem(String mensagem) throws RemoteException;
-	
 	public boolean login(String nome, String senha) throws RemoteException;
+	
+	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException;
+	
+	public String enviaMensagem(String mensagem) throws RemoteException;
 }

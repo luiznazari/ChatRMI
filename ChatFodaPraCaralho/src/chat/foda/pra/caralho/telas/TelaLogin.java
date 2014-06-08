@@ -107,7 +107,7 @@ public class TelaLogin extends JFrame{
 		jmiNovaConta.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TelaCadastro();
+				new TelaCadastro(cliente);
 			}
 		});
 		
@@ -218,7 +218,7 @@ public void actions() {
 			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new TelaCadastro();
+				new TelaCadastro(cliente);
 			}
 		});		
 	}
