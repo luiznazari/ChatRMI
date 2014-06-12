@@ -11,9 +11,11 @@ public class GerenciadorDoBanco {
 
 	private ObjectContainer db;
 	private String nomeBanco;
+	private Integer autoIncrement;
 
 	public GerenciadorDoBanco(String nomeBanco) {
 		this.nomeBanco = nomeBanco + ".db4o";
+		this.autoIncrement = this.getUltimoCodigo();
 	}
 	
 	public void abrir() {
@@ -21,6 +23,10 @@ public class GerenciadorDoBanco {
 				this.nomeBanco);
 	}
 
+	public void fechar() {
+		this.db.close();
+	}
+	
 	public ObjectSet<Usuario> getListaUsuarios() {
 		try {
 			ObjectSet<Usuario> lista = db.query(Usuario.class);	
@@ -54,13 +60,27 @@ public class GerenciadorDoBanco {
 	public void salvar(Object objeto) {
 		this.db.store(objeto);
 	}
+	
+	public void remover(Object objeto) {
+		this.db.delete(objeto);
+	}
+	
+	public void salvarUsuario(Usuario usuario) {
+		usuario.setCodigo(autoIncrement++);
+		this.db.store(usuario);
+	}
 
 	public Integer getQuantidadeUsuarios() {
 		return this.getListaUsuarios().size();
 	}
-
-	public void fechar() {
-		this.db.close();
+	
+	public Integer getUltimoCodigo() {
+		try {
+			ObjectSet<Usuario> lista = getListaUsuarios();
+			return lista.get(lista.size()-1).getCodigo();
+		} catch (NullPointerException e) {
+			return 0;
+		}
 	}
 
 	public void setNomeBanco(String nomeBanco) {
@@ -72,7 +92,7 @@ public class GerenciadorDoBanco {
 		GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
 		b.abrir();
 		for (Usuario u : b.getListaUsuarios()) {
-			System.out.println("Nome: " + u.getNomeCompleto() + " \t| \tSenha: " + u.getSenha());
+			System.out.println(u.getCodigo() + " | Nome: " + u.getNomeCompleto() + " \t| \tSenha: " + u.getSenha());
 		}
 		b.fechar();
 	}
