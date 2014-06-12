@@ -3,9 +3,9 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+
+import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.bancoDados.GerenciadorDoBanco;
 import chat.foda.pra.caralho.modelo.Chat;
@@ -15,7 +15,7 @@ import chat.foda.pra.caralho.modelo.UsuarioLogado;
 public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRemoto {
 
 	/**
-	 * Classe que implementa as ações do Servidor
+	 * Classe que implementa as aï¿½ï¿½es do Servidor
 	 * 
 	 * @author luiznazari
 	 */
@@ -43,6 +43,7 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
 				usuariosLogados.put(usuarioLogado, new ArrayList<Chat>());
+				System.out.println("[" + new LocalTime() + "] O usuÃ¡rio: " + usuarioLogado.getUsuario().getNomeCompleto() + " se conectou.");
 				banco.fechar();
 				return usuarioLogado;
 			}
@@ -63,6 +64,12 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 		}
 		banco.fechar();
 		return b;
+	}
+	
+	@Override
+	public void logout(UsuarioLogado usuarioLogado) throws RemoteException {
+		System.out.println("[" + new LocalTime() + "] O usuÃ¡rio: " + usuarioLogado.getUsuario().getNomeCompleto() + " se desconectou.");
+		usuariosLogados.remove(usuarioLogado);
 	}
 	
 	public Integer getNumeroUsuariosLogados() {

@@ -57,7 +57,7 @@ public class TelaLogin extends JFrame{
 	public TelaLogin() {
 		super("Chat Foda Pra Caralho");
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(getMainPanel());
 		setLocationRelativeTo(null);
 		setJMenuBar(getMenu());
@@ -65,8 +65,8 @@ public class TelaLogin extends JFrame{
 		setSize(300, 220);
 		setVisible(true);
 		
-		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","172.18.33.99"};
-		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
+		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","192.168.1.25", "172.18.33.99"};
+		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexï¿½o", 
 					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
 		
 		cliente = new ClienteRmi(ip);
@@ -126,7 +126,7 @@ public class TelaLogin extends JFrame{
 					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridBagConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
 					.setGridWeight(1, 0));
 		
-		jlbRegistrar = new JLabel("Ainda não possui uma conta?");
+		jlbRegistrar = new JLabel("Ainda nï¿½o possui uma conta?");
 		pnlMain.add(jlbRegistrar, new GridConstraints()
 				 	.setAnchor(GridConstraints.EAST).setInsets(5, 0, 5, 0).setGridSize(GridConstraints.RELATIVE, 1).setGridWeight(1, 0));
 		
@@ -185,14 +185,14 @@ public void actions() {
 							new TelaCliente(cliente);
 							dispose();
 						} else {
-							JOptionPane.showMessageDialog(null, "Usuário não cadastrado ou senha incorreta!");
+							JOptionPane.showMessageDialog(null, "Usuï¿½rio nï¿½o cadastrado ou senha incorreta!");
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao realizar login.");
+						JOptionPane.showMessageDialog(null, "Conexï¿½o - Erro ao realizar login.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");
+					JOptionPane.showMessageDialog(null, "Login ou senha invï¿½lidos ou vazios!");
 				}
 			}
 		});

@@ -26,6 +26,7 @@ import javax.swing.JToggleButton;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.modelo.Chat;
+import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
@@ -68,16 +69,17 @@ public class TelaCliente extends JFrame {
 	public TelaCliente(ClienteRmi cliente) {
 		super("Chat Foda Pra Caralho");
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(550, 400));
-		setContentPane(getMainPanel());
+		this.cliente = cliente;
+		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
+		
+		addWindowListener(new EventosJanela(cliente));
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(550, 400));		
+		setContentPane(getMainPanel());	
 		setLocationRelativeTo(null);
 		setJMenuBar(getMenu());
 		setSize(550, 400);
 		setVisible(true);
-		
-		this.cliente = cliente;
-		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 	}
 	
 	private JMenuBar getMenu() {
@@ -129,7 +131,7 @@ public class TelaCliente extends JFrame {
 				if (dlmAmigos.removeElement(JOptionPane.showInputDialog(null, "Nome: "))) {
 					JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
 				} else {
-					JOptionPane.showMessageDialog(null, "Amigo não encontrado");
+					JOptionPane.showMessageDialog(null, "Amigo nï¿½o encontrado");
 				}
 			}
 		});
@@ -189,7 +191,7 @@ public class TelaCliente extends JFrame {
 		pnlChat.setLayout(new GridBagLayout());
 		pnlChat.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		
-		//Painel ChatList COMEÇO
+		//Painel ChatList COMEï¿½O
 		pnlChatList = new JPanel();
 		pnlChatList.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 3));
 		pnlChatList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2), "Chats"));
@@ -204,13 +206,13 @@ public class TelaCliente extends JFrame {
 					.setGridWeight(1, 0.12));
 		//Painel ChatList FIM
 		
-		//Painel Mensagem COMEÇO		
+		//Painel Mensagem COMEï¿½O		
 		pnlTemp = new JPanel();
 		pnlTemp.setLayout(new GridBagLayout());
 		pnlTemp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 		pnlTemp.setBackground(Color.WHITE);
 		
-		jlbTemp = new JLabel("<html><center>Selecione um amigo e clique no botão \"Abrir chat\" <br> para começar uma nova conversa.</center></html>");
+		jlbTemp = new JLabel("<html><center>Selecione um amigo e clique no botï¿½o \"Abrir chat\" <br> para comeï¿½ar uma nova conversa.</center></html>");
 		pnlTemp.add(jlbTemp);
 		
 		pnlChat.add(pnlTemp, new GridConstraints()
@@ -234,7 +236,7 @@ public class TelaCliente extends JFrame {
 					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
 						novoChat();
 					} else {
-						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
+						JOptionPane.showMessageDialog(null, "Nï¿½o ï¿½ permitido abrir dois chats para o mesmo amigo.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");

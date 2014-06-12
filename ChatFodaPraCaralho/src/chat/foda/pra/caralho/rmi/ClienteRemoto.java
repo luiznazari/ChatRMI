@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 
 /**
- * Declaração de todos os métodos executados no servidor visíveis para o Cliente
+ * Declaraï¿½ï¿½o de todos os mï¿½todos executados no servidor visï¿½veis para o Cliente
  * 
  * @author luiznazari
  */
@@ -17,4 +17,6 @@ public interface ClienteRemoto extends Remote {
 	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException;
 	
 	public String enviaMensagem(String mensagem) throws RemoteException;
+	
+	public void logout(UsuarioLogado usuarioLogado) throws RemoteException;
 }

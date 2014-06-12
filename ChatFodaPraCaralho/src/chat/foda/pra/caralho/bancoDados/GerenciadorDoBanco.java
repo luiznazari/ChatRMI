@@ -72,7 +72,7 @@ public class GerenciadorDoBanco {
 		GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
 		b.abrir();
 		for (Usuario u : b.getListaUsuarios()) {
-			System.out.println("nome: " + u.getNomeCompleto() + " senha: " + u.getSenha());
+			System.out.println("Nome: " + u.getNomeCompleto() + " \t| \tSenha: " + u.getSenha());
 		}
 		b.fechar();
 	}

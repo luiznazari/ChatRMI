@@ -33,8 +33,8 @@ public class TelaServidor extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 
-		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","172.18.33.99"};
-		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
+		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102", "192.168.1.25", "172.18.33.99"};
+		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexï¿½o", 
 					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
 		
 		servidor = new ServidorRmi(ip);		
@@ -44,7 +44,7 @@ public class TelaServidor extends JFrame {
 		pnlMain = new JPanel();
 		pnlMain.setLayout(new GridBagLayout());
 		
-		jlbConexoes = new JLabel("Total de conexões: ");
+		jlbConexoes = new JLabel("Total de conexÃµes: ");
 		pnlMain.add(jlbConexoes, new GridConstraints()
 				.setAnchor(GridConstraints.EAST).setInsets(5).setGridSize(GridConstraints.RELATIVE, 1));
 		
