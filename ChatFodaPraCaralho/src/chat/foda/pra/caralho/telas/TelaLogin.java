@@ -65,7 +65,7 @@ public class TelaLogin extends JFrame{
 		setSize(300, 220);
 		setVisible(true);
 		
-		String[] opcoes = {"192.168.1.100","192.168.1.101","172.18.33.99"};
+		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","172.18.33.99"};
 		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
 					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
 		
@@ -189,7 +189,7 @@ public void actions() {
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Erro ao realizar login.");
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao realizar login.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");

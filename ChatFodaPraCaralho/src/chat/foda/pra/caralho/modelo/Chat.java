@@ -1,5 +1,6 @@
 package chat.foda.pra.caralho.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,8 @@ import org.joda.time.LocalDate;
 
 import chat.foda.pra.caralho.bancoDados.HistoricoPorDia;
 
-public class Chat {
+public class Chat implements Serializable {
+	private static final long serialVersionUID = -6861975820907169849L;
 
 	private static Integer numChats = 0;
 	
@@ -16,8 +18,7 @@ public class Chat {
 	private List<HistoricoPorDia> historico;
 	
 	public Chat() {
-		this.codigo = numChats;
-		numChats++;
+		this.codigo = numChats++;
 	}
 	
 	public void adicionaUsuario(Usuario usuario) {

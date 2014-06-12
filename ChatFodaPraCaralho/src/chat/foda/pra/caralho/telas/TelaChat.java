@@ -113,7 +113,7 @@ public class TelaChat extends JFrame{
 				recebeMensagem(telaPai.getCliente().getService().enviaMensagem(telaPai.getNickName() + ": " + mensagem));
 			} catch (RemoteException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Erro ao enviar mensagem.");
+				JOptionPane.showMessageDialog(null, "Conexão - Erro ao enviar mensagem.");
 			}
 			jtaMensagem.setText("");
 			jtaMensagem.requestFocus();

@@ -77,7 +77,7 @@ public class TelaCliente extends JFrame {
 		setVisible(true);
 		
 		this.cliente = cliente;
-		nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
+		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 	}
 	
 	private JMenuBar getMenu() {

@@ -1,7 +1,10 @@
 package chat.foda.pra.caralho.modelo;
 
-public abstract class Pessoa {
+import java.io.Serializable;
 
+public abstract class Pessoa implements Serializable {
+	private static final long serialVersionUID = 6514736075986784511L;
+	
 	private String cpf;
 	private String email;
 	private Integer idade;
@@ -43,7 +46,7 @@ public abstract class Pessoa {
 	public String getPrimeiroNome() {
 		try {
 			return this.nomeCompleto.substring(0, nomeCompleto.indexOf(" "));
-		} catch (StringIndexOutOfBoundsException e) {
+		} catch (StringIndexOutOfBoundsException | NullPointerException e) {
 			return getNomeCompleto();
 		}
 	}

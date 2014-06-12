@@ -33,7 +33,7 @@ public class TelaServidor extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 
-		String[] opcoes = {"192.168.1.100","192.168.1.101","172.18.33.99"};
+		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","172.18.33.99"};
 		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
 					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
 		

@@ -1,10 +1,12 @@
 package chat.foda.pra.caralho.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario extends Pessoa {
-
+public class Usuario extends Pessoa implements Serializable {
+	private static final long serialVersionUID = -5591108295576221784L;
+	
 	private Integer codigo;
 	private String senha;
 	private String nickName;

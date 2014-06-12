@@ -1,8 +1,8 @@
 package chat.foda.pra.caralho.clienteServidor;
 
 import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 
-import chat.foda.pra.caralho.rmi.ClienteRemoto;
 import chat.foda.pra.caralho.rmi.ClienteRemotoImpl;
 
 public class ServidorRmi {
@@ -19,6 +19,8 @@ public class ServidorRmi {
 	
 	public ServidorRmi(String ip) {
 		try {
+			LocateRegistry.createRegistry(5000);
+			
 			service = new ClienteRemotoImpl();
 			Naming.rebind("rmi://" + ip + ":5000/remoto", service);
 		} catch (Exception e) {

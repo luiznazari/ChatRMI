@@ -43,15 +43,12 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
 				usuariosLogados.put(usuarioLogado, new ArrayList<Chat>());
+				banco.fechar();
 				return usuarioLogado;
 			}
 		}
 		banco.fechar();
 		return null;
-	}
-	
-	public Integer getNumeroUsuariosLogados() {
-		return usuariosLogados.size();
 	}
 
 	@Override
@@ -67,5 +64,9 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 		banco.fechar();
 		return b;
 	}
-
+	
+	public Integer getNumeroUsuariosLogados() {
+		return usuariosLogados.size();
+	}
+	
 }
