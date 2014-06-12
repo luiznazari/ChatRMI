@@ -1,7 +1,5 @@
 package chat.foda.pra.caralho.bancoDados;
 
-import java.util.ArrayList;
-
 import chat.foda.pra.caralho.modelo.Usuario;
 
 import com.db4o.Db4oEmbedded;
@@ -11,15 +9,26 @@ import com.db4o.ObjectSet;
 public class GerenciadorDoBanco {
 
 	private ObjectContainer db;
+	private String nomeBanco;
 
 	// nomeBanco sem extensão
 	public void abrir(String nomeBanco) {
-		db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), nomeBanco
-				+ ".db4o");
+		this.nomeBanco = nomeBanco;
+		this.db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),
+				nomeBanco + ".db4o");
+		this.sair();
+	}
+
+	private void abrir() {
+		this.db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),
+				this.nomeBanco);
 	}
 
 	public ObjectSet<Usuario> getListaUsuarios() {
-		return db.query(Usuario.class);
+		this.abrir();
+		ObjectSet<Usuario> lista = this.db.query(Usuario.class);
+		this.sair();
+		return lista;
 	}
 
 	public Usuario getUsuario(Integer codigo) {
@@ -44,12 +53,29 @@ public class GerenciadorDoBanco {
 		return null;
 	}
 
-	public void armazenar(Object objeto) {
-		db.store(objeto);
+	public void salvar(Object objeto) {
+		this.abrir();
+		this.db.store(objeto);
+		this.sair();
+	}
+
+	public Integer getQuantidadeUsuarios() {
+		return this.getListaUsuarios().size();
 	}
 
 	public void sair() {
-		db.close();
+		this.db.close();
 	}
 
+
+	public static void main(String[] args) {
+		Usuario u1 = new Usuario("Alessandro", "123");
+		Usuario u2 = new Usuario("dfsf", "321");
+
+		GerenciadorDoBanco b = new GerenciadorDoBanco();
+		b.abrir("teste");
+		b.salvar(u1);
+		b.getListaUsuarios();
+		b.getQuantidadeUsuarios();
+	}
 }
