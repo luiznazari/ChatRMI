@@ -179,14 +179,16 @@ public void actions() {
 				String senha = new String(jpfSenha.getPassword());
 				if (!nome.isEmpty() && !senha.isEmpty()) {
 					try {
-						if (cliente.getService().login(nome, senha)) {
-							cliente.setUsuarioLogado(new UsuarioLogado(new Usuario(nome, senha)));
+						UsuarioLogado usuarioLogado = cliente.getService().login(nome, senha);
+						if (usuarioLogado != null) {
+							cliente.setUsuarioLogado(usuarioLogado);
 							new TelaCliente(cliente);
 							dispose();
 						} else {
-							JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");
+							JOptionPane.showMessageDialog(null, "Usuário não cadastrado ou senha incorreta!");
 						}
 					} catch (RemoteException e) {
+						e.printStackTrace();
 						JOptionPane.showMessageDialog(null, "Erro ao realizar login.");
 					}
 				} else {

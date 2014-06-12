@@ -69,5 +69,9 @@ public class TelaServidor extends JFrame {
 			}
 		});
 	}
+	
+	public static void main(String[] args) {
+		new TelaServidor();
+	}
 
 }

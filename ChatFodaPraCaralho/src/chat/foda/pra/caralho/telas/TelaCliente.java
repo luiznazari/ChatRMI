@@ -25,6 +25,7 @@ import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
+import chat.foda.pra.caralho.modelo.Chat;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
@@ -159,7 +160,7 @@ public class TelaCliente extends JFrame {
 		pnlUsuario.setLayout(new GridBagLayout());
 		pnlUsuario.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		
-		jlbNomeUsuario = new JLabel("<html>Bem Vindo, <br>"+ nickName +"</html>");
+		jlbNomeUsuario = new JLabel("<html>Bem Vindo, <br>" + nickName + "</html>");
 		pnlUsuario.add(jlbNomeUsuario, new GridConstraints()
 					.setAnchor(GridConstraints.WEST).setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.REMAINDER, 1));
 		
@@ -230,7 +231,7 @@ public class TelaCliente extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!jlstAmigos.isSelectionEmpty()) {
-					if (!amigoTemChatAberto(jlstAmigos.getSelectedValue())) {
+					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
 						novoChat();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
@@ -264,6 +265,7 @@ public class TelaCliente extends JFrame {
 								.setFill(GridConstraints.BOTH).setGridWeight(1, 1));
 					pnlMensagem.setVisible(true);
 					c.setFocus();
+					configuraChat(c.getChat());
 				} else {					
 					pnlMensagem.setVisible(false);
 					pnlTemp.setVisible(true);
@@ -272,6 +274,10 @@ public class TelaCliente extends JFrame {
 		});
 	
 		pnlChat.revalidate();
+	}
+	
+	private void configuraChat(Chat c) {
+		
 	}
 	
 	private void fecharChatAberto() {
@@ -291,6 +297,14 @@ public class TelaCliente extends JFrame {
 			}
 		}
 		return 0;
+	}
+
+	private boolean temChatAberto(String nome) {
+		for (JToggleButton b : chatListButtons)
+			if (b.getText().equals(nome)) {
+				return true;
+			}
+		return false;
 	}
 	
 	private int getToggleButtonIndex(JToggleButton jtb) {

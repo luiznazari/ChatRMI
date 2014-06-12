@@ -13,6 +13,10 @@ public class Usuario extends Pessoa {
 	public Usuario(){		
 	}
 	
+	public Usuario(Integer codigo){
+		this.codigo = codigo;
+	}
+	
 	public Usuario(String nomeCompleto, String senha) {
 		this.setNomeCompleto(nomeCompleto);
 		this.setSenha(senha);
@@ -33,6 +37,10 @@ public class Usuario extends Pessoa {
 		
 		amigos.remove(usuario);
 		return true;
+	}
+	
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
 	}
 	
 	public Integer getCodigo() {

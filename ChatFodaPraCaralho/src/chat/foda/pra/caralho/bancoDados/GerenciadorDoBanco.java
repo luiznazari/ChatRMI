@@ -1,45 +1,80 @@
 package chat.foda.pra.caralho.bancoDados;
 
-import chat.foda.pra.caralho.modelo.Chat;
-
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.ext.Db4oRecoverableException;
+
+import chat.foda.pra.caralho.modelo.Usuario;
+
 
 public class GerenciadorDoBanco {
+
+	private ObjectContainer db;
+	private String nomeBanco;
+
+	public GerenciadorDoBanco(String nomeBanco) {
+		this.nomeBanco = nomeBanco + ".db4o";
+	}
 	
-	private final ObjectContainer bancoDeDados = Db4oEmbedded.openFile(
-			Db4oEmbedded.newConfiguration(), "bancoDeDados.db4o");
-
-	public void salva(Object object) {
-		bancoDeDados.store(object);
+	public void abrir() {
+		this.db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),
+				this.nomeBanco);
 	}
 
-	public ObjectSet<Chat> listarChats() {
-		return bancoDeDados.query(Chat.class);
+	public ObjectSet<Usuario> getListaUsuarios() {
+		try {
+			ObjectSet<Usuario> lista = db.query(Usuario.class);	
+			return lista;
+		} catch(Db4oRecoverableException e) {
+			return null;
+		}
 	}
 
-	public void sair() {
-		bancoDeDados.close();
+	public Usuario getUsuario(Integer codigo) {
+		try {
+			Usuario usuario = new Usuario(codigo);
+			ObjectSet<Usuario> usuarioBanco = db.queryByExample(usuario);
+			return usuarioBanco.get(0);
+		} catch(Db4oRecoverableException e) {
+			return null;
+		}
 	}
 
-	public Chat getChatPorCodigo(Integer codigo) {
-		Chat chat = new Chat();
-		chat.setCodigo(codigo);
-		return (Chat) bancoDeDados.queryByExample(chat).get(0);
+	public Usuario getUsuario(String nome) {
+		try {
+			Usuario usuario = new Usuario();
+			usuario.setNomeCompleto(nome);
+			ObjectSet<Usuario> usuarioBanco = db.queryByExample(usuario);
+			return usuarioBanco.get(0);
+		} catch(Db4oRecoverableException e) {
+			return null;
+		}
+	}
+
+	public void salvar(Object objeto) {
+		this.db.store(objeto);
+	}
+
+	public Integer getQuantidadeUsuarios() {
+		return this.getListaUsuarios().size();
+	}
+
+	public void fechar() {
+		this.db.close();
+	}
+
+	public void setNomeBanco(String nomeBanco) {
+		this.nomeBanco = nomeBanco;
 	}
 
 	public static void main(String[] args) {
-		GerenciadorDoBanco main = new GerenciadorDoBanco();
-		try {
-			for(Chat c : main.listarChats()) {
-				System.out.println(c.getCodigo());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			main.sair();
-		} finally {
-			main.sair();
+		//GerenciadorDoBanco b = new GerenciadorDoBanco("BancoTeste");
+		GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
+		b.abrir();
+		for (Usuario u : b.getListaUsuarios()) {
+			System.out.println("nome: " + u.getNomeCompleto() + " senha: " + u.getSenha());
 		}
+		b.fechar();
 	}
 }
