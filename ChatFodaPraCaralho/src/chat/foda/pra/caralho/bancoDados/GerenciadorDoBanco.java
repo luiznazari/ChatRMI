@@ -7,7 +7,6 @@ import com.db4o.ext.Db4oRecoverableException;
 
 import chat.foda.pra.caralho.modelo.Usuario;
 
-
 public class GerenciadorDoBanco {
 
 	private ObjectContainer db;
