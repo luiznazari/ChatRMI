@@ -11,14 +11,11 @@ import chat.foda.pra.caralho.bancoDados.HistoricoPorDia;
 public class Chat implements Serializable {
 	private static final long serialVersionUID = -6861975820907169849L;
 
-	private static Integer numChats = 0;
-	
 	private Integer codigo;
 	private List<Usuario> usuarios;
 	private List<HistoricoPorDia> historico;
 	
 	public Chat() {
-		this.codigo = numChats++;
 	}
 	
 	public void adicionaUsuario(Usuario usuario) {

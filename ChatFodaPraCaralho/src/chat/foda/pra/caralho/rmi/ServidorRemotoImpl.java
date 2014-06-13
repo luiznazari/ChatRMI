@@ -4,13 +4,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.joda.time.LocalTime;
 
-import com.db4o.ObjectSet;
-
 import chat.foda.pra.caralho.bancoDados.GerenciadorDoBanco;
-import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 
@@ -24,29 +22,27 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	private static final long serialVersionUID = -8382898850011577230L;
 	
 	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
-	private HashMap<UsuarioLogado, ArrayList<Chat>> usuariosLogados;
+	private HashSet<ClienteRemoto> clientesConectados = new HashSet<ClienteRemoto>();
 	
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
-		usuariosLogados = new HashMap<>();
 	}
 	
 	@Override
-	public String enviaMensagem(String mensagem) throws RemoteException {
+	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException {
 		System.out.println(mensagem);
-		return mensagem;
 	}
 	
 	@Override
-	public synchronized UsuarioLogado login(String nome, String senha) throws RemoteException {
+	public synchronized UsuarioLogado login(ClienteRemoto cliente, String nome, String senha) throws RemoteException {
 		banco.abrir();
 		Usuario usuario = banco.getUsuario(nome);
 		if (usuario != null) {
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
-				usuariosLogados.put(usuarioLogado, new ArrayList<Chat>());
 				System.out.println("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
 				banco.fechar();
+				clientesConectados.add(cliente);
 				return usuarioLogado;
 			}
 		}
@@ -81,7 +77,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	public Integer getNumeroUsuariosLogados() {
-		return usuariosLogados.size();
+		return clientesConectados.size();
 	}
 	
 }

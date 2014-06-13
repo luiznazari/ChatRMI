@@ -3,7 +3,6 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 
 /**
@@ -13,13 +12,13 @@ import chat.foda.pra.caralho.modelo.UsuarioLogado;
  */
 public interface ServidorRemoto extends Remote {
 	
-	public UsuarioLogado login(String nome, String senha) throws RemoteException;
+	public UsuarioLogado login(ClienteRemoto cliente, String nome, String senha) throws RemoteException;
 	
 	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException;
 	
 	public void removerUsuario(String nome) throws RemoteException;
 	
-	public String enviaMensagem(String mensagem) throws RemoteException;
+	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException;
 	
 	public void logout(UsuarioLogado usuarioLogado) throws RemoteException;
 }

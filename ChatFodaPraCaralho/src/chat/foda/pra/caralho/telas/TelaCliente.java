@@ -325,4 +325,21 @@ public class TelaCliente extends JFrame {
 	public String getNickName() {
 		return nickName;
 	}
+	
+	public void enviarParaTodos(String mensagem) {
+		for (TelaChat tc : chatList) {
+			tc.recebeMensagem(mensagem);
+		}
+	}
+	
+	public TelaChat getTelaChat(Integer chatCodigo) {
+		for (TelaChat tc : chatList) {
+			if (tc.getChat().getCodigo() == chatCodigo) {
+				return tc; 
+			}
+		}
+		
+		return null;
+	}
+	
 }
