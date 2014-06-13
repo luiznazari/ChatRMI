@@ -18,6 +18,10 @@ public class Chat implements Serializable {
 	public Chat() {
 	}
 	
+	public Chat(Integer codigo) {
+		this.codigo = codigo;
+	}
+	
 	public void adicionaUsuario(Usuario usuario) {
 		if (this.usuarios == null) {
 			usuarios = new ArrayList<Usuario>();

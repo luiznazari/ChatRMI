@@ -30,7 +30,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	@Override
 	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException {
-		System.out.println(mensagem);
+		for(ClienteRemoto cliente : clientesConectados) {
+			cliente.enviarParaTodos(mensagem);
+		}
 	}
 	
 	@Override
@@ -51,8 +53,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 
 	@Override
-	public void logout(UsuarioLogado usuarioLogado) throws RemoteException {
-		System.out.println("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se desconectou.");
+	public void logout(ClienteRemoto cliente, String nome) throws RemoteException {
+		clientesConectados.remove(cliente);
+		System.out.println("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
 	}
 	
 	@Override

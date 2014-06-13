@@ -25,7 +25,8 @@ public class EventosJanela implements WindowListener {
 	@Override
 	public void windowClosed(WindowEvent e) {
 		try {
-			cliente.getService().logout(cliente.getUsuarioLogado());
+			cliente.getService().logout(cliente.getClienteService(),
+										cliente.getUsuarioLogado().getUsuario().getNomeCompleto());
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}	

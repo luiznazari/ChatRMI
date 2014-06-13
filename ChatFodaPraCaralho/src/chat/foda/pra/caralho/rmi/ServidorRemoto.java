@@ -20,5 +20,5 @@ public interface ServidorRemoto extends Remote {
 	
 	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException;
 	
-	public void logout(UsuarioLogado usuarioLogado) throws RemoteException;
+	public void logout(ClienteRemoto cliente, String nome) throws RemoteException;
 }

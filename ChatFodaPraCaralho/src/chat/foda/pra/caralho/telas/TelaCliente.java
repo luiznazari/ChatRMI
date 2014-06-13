@@ -233,15 +233,16 @@ public class TelaCliente extends JFrame {
 		jbtAbrirChat.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!jlstAmigos.isSelectionEmpty()) {
-					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
-						novoChat();
-					} else {
-						JOptionPane.showMessageDialog(null, "Nï¿½o ï¿½ permitido abrir dois chats para o mesmo amigo.");
-					}
-				} else {
-					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");
-				}
+				novoChat();
+//				if (!jlstAmigos.isSelectionEmpty()) {
+//					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
+//						novoChat();
+//					} else {
+//						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
+//					}
+//				} else {
+//					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");
+//				}
 			}
 		});
 	}
@@ -268,7 +269,7 @@ public class TelaCliente extends JFrame {
 								.setFill(GridConstraints.BOTH).setGridWeight(1, 1));
 					pnlMensagem.setVisible(true);
 					c.setFocus();
-					configuraChat(c.getChat());
+					configuraTelaChat(c);
 				} else {					
 					pnlMensagem.setVisible(false);
 					pnlTemp.setVisible(true);
@@ -279,8 +280,8 @@ public class TelaCliente extends JFrame {
 		pnlChat.revalidate();
 	}
 	
-	private void configuraChat(Chat c) {
-		
+	private void configuraTelaChat(TelaChat c) {
+		c.setChat(new Chat(0));
 	}
 	
 	private void fecharChatAberto() {
