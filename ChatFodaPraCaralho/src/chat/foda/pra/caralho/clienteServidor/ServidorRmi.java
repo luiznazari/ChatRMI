@@ -3,7 +3,7 @@ package chat.foda.pra.caralho.clienteServidor;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import chat.foda.pra.caralho.rmi.ClienteRemotoImpl;
+import chat.foda.pra.caralho.rmi.ServidorRemotoImpl;
 
 public class ServidorRmi {
 
@@ -15,20 +15,20 @@ public class ServidorRmi {
 	 * rmic chat.foda.pra.caralho.ClienteRemotoImpl
 	 */
 	
-	private ClienteRemotoImpl service;
+	private ServidorRemotoImpl service;
 	
 	public ServidorRmi(String ip) {
 		try {
 			LocateRegistry.createRegistry(5000);
 			
-			service = new ClienteRemotoImpl();
+			service = new ServidorRemotoImpl();
 			Naming.rebind("rmi://" + ip + ":5000/remoto", service);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public ClienteRemotoImpl getService() {
+	public ServidorRemotoImpl getService() {
 		return service;
 	}
 }

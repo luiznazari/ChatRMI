@@ -66,7 +66,7 @@ public class TelaLogin extends JFrame{
 		setVisible(true);
 		
 		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","192.168.1.25", "172.18.33.99"};
-		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexï¿½o", 
+		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
 					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
 		
 		cliente = new ClienteRmi(ip);
@@ -114,9 +114,13 @@ public class TelaLogin extends JFrame{
 		jmiRemoverConta.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int confirma = JOptionPane.showConfirmDialog(null, "Realmente deseja remover sua conta?");				
-				if (confirma = JOptionPane.YES_OPTION) {
-					JOptionPane.showMessageDialog(null, "Apenas clientes VIPs podem fazer isso!");
+				String nome = JOptionPane.showInputDialog(null, "Realmente deseja remover sua conta?", "Excluir conta");
+				try {
+					cliente.getService().removerUsuario(nome);
+					JOptionPane.showMessageDialog(null, "Conta removida com sucesso!");
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover conta.");
 				}
 			}
 		});

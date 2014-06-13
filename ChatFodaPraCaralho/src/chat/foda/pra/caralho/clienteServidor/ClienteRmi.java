@@ -3,24 +3,22 @@ package chat.foda.pra.caralho.clienteServidor;
 import java.rmi.Naming;
 
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
-import chat.foda.pra.caralho.rmi.ClienteRemoto;
+import chat.foda.pra.caralho.rmi.ServidorRemoto;
 
 public class ClienteRmi {
 	
-	private ClienteRemoto service;
+	private ServidorRemoto service;
 	private UsuarioLogado usuarioLogado;
 	
 	public ClienteRmi(String ip) {
 		try {
-			service = (ClienteRemoto) Naming.lookup("rmi://" + ip + ":5000/remoto");
-						
-			service.enviaMensagem("Oi");
+			service = (ServidorRemoto) Naming.lookup("rmi://" + ip + ":5000/remoto");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public ClienteRemoto getService() {
+	public ServidorRemoto getService() {
 		return this.service;
 	}
 

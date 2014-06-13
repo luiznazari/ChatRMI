@@ -14,7 +14,7 @@ import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 
-public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRemoto {
+public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorRemoto {
 
 	/**
 	 * Classe que implementa as ações do Servidor
@@ -26,7 +26,7 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
 	private HashMap<UsuarioLogado, ArrayList<Chat>> usuariosLogados;
 	
-	public ClienteRemotoImpl() throws RemoteException {
+	public ServidorRemotoImpl() throws RemoteException {
 		super();
 		usuariosLogados = new HashMap<>();
 	}
@@ -38,14 +38,14 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public UsuarioLogado login(String nome, String senha) throws RemoteException {
+	public synchronized UsuarioLogado login(String nome, String senha) throws RemoteException {
 		banco.abrir();
 		Usuario usuario = banco.getUsuario(nome);
 		if (usuario != null) {
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
 				usuariosLogados.put(usuarioLogado, new ArrayList<Chat>());
-				System.out.println("[" + new LocalTime() + "] O usuário: " + usuarioLogado.getUsuario().getNomeCompleto() + " se conectou.");
+				System.out.println("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
 				banco.fechar();
 				return usuarioLogado;
 			}
@@ -56,11 +56,11 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 
 	@Override
 	public void logout(UsuarioLogado usuarioLogado) throws RemoteException {
-		System.out.println("[" + new LocalTime() + "] O usuário: " + usuarioLogado.getUsuario().getNomeCompleto() + " se desconectou.");
+		System.out.println("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se desconectou.");
 	}
 	
 	@Override
-	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException {
+	public synchronized boolean cadastrarUsuario(String nome, String senha) throws RemoteException {
 		banco.abrir();
 		boolean b;
 		if (banco.getUsuario(nome) == null) {
@@ -74,9 +74,9 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public void removerUsuario(Usuario usuario) throws RemoteException {
+	public synchronized void removerUsuario(String nome) throws RemoteException {
 		banco.abrir();
-		banco.remover(banco.getUsuario(usuario.getCodigo()));
+		banco.remover(banco.getUsuario(nome));
 		banco.fechar();
 	}
 	

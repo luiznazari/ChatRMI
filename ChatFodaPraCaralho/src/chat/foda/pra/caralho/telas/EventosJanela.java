@@ -20,7 +20,6 @@ public class EventosJanela implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		
 	}
 
 	@Override

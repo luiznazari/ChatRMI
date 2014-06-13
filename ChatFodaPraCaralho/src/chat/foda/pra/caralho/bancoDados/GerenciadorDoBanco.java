@@ -15,7 +15,7 @@ public class GerenciadorDoBanco {
 
 	public GerenciadorDoBanco(String nomeBanco) {
 		this.nomeBanco = nomeBanco + ".db4o";
-		this.autoIncrement = this.getUltimoCodigo();
+		this.autoIncrement = this.getUltimoCodigo()+1;
 	}
 	
 	public void abrir() {
@@ -92,8 +92,8 @@ public class GerenciadorDoBanco {
 		GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
 		b.abrir();
 		for (Usuario u : b.getListaUsuarios()) {
-			System.out.println(u.getCodigo() + " | Nome: " + u.getNomeCompleto() + " \t| \tSenha: " + u.getSenha());
-		}
+			System.out.println(u.getCodigo() + " | Nome: " + u.getNomeCompleto() + " | Senha: " + u.getSenha());
+		}	
 		b.fechar();
 	}
 }
