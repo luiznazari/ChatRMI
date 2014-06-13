@@ -23,7 +23,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
-import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 

@@ -3,8 +3,6 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import chat.foda.pra.caralho.modelo.Chat;
-
 /**
  * Declaração de todos os métodos executados no Cliente visíveis para o Servidor
  * 
