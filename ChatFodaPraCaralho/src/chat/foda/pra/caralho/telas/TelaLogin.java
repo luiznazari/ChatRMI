@@ -187,7 +187,7 @@ public void actions() {
 				String senha = new String(jpfSenha.getPassword());
 				if (!nome.isEmpty() && !senha.isEmpty()) {
 					try {
-						UsuarioLogado usuarioLogado = cliente.getService().login(nome, senha);
+						UsuarioLogado usuarioLogado = cliente.getService().login(cliente.getClienteService(), nome, senha);
 						if (usuarioLogado != null) {
 							cliente.setUsuarioLogado(usuarioLogado);
 							new TelaCliente(cliente);

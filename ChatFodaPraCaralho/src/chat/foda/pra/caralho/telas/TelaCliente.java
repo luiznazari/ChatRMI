@@ -70,6 +70,7 @@ public class TelaCliente extends JFrame {
 		super("Chat Foda Pra Caralho");
 		
 		this.cliente = cliente;
+		this.cliente.getClienteService().setTelaCliente(this);
 		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 		
 		addWindowListener(new EventosJanela(cliente));

@@ -13,11 +13,11 @@ public class ClienteRmi {
 	private UsuarioLogado usuarioLogado;
 	private ClienteRemotoImpl clienteService;
 	
-	public ClienteRmi(TelaCliente tc, String ip) {
+	public ClienteRmi(String ip) {
 		try {
 			service = (ServidorRemoto) Naming.lookup("rmi://" + ip + ":5000/remoto");
 			
-			clienteService = new ClienteRemotoImpl(tc);
+			clienteService = new ClienteRemotoImpl();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -25,6 +25,10 @@ public class ClienteRmi {
 	
 	public ServidorRemoto getService() {
 		return this.service;
+	}
+	
+	public ClienteRemotoImpl getClienteService() {
+		return this.clienteService;
 	}
 
 	public UsuarioLogado getUsuarioLogado() {

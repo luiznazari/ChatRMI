@@ -15,10 +15,8 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	
 	private TelaCliente telaCliente;
 	
-	protected ClienteRemotoImpl(TelaCliente telaCliente) throws RemoteException {
+	public ClienteRemotoImpl() throws RemoteException {
 		super();
-		
-		this.telaCliente = telaCliente;
 	}
 	
 	@Override
@@ -30,4 +28,13 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	public void enviarParaTodos(String mensagem) throws RemoteException {
 		telaCliente.enviarParaTodos(mensagem);
 	}
+
+	public TelaCliente getTelaCliente() {
+		return telaCliente;
+	}
+
+	public void setTelaCliente(TelaCliente telaCliente) {
+		this.telaCliente = telaCliente;
+	}
+	
 }
