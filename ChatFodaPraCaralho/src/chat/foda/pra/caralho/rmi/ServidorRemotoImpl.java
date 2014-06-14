@@ -11,6 +11,7 @@ import org.joda.time.LocalTime;
 import chat.foda.pra.caralho.bancoDados.GerenciadorDoBanco;
 import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
+import chat.foda.pra.caralho.telas.TelaServidor;
 
 public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorRemoto {
 
@@ -23,6 +24,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
 	private HashSet<ClienteRemoto> clientesConectados = new HashSet<ClienteRemoto>();
+	private TelaServidor telaServidor;
 	
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
@@ -30,6 +32,10 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	public Integer getNumeroUsuariosLogados() {
 		return clientesConectados.size();
+	}
+	
+	public void setTelaServidor(TelaServidor telaServidor) {
+		this.telaServidor = telaServidor;
 	}
 	
 	@Override
@@ -46,9 +52,10 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		if (usuario != null) {
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
-				System.out.println("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
-				banco.fechar();
 				clientesConectados.add(cliente);
+				telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
+				telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
+				banco.fechar();
 				return usuarioLogado;
 			}
 		}
@@ -59,7 +66,8 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	@Override
 	public void logout(ClienteRemoto cliente, String nome) throws RemoteException {
 		clientesConectados.remove(cliente);
-		System.out.println("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
+		telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
+		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 	}
 	
 	@Override

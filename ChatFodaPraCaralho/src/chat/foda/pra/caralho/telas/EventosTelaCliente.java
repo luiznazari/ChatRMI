@@ -8,11 +8,11 @@ import org.omg.CORBA.SystemException;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 
-public class EventosJanela implements WindowListener {
+public class EventosTelaCliente implements WindowListener {
 
 	private ClienteRmi cliente;
 	
-	public EventosJanela(ClienteRmi cliente) {
+	public EventosTelaCliente(ClienteRmi cliente) {
 		this.cliente = cliente;
 	}
 	

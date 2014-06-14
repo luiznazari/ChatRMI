@@ -74,7 +74,7 @@ public class TelaCliente extends JFrame {
 		this.cliente.getClienteService().setTelaCliente(this);
 		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 		
-		addWindowListener(new EventosJanela(cliente));
+		addWindowListener(new EventosTelaCliente(cliente));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(550, 400));		
 		setContentPane(getMainPanel());	
