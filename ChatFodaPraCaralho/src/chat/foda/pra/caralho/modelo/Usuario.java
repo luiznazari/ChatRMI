@@ -1,8 +1,8 @@
 package chat.foda.pra.caralho.modelo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Usuario extends Pessoa implements Serializable {
 	private static final long serialVersionUID = -5591108295576221784L;
@@ -10,7 +10,7 @@ public class Usuario extends Pessoa implements Serializable {
 	private Integer codigo;
 	private String senha;
 	private String nickName;
-	private List<Usuario> amigos;
+	private Set<Usuario> amigos;
 
 	public Usuario(){		
 	}
@@ -26,7 +26,7 @@ public class Usuario extends Pessoa implements Serializable {
 	
 	public void adicionaAmigo(Usuario usuario) {
 		if (this.amigos == null) {
-			amigos = new ArrayList<Usuario>();
+			amigos = new HashSet<Usuario>();
 		}
 		
 		amigos.add(usuario);
@@ -69,11 +69,11 @@ public class Usuario extends Pessoa implements Serializable {
 		this.nickName = nickName;
 	}
 
-	public List<Usuario> getAmigos() {
+	public Set<Usuario> getAmigos() {
 		return amigos;
 	}
 
-	public void setAmigos(List<Usuario> amigos) {
+	public void setAmigos(Set<Usuario> amigos) {
 		this.amigos = amigos;
 	}
 }

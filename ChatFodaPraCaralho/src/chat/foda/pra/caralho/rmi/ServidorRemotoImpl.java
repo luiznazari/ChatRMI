@@ -28,6 +28,10 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		super();
 	}
 	
+	public Integer getNumeroUsuariosLogados() {
+		return clientesConectados.size();
+	}
+	
 	@Override
 	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException {
 		for(ClienteRemoto cliente : clientesConectados) {
@@ -78,9 +82,30 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.remover(banco.getUsuario(nome));
 		banco.fechar();
 	}
+
+	@Override
+	public synchronized boolean adicionaAmigo(Usuario usuario, String nomeAmigo) throws RemoteException {
+		banco.abrir();
+		Usuario novoAmigo = banco.getUsuario(nomeAmigo);
+		if (novoAmigo != null) {
+			usuario.adicionaAmigo(novoAmigo);
+			banco.salvar(usuario);
+			banco.fechar();
+			return true;
+		}
+		banco.fechar();
+		return false;
+	}
 	
-	public Integer getNumeroUsuariosLogados() {
-		return clientesConectados.size();
+	@Override
+	public synchronized void removerAmigo(Usuario usuario, String nomeAmigo) throws RemoteException {
+		banco.abrir();
+		Usuario novoAmigo = banco.getUsuario(nomeAmigo);
+		if (novoAmigo != null) {
+			usuario.removeAmigo(novoAmigo);
+			banco.salvar(usuario);
+		}
+		banco.fechar();
 	}
 	
 }

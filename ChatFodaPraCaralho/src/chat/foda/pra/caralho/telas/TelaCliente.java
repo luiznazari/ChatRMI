@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -26,7 +27,7 @@ import javax.swing.JToggleButton;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.modelo.Chat;
-import chat.foda.pra.caralho.modelo.UsuarioLogado;
+import chat.foda.pra.caralho.modelo.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
@@ -123,16 +124,39 @@ public class TelaCliente extends JFrame {
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
+				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
+					try {
+						if (cliente.getService().adicionaAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo)) {
+							dlmAmigos.addElement(nomeAmigo);
+						} else {
+							JOptionPane.showMessageDialog(null, "Usuário não cadastrado.");
+						}
+					} catch(RemoteException e) {
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar novo amigo.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Nome digitado inválido ou amigo já adicionado.");
+				}
 			}
 		});
 		
 		jmiRemoverAmigo.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (dlmAmigos.removeElement(JOptionPane.showInputDialog(null, "Nome: "))) {
-					JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
+			public void actionPerformed(ActionEvent arg0) {
+				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
+				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
+					try {
+						cliente.getService().removerAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo);
+						dlmAmigos.addElement(nomeAmigo);
+						JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
+					} catch(RemoteException e) {
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover amigo.");
+					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Amigo nï¿½o encontrado");
+					JOptionPane.showMessageDialog(null, "Amigo não encontrado");
 				}
 			}
 		});
@@ -172,7 +196,7 @@ public class TelaCliente extends JFrame {
 					.setAnchor(GridConstraints.CENTER).setInsets(5).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1));
 		
 		dlmAmigos = new DefaultListModel<String>();
-		jlstAmigos = new JList<String>(dlmAmigos);
+		jlstAmigos = new JList<String>(getListaAmigos());
 		jspAmigos = new JScrollPane(jlstAmigos);
 		jspAmigos.setPreferredSize(new Dimension(150, 0));		
 		pnlUsuario.add(jspAmigos, new GridConstraints()
@@ -192,7 +216,7 @@ public class TelaCliente extends JFrame {
 		pnlChat.setLayout(new GridBagLayout());
 		pnlChat.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		
-		//Painel ChatList COMEï¿½O
+		//Painel ChatList COMEÇO
 		pnlChatList = new JPanel();
 		pnlChatList.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 3));
 		pnlChatList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2), "Chats"));
@@ -207,13 +231,13 @@ public class TelaCliente extends JFrame {
 					.setGridWeight(1, 0.12));
 		//Painel ChatList FIM
 		
-		//Painel Mensagem COMEï¿½O		
+		//Painel Mensagem COMEÇO		
 		pnlTemp = new JPanel();
 		pnlTemp.setLayout(new GridBagLayout());
 		pnlTemp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 		pnlTemp.setBackground(Color.WHITE);
 		
-		jlbTemp = new JLabel("<html><center>Selecione um amigo e clique no botï¿½o \"Abrir chat\" <br> para comeï¿½ar uma nova conversa.</center></html>");
+		jlbTemp = new JLabel("<html><center>Selecione um amigo e clique no botão \"Abrir chat\" <br> para começar uma nova conversa.</center></html>");
 		pnlTemp.add(jlbTemp);
 		
 		pnlChat.add(pnlTemp, new GridConstraints()
@@ -233,25 +257,25 @@ public class TelaCliente extends JFrame {
 		jbtAbrirChat.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				novoChat();
-//				if (!jlstAmigos.isSelectionEmpty()) {
-//					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
-//						novoChat();
-//					} else {
-//						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
-//					}
-//				} else {
-//					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");
-//				}
+				if (!jlstAmigos.isSelectionEmpty()) {
+					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
+						novoChat();
+					} else {
+						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null,"Para abrir um chat, selecione um amigo!");
+				}
 			}
 		});
 	}
 	
 	private void novoChat() {
 		final TelaChat c = new TelaChat(this);
+		configuraTelaChat(c);
 		chatList.add(c);
 		
-		final JToggleButton jtb = new JToggleButton("---");
+		final JToggleButton jtb = new JToggleButton(jlstAmigos.getSelectedValue());
 		chatListButtons.add(jtb);
 		pnlChatList.add(jtb);
 		
@@ -269,7 +293,6 @@ public class TelaCliente extends JFrame {
 								.setFill(GridConstraints.BOTH).setGridWeight(1, 1));
 					pnlMensagem.setVisible(true);
 					c.setFocus();
-					configuraTelaChat(c);
 				} else {					
 					pnlMensagem.setVisible(false);
 					pnlTemp.setVisible(true);
@@ -326,6 +349,16 @@ public class TelaCliente extends JFrame {
 	
 	public String getNickName() {
 		return nickName;
+	}
+	
+	public DefaultListModel<String> getListaAmigos() {
+		try {
+			for(Usuario u : cliente.getUsuarioLogado().getUsuario().getAmigos()) {
+				dlmAmigos.addElement(u.getNomeCompleto());
+			}
+		} catch(NullPointerException e) {
+		}
+		return dlmAmigos;
 	}
 	
 	public void enviarParaTodos(String mensagem) {

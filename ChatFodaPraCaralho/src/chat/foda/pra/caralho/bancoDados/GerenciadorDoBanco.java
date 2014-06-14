@@ -93,7 +93,7 @@ public class GerenciadorDoBanco {
 		b.abrir();
 		for (Usuario u : b.getListaUsuarios()) {
 			System.out.println(u.getCodigo() + " | Nome: " + u.getNomeCompleto() + " | Senha: " + u.getSenha());
-		}	
+		}
 		b.fechar();
 	}
 }

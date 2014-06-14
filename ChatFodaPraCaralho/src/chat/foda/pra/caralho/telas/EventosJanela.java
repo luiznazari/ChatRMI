@@ -4,6 +4,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
+import org.omg.CORBA.SystemException;
+
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 
 public class EventosJanela implements WindowListener {
@@ -27,6 +29,7 @@ public class EventosJanela implements WindowListener {
 		try {
 			cliente.getService().logout(cliente.getClienteService(),
 										cliente.getUsuarioLogado().getUsuario().getNomeCompleto());
+			System.exit(0);
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}	
