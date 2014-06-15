@@ -3,6 +3,7 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 
@@ -26,4 +27,6 @@ public interface ServidorRemoto extends Remote {
 	public boolean adicionaAmigo(Usuario usuario, String nomeAmigo) throws RemoteException;
 	
 	public void removerAmigo(Usuario usuario, String nomeAmigo) throws RemoteException;
+	
+	public Chat criarChat(Usuario solicitante, String nomeAmigo) throws RemoteException;
 }

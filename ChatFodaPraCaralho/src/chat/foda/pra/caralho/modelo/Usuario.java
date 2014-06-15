@@ -26,10 +26,10 @@ public class Usuario extends Pessoa implements Serializable {
 	
 	public void adicionaAmigo(Usuario usuario) {
 		if (this.amigos == null) {
-			amigos = new HashSet<Usuario>();
+			this.amigos = new HashSet<Usuario>();
 		}
 		
-		amigos.add(usuario);
+		this.amigos.add(usuario);
 	}
 	
 	public boolean removeAmigo(Usuario usuario) {
@@ -37,7 +37,7 @@ public class Usuario extends Pessoa implements Serializable {
 			return false;
 		}
 		
-		amigos.remove(usuario);
+		this.amigos.remove(usuario);
 		return true;
 	}
 	

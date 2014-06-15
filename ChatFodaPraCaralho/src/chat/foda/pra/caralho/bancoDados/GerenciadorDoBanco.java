@@ -1,5 +1,7 @@
 package chat.foda.pra.caralho.bancoDados;
 
+import java.util.Scanner;
+
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -11,16 +13,13 @@ public class GerenciadorDoBanco {
 
 	private ObjectContainer db;
 	private String nomeBanco;
-	private Integer autoIncrement;
 
 	public GerenciadorDoBanco(String nomeBanco) {
 		this.nomeBanco = nomeBanco + ".db4o";
-		this.autoIncrement = this.getUltimoCodigo()+1;
 	}
 	
 	public void abrir() {
-		this.db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(),
-				this.nomeBanco);
+		this.db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), this.nomeBanco);
 	}
 
 	public void fechar() {
@@ -65,35 +64,88 @@ public class GerenciadorDoBanco {
 		this.db.delete(objeto);
 	}
 	
-	public void salvarUsuario(Usuario usuario) {
-		usuario.setCodigo(autoIncrement++);
-		this.db.store(usuario);
+	public void atualizar(Object objeto) {
+		//this.db.ext().store(objeto);
+		remover(objeto);
+		salvar(objeto);
 	}
 
 	public Integer getQuantidadeUsuarios() {
 		return this.getListaUsuarios().size();
 	}
-	
-	public Integer getUltimoCodigo() {
-		try {
-			ObjectSet<Usuario> lista = getListaUsuarios();
-			return lista.get(lista.size()-1).getCodigo();
-		} catch (NullPointerException e) {
-			return 0;
-		}
-	}
 
 	public void setNomeBanco(String nomeBanco) {
 		this.nomeBanco = nomeBanco;
 	}
-
-	public static void main(String[] args) {
-		//GerenciadorDoBanco b = new GerenciadorDoBanco("BancoTeste");
-		GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
-		b.abrir();
-		for (Usuario u : b.getListaUsuarios()) {
-			System.out.println(u.getCodigo() + " | Nome: " + u.getNomeCompleto() + " | Senha: " + u.getSenha());
+	
+	public void imprimeDadosUsuario(Usuario usuario) {
+		System.out.println("Nome: " + usuario.getNomeCompleto() + " | Senha: " + usuario.getSenha());
+		System.out.println("Número de amigos: "+ usuario.getAmigos().size());
+	}
+	
+	public void imprimeDadosUsuarios() {
+		for (Usuario usuario : getListaUsuarios()) {
+			System.out.println("Nome: " + usuario.getNomeCompleto() + " | Senha: " + usuario.getSenha());
+			try {
+				System.out.println("Número de amigos: "+ usuario.getAmigos().size());
+				for (Usuario u : usuario.getAmigos()) {
+					System.out.print(u.getNomeCompleto() + " ");
+				}
+				System.out.println("\n");
+			} catch (NullPointerException e) {
+				System.out.println("Número de amigos: " + 0 + "\n");
+			}
 		}
-		b.fechar();
+	}
+	
+	public void populaBanco() {		
+		Usuario u1 = new Usuario("Luiz", "123");
+		Usuario u2 = new Usuario("Alessandro", "123");
+		Usuario u3 = new Usuario("Usuario001", "123");
+		Usuario u4 = new Usuario("Usuario002", "123");
+		
+		u1.adicionaAmigo(u2);
+		u2.adicionaAmigo(u1);
+		u4.adicionaAmigo(u1);
+		u4.adicionaAmigo(u2);
+		u4.adicionaAmigo(u3);
+		
+		salvar(u1);
+		salvar(u2);
+		salvar(u3);
+		salvar(u4);
+	}
+	
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("0 - BancoTeste | 1 - BancoDeDados");
+		Integer escolha = Integer.valueOf(scan.nextLine());
+		switch (escolha) {
+			case 0: {
+				GerenciadorDoBanco bancoTeste = new GerenciadorDoBanco("BancoTeste");
+				
+				bancoTeste.abrir();
+				//bancoTeste.populaBanco();
+				Usuario u1 = bancoTeste.getUsuario("Luiz");
+				Usuario u2 = bancoTeste.getUsuario("Alessandro");				
+				Usuario u3 = bancoTeste.getUsuario("Usuario001");
+				Usuario u4 = bancoTeste.getUsuario("Usuario002");
+				bancoTeste.fechar();
+				
+				bancoTeste.abrir();
+				bancoTeste.imprimeDadosUsuarios();
+				bancoTeste.fechar();
+				
+				break;
+			}
+			case 1: {
+				GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
+				
+				b.imprimeDadosUsuarios();
+				break;
+			}
+		}
+		
+		scan.close();
 	}
 }

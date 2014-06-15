@@ -3,6 +3,7 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.telas.TelaCliente;
 
 /**
@@ -21,12 +22,17 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	
 	@Override
 	public void enviarMensagem(Integer chatCodigo, String mensagem) throws RemoteException {
-		telaCliente.getTelaChat(chatCodigo).recebeMensagem(mensagem);
+		telaCliente.enviarParaChat(chatCodigo, mensagem);
 	}
 
 	@Override
 	public void enviarParaTodos(String mensagem) throws RemoteException {
 		telaCliente.enviarParaTodos(mensagem);
+	}
+	
+	@Override
+	public void abrirChat(Chat chat, String nomeAmigo) throws RemoteException {
+		telaCliente.iniciarChatExistente(chat, nomeAmigo);
 	}
 
 	public TelaCliente getTelaCliente() {

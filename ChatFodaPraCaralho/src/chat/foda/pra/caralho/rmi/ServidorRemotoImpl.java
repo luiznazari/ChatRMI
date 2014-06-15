@@ -3,12 +3,14 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 
 import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.bancoDados.GerenciadorDoBanco;
+import chat.foda.pra.caralho.modelo.Chat;
 import chat.foda.pra.caralho.modelo.Usuario;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import chat.foda.pra.caralho.telas.TelaServidor;
@@ -22,26 +24,34 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	 */
 	private static final long serialVersionUID = -8382898850011577230L;
 	
-	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
-	private HashSet<ClienteRemoto> clientesConectados = new HashSet<ClienteRemoto>();
+	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoTeste");
 	private TelaServidor telaServidor;
+	private Map<String, ClienteRemoto> clientesConectados = new HashMap<String, ClienteRemoto>();
+	private Map<Integer, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Integer, ArrayList<ClienteRemoto>>();
+	private Integer autoIncrementChatId = 0;
 	
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
-	}
-	
-	public Integer getNumeroUsuariosLogados() {
-		return clientesConectados.size();
 	}
 	
 	public void setTelaServidor(TelaServidor telaServidor) {
 		this.telaServidor = telaServidor;
 	}
 	
+	public Integer getNumeroUsuariosLogados() {
+		return clientesConectados.size();
+	}
+	
+	public void enviarMensagemParaTodosClientes(String mensagem) throws RemoteException {
+		for(ClienteRemoto cliente : clientesConectados.values()) {
+			cliente.enviarParaTodos(mensagem);
+		}		
+	}
+	
 	@Override
 	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException {
-		for(ClienteRemoto cliente : clientesConectados) {
-			cliente.enviarParaTodos(mensagem);
+		for (ClienteRemoto cliente : chatsAbertos.get(chatCodigo)) {
+			cliente.enviarMensagem(chatCodigo, mensagem);
 		}
 	}
 	
@@ -49,10 +59,10 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	public synchronized UsuarioLogado login(ClienteRemoto cliente, String nome, String senha) throws RemoteException {
 		banco.abrir();
 		Usuario usuario = banco.getUsuario(nome);
-		if (usuario != null) {
+		if (usuario != null && !clientesConectados.containsKey(nome)) {
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
-				clientesConectados.add(cliente);
+				clientesConectados.put(usuario.getNomeCompleto(), cliente);
 				telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
 				telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 				banco.fechar();
@@ -65,7 +75,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 
 	@Override
 	public void logout(ClienteRemoto cliente, String nome) throws RemoteException {
-		clientesConectados.remove(cliente);
+		clientesConectados.remove(nome);
 		telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
 		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 	}
@@ -75,7 +85,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.abrir();
 		boolean b;
 		if (banco.getUsuario(nome) == null) {
-			banco.salvarUsuario(new Usuario(nome, senha));
+			banco.salvar(new Usuario(nome, senha));
 			b = true;
 		} else {
 			b = false;
@@ -97,7 +107,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		Usuario novoAmigo = banco.getUsuario(nomeAmigo);
 		if (novoAmigo != null) {
 			usuario.adicionaAmigo(novoAmigo);
-			banco.salvar(usuario);
+			banco.atualizar(usuario);
 			banco.fechar();
 			return true;
 		}
@@ -108,12 +118,37 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	@Override
 	public synchronized void removerAmigo(Usuario usuario, String nomeAmigo) throws RemoteException {
 		banco.abrir();
-		Usuario novoAmigo = banco.getUsuario(nomeAmigo);
-		if (novoAmigo != null) {
-			usuario.removeAmigo(novoAmigo);
-			banco.salvar(usuario);
+		Usuario usuarioAmigo = banco.getUsuario(nomeAmigo);
+		if (usuarioAmigo != null) {
+			usuario.removeAmigo(usuarioAmigo);
+			banco.atualizar(usuario);
 		}
 		banco.fechar();
+	}
+	
+	@Override
+	public synchronized Chat criarChat(Usuario solicitante, String nomeAmigo) {
+		banco.abrir();
+		Usuario amigo = banco.getUsuario(nomeAmigo);
+		banco.fechar();
+		if (amigo != null && clientesConectados.containsKey(nomeAmigo)) {
+			Chat novoChat = new Chat(autoIncrementChatId++);
+			novoChat.adicionaUsuario(solicitante);
+			novoChat.adicionaUsuario(amigo);
+			
+			ClienteRemoto clienteAmigo = clientesConectados.get(nomeAmigo);
+			try {
+				clienteAmigo.abrirChat(novoChat, solicitante.getNomeCompleto());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				return null;
+			}
+			
+			chatsAbertos.put(novoChat.getCodigo(), new ArrayList<ClienteRemoto>(
+					Arrays.asList(clientesConectados.get(solicitante.getNomeCompleto()), clienteAmigo)));
+			return novoChat;
+		}
+		return null;
 	}
 	
 }

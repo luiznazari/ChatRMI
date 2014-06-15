@@ -259,7 +259,7 @@ public class TelaCliente extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!jlstAmigos.isSelectionEmpty()) {
 					if (!temChatAberto(jlstAmigos.getSelectedValue())) {
-						novoChat();
+						iniciarNovoChat();
 					} else {
 						JOptionPane.showMessageDialog(null, "Não é permitido abrir dois chats para o mesmo amigo.");
 					}
@@ -270,12 +270,39 @@ public class TelaCliente extends JFrame {
 		});
 	}
 	
-	private void novoChat() {
+	private void iniciarNovoChat() {
 		final TelaChat c = new TelaChat(this);
-		configuraTelaChat(c);
-		chatList.add(c);
+		String nomeAmigo = jlstAmigos.getSelectedValue();
 		
-		final JToggleButton jtb = new JToggleButton(jlstAmigos.getSelectedValue());
+		Chat chat = null;
+		
+		try {
+			chat = cliente.getService().criarChat(cliente.getUsuarioLogado().getUsuario(), nomeAmigo);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Conexão - Erro ao abrir chat.");
+		}
+		
+		if (chat != null) {
+			c.setChat(chat);
+			chatList.add(c);		
+			abrirTelaChat(nomeAmigo);
+		} else {
+			JOptionPane.showMessageDialog(null, "O usuário selecionado não está logado.");
+		}	
+	}
+	
+	public void iniciarChatExistente(Chat chat, String nomeAmigo) {
+		final TelaChat c = new TelaChat(this);
+		
+		c.setChat(chat);
+		
+		chatList.add(c);		
+		abrirTelaChat(nomeAmigo);
+	}
+	
+	private void abrirTelaChat(String nomeAmigo) {
+		final JToggleButton jtb = new JToggleButton(nomeAmigo);
 		chatListButtons.add(jtb);
 		pnlChatList.add(jtb);
 		
@@ -303,10 +330,6 @@ public class TelaCliente extends JFrame {
 		pnlChat.revalidate();
 	}
 	
-	private void configuraTelaChat(TelaChat c) {
-		c.setChat(new Chat(0));
-	}
-	
 	private void fecharChatAberto() {
 		for (JToggleButton b : chatListButtons) {
 			if (b.isSelected()) {
@@ -317,15 +340,6 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	private int getChatAbertoIndex() {
-		for (JToggleButton jtb : chatListButtons) {
-			if (jtb.isSelected()) {
-				return getToggleButtonIndex(jtb);
-			}
-		}
-		return 0;
-	}
-
 	private boolean temChatAberto(String nome) {
 		for (JToggleButton b : chatListButtons)
 			if (b.getText().equals(nome)) {
@@ -367,14 +381,13 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public TelaChat getTelaChat(Integer chatCodigo) {
+	public void enviarParaChat(Integer chatCodigo, String mensagem) {
 		for (TelaChat tc : chatList) {
-			if (tc.getChat().getCodigo() == chatCodigo) {
-				return tc; 
+			if (tc.getChat().getCodigo().equals(chatCodigo)) {
+				tc.recebeMensagem(mensagem);
+				break;
 			}
 		}
-		
-		return null;
 	}
 	
 }

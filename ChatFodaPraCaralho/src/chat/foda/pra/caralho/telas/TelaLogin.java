@@ -192,7 +192,7 @@ public void actions() {
 							new TelaCliente(cliente);
 							dispose();
 						} else {
-							JOptionPane.showMessageDialog(null, "Usuário não cadastrado ou senha incorreta!");
+							JOptionPane.showMessageDialog(null, "Este usuário já está logado, não está cadastrado \n ou a senha está incorreta.");
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
