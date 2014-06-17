@@ -60,7 +60,7 @@ public class TelaServidor extends JFrame {
 		jtaConsole.setWrapStyleWord(true);
 		jspConsole = new JScrollPane(jtaConsole);
 		pnlMain.add(jspConsole, new GridConstraints()
-				.setAnchor(GridConstraints.CENTER).setInsets(5).setGridSize(1, 1).setFill(GridConstraints.BOTH)
+				.setAnchor(GridConstraints.CENTER).setInsets(5).setGridWeight(1, 1).setFill(GridConstraints.BOTH)
 				.setGridSize(GridConstraints.REMAINDER, GridConstraints.REMAINDER));
 				
 		return pnlMain;				

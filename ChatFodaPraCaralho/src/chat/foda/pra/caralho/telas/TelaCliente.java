@@ -40,7 +40,8 @@ public class TelaCliente extends JFrame {
 	private JMenuBar jmbMenuBar;
 	private JMenu jmnArquivo;
 	private JMenuItem jmiSair;
-	private JMenu jmnAmigo;
+	private JMenu jmnConta;
+	private JMenuItem jmiAlterarNickname;
 	private JMenuItem jmiAdicionarAmigo;
 	private JMenuItem jmiRemoverAmigo;
 	private JMenu jmnAjuda;
@@ -93,14 +94,17 @@ public class TelaCliente extends JFrame {
 		jmiSair = new JMenuItem("Sair");
 		jmnArquivo.add(jmiSair);
 		
-		jmnAmigo = new JMenu("Amigos");
-		jmbMenuBar.add(jmnAmigo);
+		jmnConta = new JMenu("Conta");
+		jmbMenuBar.add(jmnConta);
 		
-		jmiAdicionarAmigo = new JMenuItem("Adicionar");
-		jmnAmigo.add(jmiAdicionarAmigo);
+		jmiAlterarNickname = new JMenuItem("Alterar Nickname");
+		jmnConta.add(jmiAlterarNickname);
 		
-		jmiRemoverAmigo = new JMenuItem("Remover");
-		jmnAmigo.add(jmiRemoverAmigo);
+		jmiAdicionarAmigo = new JMenuItem("Adicionar Amigo");
+		jmnConta.add(jmiAdicionarAmigo);
+		
+		jmiRemoverAmigo = new JMenuItem("Remover Amigo");
+		jmnConta.add(jmiRemoverAmigo);
 		
 		jmnAjuda = new JMenu("Ajuda");
 		jmbMenuBar.add(jmnAjuda);
@@ -118,6 +122,23 @@ public class TelaCliente extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
+			}
+		});
+		
+		jmiAlterarNickname.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String novoNickname = JOptionPane.showInputDialog(null, "Digite seu novo nickname:");
+				if (novoNickname != null && !novoNickname.equals(" ")) {
+					nickName = novoNickname;
+					jlbNomeUsuario.setText("<html>Bem Vindo, <br>" + novoNickname + "</html>");
+					/*try {
+						cliente.getService().atualizarNoBanco(cliente.getUsuarioLogado().getUsuario());
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao salvar novo nickname.");
+					}*/
+				}
 			}
 		});
 		

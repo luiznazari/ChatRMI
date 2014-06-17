@@ -127,6 +127,13 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
+	public synchronized void atualizarNoBanco(Object objeto) throws RemoteException {
+		banco.abrir();
+		banco.atualizar(objeto);
+		banco.fechar();
+	}
+	
+	@Override
 	public synchronized Chat criarChat(Usuario solicitante, String nomeAmigo) {
 		banco.abrir();
 		Usuario amigo = banco.getUsuario(nomeAmigo);
