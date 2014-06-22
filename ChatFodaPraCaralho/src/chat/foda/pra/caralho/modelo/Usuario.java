@@ -10,7 +10,7 @@ public class Usuario extends Pessoa implements Serializable {
 	private Integer codigo;
 	private String senha;
 	private String nickName;
-	private Set<Usuario> amigos;
+	private Set<String> amigos;
 
 	public Usuario(){		
 	}
@@ -24,20 +24,20 @@ public class Usuario extends Pessoa implements Serializable {
 		this.setSenha(senha);
 	}
 	
-	public void adicionaAmigo(Usuario usuario) {
+	public void adicionaAmigo(String nome) {
 		if (this.amigos == null) {
-			this.amigos = new HashSet<Usuario>();
+			this.amigos = new HashSet<String>();
 		}
 		
-		this.amigos.add(usuario);
+		this.amigos.add(nome);
 	}
 	
-	public boolean removeAmigo(Usuario usuario) {
+	public boolean removeAmigo(String nome) {
 		if (this.amigos == null) {
 			return false;
 		}
 		
-		this.amigos.remove(usuario);
+		this.amigos.remove(nome);
 		return true;
 	}
 	
@@ -68,12 +68,12 @@ public class Usuario extends Pessoa implements Serializable {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-
-	public Set<Usuario> getAmigos() {
+	
+	public Set<String> getAmigos() {
 		return amigos;
 	}
 
-	public void setAmigos(Set<Usuario> amigos) {
+	public void setAmigos(Set<String> amigos) {
 		this.amigos = amigos;
 	}
 }

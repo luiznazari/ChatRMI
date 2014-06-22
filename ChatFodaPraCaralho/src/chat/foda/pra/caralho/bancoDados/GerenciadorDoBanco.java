@@ -64,12 +64,6 @@ public class GerenciadorDoBanco {
 		this.db.delete(objeto);
 	}
 	
-	public void atualizar(Object objeto) {
-		//this.db.ext().store(objeto);
-		remover(objeto);
-		salvar(objeto);
-	}
-
 	public Integer getQuantidadeUsuarios() {
 		return this.getListaUsuarios().size();
 	}
@@ -88,8 +82,8 @@ public class GerenciadorDoBanco {
 			System.out.println("Nome: " + usuario.getNomeCompleto() + " | Senha: " + usuario.getSenha());
 			try {
 				System.out.println("Número de amigos: "+ usuario.getAmigos().size());
-				for (Usuario u : usuario.getAmigos()) {
-					System.out.print(u.getNomeCompleto() + " ");
+				for (String nome : usuario.getAmigos()) {
+					System.out.print(nome + " ");
 				}
 				System.out.println("\n");
 			} catch (NullPointerException e) {
@@ -104,11 +98,11 @@ public class GerenciadorDoBanco {
 		Usuario u3 = new Usuario("Usuario001", "123");
 		Usuario u4 = new Usuario("Usuario002", "123");
 		
-		u1.adicionaAmigo(u2);
-		u2.adicionaAmigo(u1);
-		u4.adicionaAmigo(u1);
-		u4.adicionaAmigo(u2);
-		u4.adicionaAmigo(u3);
+		u1.adicionaAmigo(u2.getNomeCompleto());
+		u2.adicionaAmigo(u1.getNomeCompleto());
+		u4.adicionaAmigo(u1.getNomeCompleto());
+		u4.adicionaAmigo(u2.getNomeCompleto());
+		u4.adicionaAmigo(u3.getNomeCompleto());
 		
 		salvar(u1);
 		salvar(u2);
@@ -140,8 +134,10 @@ public class GerenciadorDoBanco {
 			}
 			case 1: {
 				GerenciadorDoBanco b = new GerenciadorDoBanco("BancoDeDados");
-				
+				b.abrir();
+				//b.populaBanco();
 				b.imprimeDadosUsuarios();
+				b.fechar();
 				break;
 			}
 		}

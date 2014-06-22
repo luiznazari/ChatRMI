@@ -24,7 +24,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	 */
 	private static final long serialVersionUID = -8382898850011577230L;
 	
-	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoTeste");
+	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
 	private TelaServidor telaServidor;
 	private Map<String, ClienteRemoto> clientesConectados = new HashMap<String, ClienteRemoto>();
 	private Map<Integer, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Integer, ArrayList<ClienteRemoto>>();
@@ -106,8 +106,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.abrir();
 		Usuario novoAmigo = banco.getUsuario(nomeAmigo);
 		if (novoAmigo != null) {
-			usuario.adicionaAmigo(novoAmigo);
-			banco.atualizar(usuario);
+			banco.remover(banco.getUsuario(usuario.getNomeCompleto()));
+			usuario.adicionaAmigo(nomeAmigo);
+			banco.salvar(usuario);
 			banco.fechar();
 			return true;
 		}
@@ -120,8 +121,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.abrir();
 		Usuario usuarioAmigo = banco.getUsuario(nomeAmigo);
 		if (usuarioAmigo != null) {
-			usuario.removeAmigo(usuarioAmigo);
-			banco.atualizar(usuario);
+			banco.remover(banco.getUsuario(usuario.getNomeCompleto()));
+			usuario.removeAmigo(nomeAmigo);
+			banco.salvar(usuario);
 		}
 		banco.fechar();
 	}

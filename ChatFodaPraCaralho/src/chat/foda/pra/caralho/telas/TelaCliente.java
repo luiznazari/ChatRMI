@@ -21,14 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.modelo.Chat;
-import chat.foda.pra.caralho.modelo.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
@@ -124,26 +121,20 @@ public class TelaCliente extends JFrame {
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null,
-						"Digite o nome do amigo:");
+				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
 				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
 					try {
-						if (cliente.getService().adicionaAmigo(
-								cliente.getUsuarioLogado().getUsuario(),
-								nomeAmigo)) {
+						if (cliente.getService().adicionaAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo)) {
 							dlmAmigos.addElement(nomeAmigo);
 						} else {
-							JOptionPane.showMessageDialog(null,
-									"Usuário não cadastrado.");
+							JOptionPane.showMessageDialog(null, "Usuário não cadastrado.");
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null,
-								"Conexão - Erro ao adicionar novo amigo.");
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar novo amigo.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Nome digitado inválido ou amigo já adicionado.");
+					JOptionPane.showMessageDialog(null, "Nome digitado inválido ou amigo já adicionado.");
 				}
 			}
 		});
@@ -151,20 +142,15 @@ public class TelaCliente extends JFrame {
 		jmiRemoverAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null,
-						"Digite o nome do amigo:");
+				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
 				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
 					try {
-						cliente.getService().removerAmigo(
-								cliente.getUsuarioLogado().getUsuario(),
-								nomeAmigo);
+						cliente.getService().removerAmigo(cliente.getUsuarioLogado().getUsuario(),nomeAmigo);
 						dlmAmigos.addElement(nomeAmigo);
-						JOptionPane.showMessageDialog(null,
-								"Amigo removido com sucesso!");
+						JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null,
-								"Conexão - Erro ao remover amigo.");
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover amigo.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Amigo não encontrado");
@@ -200,9 +186,7 @@ public class TelaCliente extends JFrame {
 		pnlUsuario = new JPanel(new GridBagLayout());
 		pnlUsuario.setMinimumSize(minDimensao);
 
-		jlbNomeUsuario = new JLabel("<html>Bem Vindo,<br><b>" + nickName
-				+ "</b></html>");
-
+		jlbNomeUsuario = new JLabel("<html>Bem Vindo,<br><b>" + nickName + "</b></html>");
 		pnlUsuario.add(jlbNomeUsuario,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.BOTH)
@@ -299,9 +283,8 @@ public class TelaCliente extends JFrame {
 
 	public DefaultListModel<String> getListaAmigos() {
 		try {
-			for (Usuario u : cliente.getUsuarioLogado().getUsuario()
-					.getAmigos()) {
-				dlmAmigos.addElement(u.getNomeCompleto());
+			for (String nomeDoAmigo : cliente.getUsuarioLogado().getUsuario().getAmigos()) {
+				dlmAmigos.addElement(nomeDoAmigo);
 			}
 		} catch (NullPointerException e) {
 		}
