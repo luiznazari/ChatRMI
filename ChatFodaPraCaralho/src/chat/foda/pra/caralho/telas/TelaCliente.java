@@ -1,14 +1,19 @@
 package chat.foda.pra.caralho.telas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -46,6 +51,7 @@ public class TelaCliente extends JFrame {
 
 	private JPanel pnlMain;
 	private JPanel pnlUsuario;
+	private JLabel jlbBemVindo;
 	private JLabel jlbNomeUsuario;
 	private JSeparator jsepListaDeAmigos;
 	private JList<String> jlstAmigos;
@@ -121,20 +127,28 @@ public class TelaCliente extends JFrame {
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
-				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
+				String nomeAmigo = JOptionPane.showInputDialog(null,
+						"Digite o nome do amigo:");
+				if (!cliente.getUsuarioLogado().getUsuario().getNomeCompleto()
+						.equals(nomeAmigo)
+						&& !dlmAmigos.contains(nomeAmigo)) {
 					try {
-						if (cliente.getService().adicionaAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo)) {
+						if (cliente.getService().adicionaAmigo(
+								cliente.getUsuarioLogado().getUsuario(),
+								nomeAmigo)) {
 							dlmAmigos.addElement(nomeAmigo);
 						} else {
-							JOptionPane.showMessageDialog(null, "Usuário não cadastrado.");
+							JOptionPane.showMessageDialog(null,
+									"Usuário não cadastrado.");
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar novo amigo.");
+						JOptionPane.showMessageDialog(null,
+								"Conexão - Erro ao adicionar novo amigo.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Nome digitado inválido ou amigo já adicionado.");
+					JOptionPane.showMessageDialog(null,
+							"Nome digitado inválido ou amigo já adicionado.");
 				}
 			}
 		});
@@ -142,15 +156,20 @@ public class TelaCliente extends JFrame {
 		jmiRemoverAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
-				if (nomeAmigo != null && !dlmAmigos.contains(nomeAmigo)) {
+				String nomeAmigo = JOptionPane.showInputDialog(null,
+						"Digite o nome do amigo:");
+				if (nomeAmigo != null && dlmAmigos.contains(nomeAmigo)) {
 					try {
-						cliente.getService().removerAmigo(cliente.getUsuarioLogado().getUsuario(),nomeAmigo);
-						dlmAmigos.addElement(nomeAmigo);
-						JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
+						cliente.getService().removerAmigo(
+								cliente.getUsuarioLogado().getUsuario(),
+								nomeAmigo);
+						dlmAmigos.removeElement(nomeAmigo);
+						JOptionPane.showMessageDialog(null,
+								"Amigo removido com sucesso!");
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover amigo.");
+						JOptionPane.showMessageDialog(null,
+								"Conexão - Erro ao remover amigo.");
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Amigo não encontrado");
@@ -186,10 +205,16 @@ public class TelaCliente extends JFrame {
 		pnlUsuario = new JPanel(new GridBagLayout());
 		pnlUsuario.setMinimumSize(minDimensao);
 
-		jlbNomeUsuario = new JLabel("<html>Bem Vindo,<br><b>" + nickName + "</b></html>");
+		jlbBemVindo = new JLabel("Bem Vindo,");
+		pnlUsuario.add(jlbBemVindo,
+				new GridConstraints().setAnchor(GridConstraints.WEST)
+						.setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH)
+						.setGridSize(GridConstraints.REMAINDER, 1));
+
+		jlbNomeUsuario = new JLabel(nickName);
 		pnlUsuario.add(jlbNomeUsuario,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setFill(GridConstraints.BOTH)
+						.setInsets(0, 5, 5, 5).setFill(GridConstraints.BOTH)
 						.setGridSize(GridConstraints.REMAINDER, 1));
 
 		jsepListaDeAmigos = new JSeparator();
@@ -225,6 +250,49 @@ public class TelaCliente extends JFrame {
 	}
 
 	private void acoes() {
+
+		jlbNomeUsuario.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				jlbNomeUsuario.setForeground(Color.BLACK);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				jlbNomeUsuario.setForeground(Color.blue);
+				jlbNomeUsuario.setCursor(Cursor
+						.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					String novoNickname = JOptionPane.showInputDialog(null,
+							"Digite o novo nickname:");
+					if (!novoNickname.isEmpty() && !novoNickname.equals(" ")) {
+						nickName = novoNickname;
+						jlbNomeUsuario.setText(novoNickname);
+					}
+					cliente.getService().atualizarNickname(
+							cliente.getUsuarioLogado().getUsuario()
+									.getNomeCompleto(), novoNickname);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Conexão - Erro ao alterar nickname");
+				} catch (NullPointerException e) {
+				}
+			}
+		});
 
 		jlstAmigos.addListSelectionListener(new ListSelectionListener() {
 
@@ -283,7 +351,8 @@ public class TelaCliente extends JFrame {
 
 	public DefaultListModel<String> getListaAmigos() {
 		try {
-			for (String nomeDoAmigo : cliente.getUsuarioLogado().getUsuario().getAmigos()) {
+			for (String nomeDoAmigo : cliente.getUsuarioLogado().getUsuario()
+					.getAmigos()) {
 				dlmAmigos.addElement(nomeDoAmigo);
 			}
 		} catch (NullPointerException e) {

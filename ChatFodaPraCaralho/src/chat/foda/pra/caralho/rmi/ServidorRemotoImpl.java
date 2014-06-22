@@ -152,5 +152,17 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 		return null;
 	}
+
+	@Override
+	public synchronized void atualizarNickname(String nomeUsuario, String novoNickname) throws RemoteException {
+		banco.abrir();
+		
+		Usuario usuario = banco.getUsuario(nomeUsuario);
+		banco.remover(usuario);
+		usuario.setNickName(novoNickname);
+		banco.salvar(usuario);
+		
+		banco.fechar();
+	}
 	
 }
