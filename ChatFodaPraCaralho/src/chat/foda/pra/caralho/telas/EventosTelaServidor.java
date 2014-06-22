@@ -2,38 +2,36 @@ package chat.foda.pra.caralho.telas;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.net.ConnectException;
 import java.rmi.RemoteException;
 
-import javax.sound.midi.SysexMessage;
+import chat.foda.pra.caralho.clienteServidor.ServidorRmi;
 
-import org.omg.CORBA.SystemException;
+public class EventosTelaServidor implements WindowListener {
 
-import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
+	private ServidorRmi servidor;
 
-public class EventosTelaCliente implements WindowListener {
-
-	private ClienteRmi cliente;
-
-	public EventosTelaCliente(ClienteRmi cliente) {
-		this.cliente = cliente;
+	public EventosTelaServidor(TelaServidor telaServidor) {
+		this.servidor = telaServidor.getServidor();
 	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
 		try {
-			cliente.getService().logout(cliente.getClienteService(),
-					cliente.getUsuarioLogado().getUsuario().getNomeCompleto());
+			this.servidor.getService().enviarMensagemParaTodosClientes("msg");
 		} catch (RemoteException e1) {
-
+			e1.printStackTrace();
 		} finally {
 			System.exit(0);
 		}
@@ -41,17 +39,26 @@ public class EventosTelaCliente implements WindowListener {
 
 	@Override
 	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
 	}
+
 }

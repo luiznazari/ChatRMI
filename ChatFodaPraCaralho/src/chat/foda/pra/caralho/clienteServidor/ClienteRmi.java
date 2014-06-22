@@ -8,25 +8,26 @@ import chat.foda.pra.caralho.rmi.ServidorRemoto;
 import chat.foda.pra.caralho.telas.TelaCliente;
 
 public class ClienteRmi {
-	
+
 	private ServidorRemoto service;
 	private UsuarioLogado usuarioLogado;
 	private ClienteRemotoImpl clienteService;
-	
-	public ClienteRmi(String ip) {
+
+	public ClienteRmi(String ip, Integer porta) {
 		try {
-			service = (ServidorRemoto) Naming.lookup("rmi://" + ip + ":5000/remoto");
-			
+			service = (ServidorRemoto) Naming.lookup("rmi://" + ip + ":"
+					+ porta + "/remoto");
+
 			clienteService = new ClienteRemotoImpl();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public ServidorRemoto getService() {
 		return this.service;
 	}
-	
+
 	public ClienteRemotoImpl getClienteService() {
 		return this.clienteService;
 	}
@@ -38,5 +39,5 @@ public class ClienteRmi {
 	public void setUsuarioLogado(UsuarioLogado usuarioLogado) {
 		this.usuarioLogado = usuarioLogado;
 	}
-	
+
 }

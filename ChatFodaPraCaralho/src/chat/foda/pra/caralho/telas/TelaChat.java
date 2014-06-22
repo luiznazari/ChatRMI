@@ -9,7 +9,6 @@ import java.rmi.RemoteException;
 
 import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,83 +17,101 @@ import javax.swing.JTextArea;
 import chat.foda.pra.caralho.modelo.Chat;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
-public class TelaChat extends JFrame{
+public class TelaChat {
 
 	/**
 	 * @author luiznazari
 	 */
-	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel pnlMain;
 	private JTextArea jtaConversa;
 	private JScrollPane jspConversa;
 	private JTextArea jtaMensagem;
 	private JScrollPane jspMensagem;
 	private JButton jbtEnviar;
-	
+
 	private Chat chat;
 	private TelaCliente telaPai;
-	
+
 	public TelaChat(TelaCliente telaPai) {
 		this.telaPai = telaPai;
+
 		pnlMain = new JPanel();
 		pnlMain.setLayout(new GridBagLayout());
-		
+
 		jtaConversa = new JTextArea();
 		jtaConversa.setEditable(false);
 		jtaConversa.setLineWrap(true);
 		jtaConversa.setWrapStyleWord(true);
+		jtaConversa.setAutoscrolls(true);
 		jspConversa = new JScrollPane(jtaConversa);
-		pnlMain.add(jspConversa, new GridConstraints()
-					.setAnchor(GridConstraints.CENTER).setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH)
-					.setGridWeight(1, 1).setGridSize(GridConstraints.REMAINDER, 1));
-		
+		jspConversa.setAutoscrolls(true);
+		pnlMain.add(
+				jspConversa,
+				new GridConstraints().setAnchor(GridConstraints.CENTER)
+						.setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH)
+						.setGridWeight(1, 1)
+						.setGridSize(GridConstraints.REMAINDER, 1));
+
 		jtaMensagem = new JTextArea();
 		jspMensagem = new JScrollPane(jtaMensagem);
-		pnlMain.add(jspMensagem, new GridConstraints()
-					.setAnchor(GridConstraints.WEST).setInsets(5).setGridSize(GridConstraints.RELATIVE, GridConstraints.REMAINDER)
-					.setGridWeight(1, 0.1).setFill(GridConstraints.BOTH));
-		
-		jbtEnviar = new JButton("Enviar");		
-		pnlMain.add(jbtEnviar, new GridConstraints()
-					.setAnchor(GridConstraints.EAST).setInsets(5, 0, 5, 5).setFill(GridConstraints.BOTH)
-					.setGridWeight(0, 0.1).setGridSize(GridConstraints.REMAINDER, GridConstraints.REMAINDER));
-		
+		jspMensagem.setAutoscrolls(true);
+		pnlMain.add(
+				jspMensagem,
+				new GridConstraints()
+						.setAnchor(GridConstraints.WEST)
+						.setInsets(5)
+						.setGridSize(GridConstraints.RELATIVE,
+								GridConstraints.REMAINDER)
+						.setGridWeight(1, 0.1).setFill(GridConstraints.BOTH));
+
+		jbtEnviar = new JButton("Enviar");
+		pnlMain.add(
+				jbtEnviar,
+				new GridConstraints()
+						.setAnchor(GridConstraints.EAST)
+						.setInsets(5, 0, 5, 5)
+						.setFill(GridConstraints.BOTH)
+						.setGridWeight(0, 0.1)
+						.setGridSize(GridConstraints.REMAINDER,
+								GridConstraints.REMAINDER));
+
 		actions();
-		
+
 		jtaMensagem.requestFocus();
+
 	}
-	
+
 	private void actions() {
-		
+
 		jbtEnviar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enviaMensagem();
 			}
 		});
 
-		//Não aceita caractere "\n" na TextArea pressionando <enter>
+		// Não aceita caractere "\n" na TextArea pressionando <enter>
 		Action[] actions = jtaMensagem.getActions();
-		for (Action currentAction : actions){
+		for (Action currentAction : actions) {
 			if (currentAction.toString().contains("InsertBreakAction")) {
 				currentAction.setEnabled(false);
-		    }
+			}
 		}
-		
-		//Quando <enter> envia a mensagem
-		//Quando <enter> + <shift> envia "\n"  
+
+		// Quando <enter> envia a mensagem
+		// Quando <enter> + <shift> envia "\n"
 		jtaMensagem.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.isShiftDown()) {
@@ -105,34 +122,39 @@ public class TelaChat extends JFrame{
 			}
 		});
 	}
-	
+
 	private void enviaMensagem() {
 		String mensagem = jtaMensagem.getText();
+
 		if (!mensagem.isEmpty()) {
 			try {
-				telaPai.getCliente().getService().enviarMensagemParaServidor(
-					this.getChat().getCodigo(), "<html><b>" + telaPai.getNickName() + "</b>: " + mensagem + "</html>");
+				telaPai.getCliente()
+						.getService()
+						.enviarMensagemParaServidor(this.getChat().getCodigo(),
+								telaPai.getNickName() + ": " + mensagem);
+
 			} catch (RemoteException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Conexão - Erro ao enviar mensagem.");
+				JOptionPane.showMessageDialog(null,
+						"Conexão - Erro ao enviar mensagem.");
 			}
 			jtaMensagem.setText("");
 			jtaMensagem.requestFocus();
 		}
 	}
-	
+
 	public void recebeMensagem(String mensagem) {
-		jtaConversa.append(mensagem +"\n");
+		jtaConversa.append(mensagem + "\n");
 	}
-	
+
 	public void setFocus() {
 		this.jtaMensagem.requestFocus();
 	}
-		
+
 	public JPanel getChatPanel() {
 		return this.pnlMain;
 	}
-	
+
 	public Chat getChat() {
 		return chat;
 	}
@@ -148,5 +170,5 @@ public class TelaChat extends JFrame{
 	public void setClient(TelaCliente client) {
 		this.telaPai = client;
 	}
-	
+
 }

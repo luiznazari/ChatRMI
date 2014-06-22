@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
@@ -21,25 +23,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.modelo.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
-public class TelaLogin extends JFrame{
-	
+import com.alee.laf.WebLookAndFeel;
+
+public class TelaLogin extends JFrame {
+
 	/**
 	 * @author luiznazari
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private JMenuBar jmbMenuBar;
 	private JMenu jmnArquivo;
 	private JMenuItem jmiSair;
 	private JMenu jmnConta;
 	private JMenuItem jmiNovaConta;
 	private JMenuItem jmiRemoverConta;
-	
+
 	private JPanel pnlMain;
 	private JPanel pnlLogin;
 	private JLabel jlbId;
@@ -47,192 +54,239 @@ public class TelaLogin extends JFrame{
 	private JLabel jlbSenha;
 	private JPasswordField jpfSenha;
 	private JButton jbtConfirmar;
-	
+
 	private JLabel jlbRegistrar;
 	private JLabel jlbLink;
-	
+
 	private ClienteRmi cliente;
-	
-	public TelaLogin() {
+
+	public TelaLogin() throws UnknownHostException, ConnectException {
 		super("Chat Foda Pra Caralho");
-		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(getMainPanel());
-		setLocationRelativeTo(null);
-		setJMenuBar(getMenu());
-		setResizable(false);
-		setSize(300, 220);
-		setVisible(true);
-		
-		String[] opcoes = {"192.168.1.100","192.168.1.101","192.168.1.102","192.168.1.25", "172.18.33.99"};
-		String ip = JOptionPane.showInputDialog(null, "Selecione o IP: ", "Configurar conexão", 
-					JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]).toString();
-		
-		cliente = new ClienteRmi(ip);
+
+		TelaConfiguracao config = new TelaConfiguracao();
+		String ip = config.getIp();
+		Integer porta = config.getPorta();
+
+		try {
+			cliente = new ClienteRmi(ip, porta);
+			setContentPane(getMainPanel());
+			setJMenuBar(getMenu());
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+			setSize(400, 220);
+			setLocationRelativeTo(null);
+			setResizable(false);
+			setVisible(true);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Erro na Conexão!", "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
-	
+
 	public JMenuBar getMenu() {
 		jmbMenuBar = new JMenuBar();
-		
+
 		jmnArquivo = new JMenu("Arquivo");
 		jmbMenuBar.add(jmnArquivo);
-		
+
 		jmiSair = new JMenuItem("Sair");
 		jmnArquivo.add(jmiSair);
-		
+
 		jmnConta = new JMenu("Conta");
 		jmbMenuBar.add(jmnConta);
-		
+
 		jmiNovaConta = new JMenuItem("Nova");
 		jmnConta.add(jmiNovaConta);
-		
+
 		jmiRemoverConta = new JMenuItem("Remover");
 		jmnConta.add(jmiRemoverConta);
-		
+
 		getMenuActions();
-		
+
 		return jmbMenuBar;
 	}
-	
+
 	private void getMenuActions() {
-		
-		jmiSair.addActionListener(new ActionListener() {			
+
+		jmiSair.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				System.exit(0);
 			}
 		});
-		
-		jmiNovaConta.addActionListener(new ActionListener() {			
+
+		jmiNovaConta.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new TelaCadastro(cliente);
 			}
 		});
-		
-		jmiRemoverConta.addActionListener(new ActionListener() {			
+
+		jmiRemoverConta.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nome = JOptionPane.showInputDialog(null, "Realmente deseja remover sua conta?", "Excluir conta");
+				String nome = JOptionPane.showInputDialog(null,
+						"Realmente deseja remover sua conta?", "Excluir conta");
 				try {
 					cliente.getService().removerUsuario(nome);
-					JOptionPane.showMessageDialog(null, "Conta removida com sucesso!");
+					JOptionPane.showMessageDialog(jmbMenuBar,
+							"Conta removida com sucesso!", "Remover Usuário",
+							JOptionPane.INFORMATION_MESSAGE);
 				} catch (RemoteException e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover conta.");
+					JOptionPane.showMessageDialog(null,
+							"Conexão - Erro ao remover conta.");
 				}
 			}
 		});
 	}
-	
+
 	private JPanel getMainPanel() {
-		pnlMain = new JPanel();
-		pnlMain.setLayout(new GridBagLayout());
-		
-		pnlMain.add(getLogin(), new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridBagConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
-					.setGridWeight(1, 0));
-		
+		pnlMain = new JPanel(new GridBagLayout());
+		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		pnlMain.add(
+				getLogin(),
+				new GridConstraints().setInsets(5)
+						.setAnchor(GridConstraints.WEST)
+						.setFill(GridBagConstraints.HORIZONTAL)
+						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setGridWeight(1, 0));
+
 		jlbRegistrar = new JLabel("Ainda não possui uma conta?");
-		pnlMain.add(jlbRegistrar, new GridConstraints()
-				 	.setAnchor(GridConstraints.EAST).setInsets(5, 0, 5, 0).setGridSize(GridConstraints.RELATIVE, 1).setGridWeight(1, 0));
-		
+		pnlMain.add(
+				jlbRegistrar,
+				new GridConstraints().setAnchor(GridConstraints.EAST)
+						.setInsets(5)
+						.setGridSize(GridConstraints.RELATIVE, 1)
+						.setGridWeight(1, 0));
+
 		jlbLink = new JLabel("Clique aqui!");
-		pnlMain.add(jlbLink, new GridConstraints()
-					.setAnchor(GridConstraints.WEST).setInsets(5).setGridSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
-		
+		pnlMain.add(jlbLink,
+				new GridConstraints().setAnchor(GridConstraints.WEST)
+						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setGridWeight(1, 0));
+
 		actions();
-		
+
 		return pnlMain;
 	}
-	
+
 	private JPanel getLogin() {
 		pnlLogin = new JPanel();
 		pnlLogin.setLayout(new GridBagLayout());
-		pnlLogin.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2), "Login"));
-		
-		jlbId = new JLabel("ID: ");
-		pnlLogin.add(jlbId, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.EAST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
-		
+		pnlLogin.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), "Login"));
+
+		jlbId = new JLabel("ID:");
+		pnlLogin.add(jlbId,
+				new GridConstraints().setAnchor(GridConstraints.EAST)
+				.setInsets(5));
+
 		jtfId = new JTextField();
-		pnlLogin.add(jtfId, new GridConstraints()
-					.setInsets(0, 0, 0, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
-					.setGridWeight(1, 1));
-		
-		jlbSenha = new JLabel("Senha: ");
-		pnlLogin.add(jlbSenha, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.BOTH).setGridSize(GridConstraints.RELATIVE, 1));
-		
+		pnlLogin.add(
+				jtfId,
+				new GridConstraints().setInsets(5)
+						.setAnchor(GridConstraints.WEST)
+						.setFill(GridConstraints.HORIZONTAL)
+						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setGridWeight(1, 0));
+
+		jlbSenha = new JLabel("Senha:");
+		pnlLogin.add(
+				jlbSenha,new GridConstraints().setAnchor(GridConstraints.EAST)
+				.setInsets(5));
+
 		jpfSenha = new JPasswordField();
-		pnlLogin.add(jpfSenha, new GridConstraints()
-					.setInsets(5, 0, 5, 5).setAnchor(GridConstraints.WEST).setFill(GridConstraints.HORIZONTAL).setGridSize(GridConstraints.REMAINDER, 1)
-					.setGridWeight(1, 1));
-		
-		jbtConfirmar = new JButton("Confirmar");		
-		pnlLogin.add(jbtConfirmar, new GridConstraints()
-					.setInsets(5).setAnchor(GridConstraints.EAST).setGridSize(GridConstraints.REMAINDER, 1).setGridLocation(2, 1));
-		
+		pnlLogin.add(
+				jpfSenha,
+				new GridConstraints().setInsets(5)
+						.setAnchor(GridConstraints.WEST)
+						.setFill(GridConstraints.HORIZONTAL)
+						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setGridWeight(1, 0));
+
+		jbtConfirmar = new JButton("Confirmar");
+		pnlLogin.add(
+				jbtConfirmar,
+				new GridConstraints().setInsets(5)
+						.setAnchor(GridConstraints.EAST)
+						.setGridSize(GridConstraints.REMAINDER, 1));
+
 		return pnlLogin;
 	}
 
-public void actions() {
-		
+	public void actions() {
+
 		jbtConfirmar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String nome = jtfId.getText();
 				String senha = new String(jpfSenha.getPassword());
+
 				if (!nome.isEmpty() && !senha.isEmpty()) {
 					try {
-						UsuarioLogado usuarioLogado = cliente.getService().login(cliente.getClienteService(), nome, senha);
+						UsuarioLogado usuarioLogado = cliente
+								.getService()
+								.login(cliente.getClienteService(), nome, senha);
+
 						if (usuarioLogado != null) {
 							cliente.setUsuarioLogado(usuarioLogado);
 							new TelaCliente(cliente);
 							dispose();
 						} else {
-							JOptionPane.showMessageDialog(null, "Este usuário já está logado, não está cadastrado \n ou a senha está incorreta.");
+							JOptionPane
+									.showMessageDialog(null,
+											"Usuário não cadastrado ou senha incorreta!");
 						}
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao realizar login.");
+						JOptionPane.showMessageDialog(null,
+								"Conexão - Erro ao realizar login.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Login ou senha inválidos ou vazios!");
+					JOptionPane.showMessageDialog(null,
+							"Login ou senha inválidos ou vazios!");
 				}
 			}
 		});
-		
+
 		jlbLink.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent arg0) {
 				jlbLink.setForeground(Color.DARK_GRAY);
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				jlbLink.setForeground(Color.blue);
-				jlbLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				jlbLink.setCursor(Cursor
+						.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
-			
+
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				new TelaCadastro(cliente);
 			}
-		});		
+		});
 	}
-	
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws UnknownHostException, ConnectException {
+		try {
+			UIManager.setLookAndFeel(new WebLookAndFeel());
+		} catch (UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+		}
+
 		new TelaLogin();
 	}
 }
