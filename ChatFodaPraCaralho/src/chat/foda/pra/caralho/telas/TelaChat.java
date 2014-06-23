@@ -142,13 +142,25 @@ public class TelaChat {
 			jtaMensagem.requestFocus();
 		}
 	}
-
+	
 	public void recebeMensagem(String mensagem) {
 		jtaConversa.append(mensagem + "\n");
 	}
 
 	public void setFocus() {
 		this.jtaMensagem.requestFocus();
+	}
+	
+	public void desativaChat(String mensagem) {
+		this.jtaMensagem.setText(mensagem);
+		this.jtaMensagem.setEnabled(false);
+		this.jbtEnviar.setEnabled(false);
+	}
+	
+	public void ativarChat() {
+		this.jtaMensagem.setText("");
+		this.jtaMensagem.setEnabled(true);
+		this.jbtEnviar.setEnabled(true);
 	}
 
 	public JPanel getChatPanel() {

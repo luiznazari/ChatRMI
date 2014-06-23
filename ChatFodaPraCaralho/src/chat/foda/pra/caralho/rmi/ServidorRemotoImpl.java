@@ -55,6 +55,12 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	public void encerrarServicos() throws RemoteException {
+		for (ClienteRemoto cliente : clientesConectados.values()) {
+			cliente.desativarTodosChats();
+		}
+	}
+	
 	@Override
 	public synchronized UsuarioLogado login(ClienteRemoto cliente, String nome, String senha) throws RemoteException {
 		banco.abrir();
@@ -74,7 +80,10 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 
 	@Override
-	public void logout(ClienteRemoto cliente, String nome) throws RemoteException {
+	public void logout(ArrayList<Integer> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
+		for(Integer codigo : codigos) {
+			fecharChat(codigo, cliente, nome);
+		}
 		clientesConectados.remove(nome);
 		telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
 		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
@@ -151,6 +160,22 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			return novoChat;
 		}
 		return null;
+	}
+	
+	public void fecharChat(Integer codigo, ClienteRemoto cliente, String nome) throws RemoteException {
+		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codigo);
+		
+		if (clientesNoChat.size() < 3) {
+			for (ClienteRemoto cliente2 : clientesNoChat) {
+				cliente2.desativarChat(codigo);
+			}
+			chatsAbertos.remove(codigo);
+		} else {
+			clientesNoChat.remove(cliente);
+			for (ClienteRemoto cliente2 : clientesNoChat) {
+				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+			}
+		}
 	}
 
 	@Override

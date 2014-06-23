@@ -18,4 +18,8 @@ public interface ClienteRemoto extends Remote {
 	
 	public void abrirChat(Chat chat, String nomeAmigo) throws RemoteException;
 	
+	public void desativarChat(Integer chatCodigo) throws RemoteException;
+	
+	public void desativarTodosChats() throws RemoteException;
+	
 }

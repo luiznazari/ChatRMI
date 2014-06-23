@@ -10,13 +10,14 @@ import javax.sound.midi.SysexMessage;
 import org.omg.CORBA.SystemException;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
+import chat.foda.pra.caralho.rmi.ClienteRemoto;
 
 public class EventosTelaCliente implements WindowListener {
 
-	private ClienteRmi cliente;
+	private TelaCliente telaCliente;
 
-	public EventosTelaCliente(ClienteRmi cliente) {
-		this.cliente = cliente;
+	public EventosTelaCliente(TelaCliente telaCliente) {
+		this.telaCliente = telaCliente;
 	}
 
 	@Override
@@ -29,8 +30,10 @@ public class EventosTelaCliente implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent e) {
+		ClienteRmi cliente = telaCliente.getCliente();
+		
 		try {
-			cliente.getService().logout(cliente.getClienteService(),
+			cliente.getService().logout(telaCliente.getCodigosChat(), cliente.getClienteService(),
 					cliente.getUsuarioLogado().getUsuario().getNomeCompleto());
 		} catch (RemoteException e1) {
 

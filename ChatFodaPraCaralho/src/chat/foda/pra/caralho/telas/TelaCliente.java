@@ -79,7 +79,7 @@ public class TelaCliente extends JFrame {
 		setTitle(nickName);
 		setContentPane(getMainPanel());
 		setJMenuBar(getMenu());
-		addWindowListener(new EventosTelaCliente(cliente));
+		addWindowListener(new EventosTelaCliente(this));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(550, 400));
 		setSize(550, 400);
@@ -341,14 +341,6 @@ public class TelaCliente extends JFrame {
 		jtpChat.addTabWithButtonClose(nomeAmigo, telaChat.getChatPanel());
 	}
 
-	public ClienteRmi getCliente() {
-		return this.cliente;
-	}
-
-	public String getNickName() {
-		return nickName;
-	}
-
 	public DefaultListModel<String> getListaAmigos() {
 		try {
 			for (String nomeDoAmigo : cliente.getUsuarioLogado().getUsuario()
@@ -373,6 +365,37 @@ public class TelaCliente extends JFrame {
 				break;
 			}
 		}
+	}
+	
+	public void desativarChat(Integer chatCodigo) {
+		for (TelaChat tc : chatList) {
+			if (tc.getChat().getCodigo().equals(chatCodigo)) {
+				tc.desativaChat("O amigo se desconectou.");
+				break;
+			}
+		}
+	}
+	
+	public void desativarTodosChats() {
+		for (TelaChat tc : chatList) {
+			tc.desativaChat("O servidor está offline.");
+		}
+	}
+	
+	public ArrayList<Integer> getCodigosChat() {
+		ArrayList<Integer> codigos = new ArrayList<Integer>();
+		for (TelaChat tc : chatList) {
+			codigos.add(tc.getChat().getCodigo());
+		}
+		return codigos;
+	}
+	
+	public ClienteRmi getCliente() {
+		return this.cliente;
+	}
+
+	public String getNickName() {
+		return nickName;
 	}
 
 }

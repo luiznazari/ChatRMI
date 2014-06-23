@@ -48,7 +48,7 @@ public class TelaServidor extends JFrame {
 					+ porta + ".\n");
 
 			addWindowListener(new EventosTelaServidor(this));
-			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			setSize(500, 300);
 			setLocationRelativeTo(null);
 			setResizable(false);

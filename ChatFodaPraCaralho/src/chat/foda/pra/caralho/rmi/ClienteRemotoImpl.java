@@ -34,6 +34,16 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	public void abrirChat(Chat chat, String nomeAmigo) throws RemoteException {
 		telaCliente.iniciarChatExistente(chat, nomeAmigo);
 	}
+	
+	@Override
+	public void desativarChat(Integer chatCodigo) throws RemoteException {
+		telaCliente.desativarChat(chatCodigo);	
+	}
+
+	@Override
+	public void desativarTodosChats() throws RemoteException {
+		telaCliente.desativarTodosChats();
+	}
 
 	public TelaCliente getTelaCliente() {
 		return telaCliente;
@@ -42,5 +52,5 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	public void setTelaCliente(TelaCliente telaCliente) {
 		this.telaCliente = telaCliente;
 	}
-	
+
 }
