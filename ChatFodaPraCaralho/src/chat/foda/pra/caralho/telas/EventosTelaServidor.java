@@ -40,7 +40,7 @@ public class EventosTelaServidor implements WindowListener {
 				public void run() {
 					try {						
 						telaServidor.getServidor().getService().enviarMensagemParaTodosClientes(
-								"Avisos do Servidor: Encerrando em: " + contador + " segundos.");
+								"Avisos do Servidor: Encerrando em: " + contador);
 						telaServidor.escreverNoConsole(
 								"[" + LocalTime.now().toString() + "] - Encerrando em: " + contador--);
 						

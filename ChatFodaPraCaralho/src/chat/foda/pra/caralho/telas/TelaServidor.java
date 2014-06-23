@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -53,27 +54,27 @@ public class TelaServidor extends JFrame {
 		super("Servidor RMI");
 		setContentPane(getMain());
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(500, 300);
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setVisible(true);
+		TelaConfiguracao config = new TelaConfiguracao();
+		String ip = config.getIp();
+		Integer porta = config.getPorta();
+		try {
+			servidor = new ServidorRmi(ip, porta);
+			servidor.getService().setTelaServidor(this);
 
-		/*
-		 * TelaConfiguracao config = new TelaConfiguracao(); String ip =
-		 * config.getIp(); Integer porta = config.getPorta(); try { servidor =
-		 * new ServidorRmi(ip, porta);
-		 * servidor.getService().setTelaServidor(this);
-		 * 
-		 * jtaConsole.append("Servidor conectado em [" + ip + "] na porta " +
-		 * porta + ".\n");
-		 * 
-		 * addWindowListener(new EventosTelaServidor(this));
-		 * setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); setSize(500, 300);
-		 * setLocationRelativeTo(null); setResizable(false); setVisible(true); }
-		 * catch (Exception e) { JOptionPane.showMessageDialog(this,
-		 * "Erro na Conexão!"); System.exit(0); }
-		 */
+			jtaConsole.append("Servidor conectado em [" + ip + "] na porta "
+					+ porta + ".\n");
+
+			addWindowListener(new EventosTelaServidor(this));
+			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			setSize(500, 300);
+			setLocationRelativeTo(null);
+			setResizable(false);
+			setVisible(true);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Erro na Conexão!");
+			System.exit(0);
+		}
+
 	}
 
 	private JPanel getMain() {
@@ -93,13 +94,11 @@ public class TelaServidor extends JFrame {
 		pnlConsole = new JPanel();
 		pnlConsole.setLayout(new GridBagLayout());
 
-		jlbConexoes = new JLabel("Total de conexões: ");
-		pnlConsole.add(
-				jlbConexoes,
+		jlbConexoes = new JLabel("Usuários on-line: ");
+		pnlConsole.add(jlbConexoes,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.NONE)
-						.setGridWeight(1, 0)
-						.setGridSize(GridConstraints.RELATIVE, 1));
+						.setGridWeight(0, 0).setGridSize(1, 1));
 
 		jlbConexoesCount = new JLabel("0");
 		pnlConsole.add(
@@ -147,7 +146,8 @@ public class TelaServidor extends JFrame {
 		pnlMensagem.add(
 				jlbMensagemEnviar,
 				new GridConstraints().setAnchor(GridConstraints.CENTER)
-						.setInsets(10, 0, 15, 5).setFill(GridConstraints.HORIZONTAL)
+						.setInsets(10, 0, 15, 5)
+						.setFill(GridConstraints.HORIZONTAL)
 						.setGridWeight(1, 0)
 						.setGridSize(GridConstraints.REMAINDER, 1));
 
@@ -168,7 +168,8 @@ public class TelaServidor extends JFrame {
 				jbtEnviar,
 				new GridConstraints()
 						.setAnchor(GridConstraints.CENTER)
-						.setInsets(0, 0, 5, 5).setFill(GridConstraints.HORIZONTAL)						
+						.setInsets(0, 0, 5, 5)
+						.setFill(GridConstraints.HORIZONTAL)
 						.setGridWeight(1, 0)
 						.setGridSize(GridConstraints.REMAINDER,
 								GridConstraints.REMAINDER));
@@ -204,13 +205,13 @@ public class TelaServidor extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				if (jtbEnviarMensagem.isSelected()) {
-					jtbEnviarMensagem.setText(">");
-					pnlMensagem.setVisible(false);
-					setSize(500, 300);
-				} else {
 					jtbEnviarMensagem.setText("<");
 					pnlMensagem.setVisible(true);
 					setSize(660, 300);
+				} else {
+					jtbEnviarMensagem.setText(">");
+					pnlMensagem.setVisible(false);
+					setSize(500, 300);
 				}
 
 			}
