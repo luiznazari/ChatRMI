@@ -98,7 +98,7 @@ public class TelaServidor extends JFrame {
 		pnlConsole.add(jlbConexoes,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.NONE)
-						.setGridWeight(0, 0).setGridSize(1, 1));
+						.setGridWeight(0, 0).setOccupiedSize(1, 1));
 
 		jlbConexoesCount = new JLabel("0");
 		pnlConsole.add(
@@ -106,7 +106,7 @@ public class TelaServidor extends JFrame {
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.NONE)
 						.setGridWeight(1, 0)
-						.setGridSize(GridConstraints.RELATIVE, 1));
+						.setOccupiedSize(GridConstraints.RELATIVE, 1));
 
 		jtbEnviarMensagem = new JToggleButton(">");
 		pnlConsole.add(
@@ -114,7 +114,7 @@ public class TelaServidor extends JFrame {
 				new GridConstraints().setAnchor(GridConstraints.EAST)
 						.setInsets(5).setFill(GridConstraints.NONE)
 						.setGridWeight(1, 0)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jtaConsole = new JTextArea();
 		jtaConsole.setLineWrap(true);
@@ -131,7 +131,7 @@ public class TelaServidor extends JFrame {
 				new GridConstraints()
 						.setAnchor(GridConstraints.CENTER)
 						.setInsets(5)
-						.setGridSize(GridConstraints.REMAINDER,
+						.setOccupiedSize(GridConstraints.REMAINDER,
 								GridConstraints.REMAINDER)
 						.setFill(GridConstraints.BOTH).setGridWeight(1, 1));
 
@@ -146,10 +146,10 @@ public class TelaServidor extends JFrame {
 		pnlMensagem.add(
 				jlbMensagemEnviar,
 				new GridConstraints().setAnchor(GridConstraints.CENTER)
-						.setInsets(10, 0, 15, 5)
+						.setInsets(10, 5, 15, 0)
 						.setFill(GridConstraints.HORIZONTAL)
 						.setGridWeight(1, 0)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jtaMensagem = new JTextArea();
 		jtaMensagem.setLineWrap(true);
@@ -159,19 +159,19 @@ public class TelaServidor extends JFrame {
 		pnlMensagem.add(
 				jspMensagem,
 				new GridConstraints().setAnchor(GridConstraints.CENTER)
-						.setInsets(0, 0, 0, 5).setFill(GridConstraints.BOTH)
+						.setInsets(0, 5, 0, 0).setFill(GridConstraints.BOTH)
 						.setGridWeight(1, 1)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jbtEnviar = new JButton("Enviar");
 		pnlMensagem.add(
 				jbtEnviar,
 				new GridConstraints()
 						.setAnchor(GridConstraints.CENTER)
-						.setInsets(0, 0, 5, 5)
+						.setInsets(0, 5, 5, 0)
 						.setFill(GridConstraints.HORIZONTAL)
 						.setGridWeight(1, 0)
-						.setGridSize(GridConstraints.REMAINDER,
+						.setOccupiedSize(GridConstraints.REMAINDER,
 								GridConstraints.REMAINDER));
 
 		pnlMensagem.setVisible(false);

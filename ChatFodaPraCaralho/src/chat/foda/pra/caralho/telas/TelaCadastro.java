@@ -69,41 +69,41 @@ public class TelaCadastro extends JDialog {
 		jtfNome = new JTextField();
 		pnlMain.add(jtfNome,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 
 		jlbSenha = new JLabel("Senha:");
 		pnlMain.add(jlbSenha,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setGridSize(1, 1));
+						.setInsets(5).setOccupiedSize(1, 1));
 
 		jpfSenha = new JPasswordField();
 		pnlMain.add(jpfSenha,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 
 		jlbConfirmaSenha = new JLabel("<html><p align:right> Confirmar<br>Senha:");
 		pnlMain.add(jlbConfirmaSenha,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setGridSize(1, 1));
+						.setInsets(5).setOccupiedSize(1, 1));
 
 		jpfConfirmaSenha = new JPasswordField();
 		pnlMain.add(jpfConfirmaSenha,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 
 		jlbSerial = new JLabel("Serial:");
 		pnlMain.add(jlbSerial,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setGridSize(2, 1));
+						.setInsets(5).setOccupiedSize(2, 1));
 
 		jtfSerial = new JTextField();
 		jtfSerial.setEnabled(false);
 		pnlMain.add(jtfSerial,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 
 		JPanel jpnBotoes = new JPanel(new BorderLayout(5, 5));
@@ -117,7 +117,7 @@ public class TelaCadastro extends JDialog {
 
 		pnlMain.add(jpnBotoes,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1));
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		actions();
 

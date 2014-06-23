@@ -209,19 +209,19 @@ public class TelaCliente extends JFrame {
 		pnlUsuario.add(jlbBemVindo,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jlbNomeUsuario = new JLabel(nickName);
 		pnlUsuario.add(jlbNomeUsuario,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(0, 5, 5, 5).setFill(GridConstraints.BOTH)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jsepListaDeAmigos = new JSeparator();
 		pnlUsuario.add(jsepListaDeAmigos,
 				new GridConstraints().setAnchor(GridConstraints.CENTER)
 						.setInsets(5).setFill(GridConstraints.HORIZONTAL)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		dlmAmigos = new DefaultListModel<String>();
 		jlstAmigos = new JList<String>(getListaAmigos());
@@ -233,7 +233,7 @@ public class TelaCliente extends JFrame {
 						.setAnchor(GridConstraints.WEST)
 						.setInsets(0, 5, 5, 5)
 						.setFill(GridConstraints.BOTH)
-						.setGridSize(GridConstraints.REMAINDER,
+						.setOccupiedSize(GridConstraints.REMAINDER,
 								GridConstraints.REMAINDER).setGridWeight(1, 1));
 
 		return pnlUsuario;

@@ -149,7 +149,7 @@ public class TelaLogin extends JFrame {
 				new GridConstraints().setInsets(5)
 						.setAnchor(GridConstraints.WEST)
 						.setFill(GridBagConstraints.HORIZONTAL)
-						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		jlbRegistrar = new JLabel("Ainda não possui uma conta?");
@@ -157,13 +157,13 @@ public class TelaLogin extends JFrame {
 				jlbRegistrar,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
 						.setInsets(5)
-						.setGridSize(GridConstraints.RELATIVE, 1)
+						.setOccupiedSize(GridConstraints.RELATIVE, 1)
 						.setGridWeight(1, 0));
 
 		jlbLink = new JLabel("Clique aqui!");
 		pnlMain.add(jlbLink,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		actions();
@@ -188,7 +188,7 @@ public class TelaLogin extends JFrame {
 				new GridConstraints().setInsets(5)
 						.setAnchor(GridConstraints.WEST)
 						.setFill(GridConstraints.HORIZONTAL)
-						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		jlbSenha = new JLabel("Senha:");
@@ -202,7 +202,7 @@ public class TelaLogin extends JFrame {
 				new GridConstraints().setInsets(5)
 						.setAnchor(GridConstraints.WEST)
 						.setFill(GridConstraints.HORIZONTAL)
-						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		jbtConfirmar = new JButton("Confirmar");
@@ -210,7 +210,7 @@ public class TelaLogin extends JFrame {
 				jbtConfirmar,
 				new GridConstraints().setInsets(5)
 						.setAnchor(GridConstraints.EAST)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		return pnlLogin;
 	}

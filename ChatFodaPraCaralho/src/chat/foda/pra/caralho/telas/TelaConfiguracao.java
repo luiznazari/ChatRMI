@@ -69,7 +69,7 @@ public class TelaConfiguracao extends JDialog {
 		jpnMain.add(jcbIP,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.HORIZONTAL)
-						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		jlbPorta = new JLabel("Porta:");
@@ -85,7 +85,7 @@ public class TelaConfiguracao extends JDialog {
 		jpnMain.add(jcbPorta,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.BOTH)
-						.setGridSize(GridConstraints.REMAINDER, 1)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		JPanel jpnBotoes = new JPanel(new BorderLayout(5, 5));
@@ -101,7 +101,7 @@ public class TelaConfiguracao extends JDialog {
 		
 		jpnMain.add(jpnBotoes,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setGridSize(GridConstraints.REMAINDER, 1));
+						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		actionButton();
 		return jpnMain;

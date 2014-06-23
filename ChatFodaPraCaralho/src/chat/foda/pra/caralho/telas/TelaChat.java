@@ -51,7 +51,7 @@ public class TelaChat {
 				new GridConstraints().setAnchor(GridConstraints.CENTER)
 						.setInsets(5, 5, 0, 5).setFill(GridConstraints.BOTH)
 						.setGridWeight(1, 1)
-						.setGridSize(GridConstraints.REMAINDER, 1));
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		jtaMensagem = new JTextArea();
 		jspMensagem = new JScrollPane(jtaMensagem);
@@ -61,7 +61,7 @@ public class TelaChat {
 				new GridConstraints()
 						.setAnchor(GridConstraints.WEST)
 						.setInsets(5)
-						.setGridSize(GridConstraints.RELATIVE,
+						.setOccupiedSize(GridConstraints.RELATIVE,
 								GridConstraints.REMAINDER)
 						.setGridWeight(1, 0.1).setFill(GridConstraints.BOTH));
 
@@ -73,7 +73,7 @@ public class TelaChat {
 						.setInsets(5, 0, 5, 5)
 						.setFill(GridConstraints.BOTH)
 						.setGridWeight(0, 0.1)
-						.setGridSize(GridConstraints.REMAINDER,
+						.setOccupiedSize(GridConstraints.REMAINDER,
 								GridConstraints.REMAINDER));
 
 		actions();
