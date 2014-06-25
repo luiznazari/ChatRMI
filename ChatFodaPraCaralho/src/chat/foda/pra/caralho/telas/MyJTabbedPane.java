@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -26,13 +27,37 @@ import javax.swing.plaf.basic.BasicButtonUI;
 public class MyJTabbedPane extends JTabbedPane {
 
 	private static final long serialVersionUID = 1L;
-
-	public void addTabWithButtonClose(String title, JComponent component) {
-		this.addTab(title, component);
-		int index = this.getTabCount() - 1;
-		this.setTabComponentAt(index, new ButtonTabComponent(this));
-		this.setSelectedIndex(index);
+	private ArrayList<String> listName;
+	private Integer indexTab;
+	
+	public MyJTabbedPane() {
+		listName = new ArrayList<>();
 	}
+	
+	public void addTabWithButtonClose(String title, JComponent component) {
+		indexTab = encontra(title);
+		if (indexTab == null) {
+			this.addTab(title, component);
+			int index = this.getTabCount() - 1;
+			this.setTabComponentAt(index, new ButtonTabComponent(this));
+			listName.add(title);
+			this.getTitleAt(index);
+			this.setSelectedIndex(index);
+		} else {
+			this.setSelectedIndex(indexTab);
+		}
+	}
+
+	public Integer encontra(String title) {
+		for (int i = 0; i < listName.size(); i++) {
+			if (listName.get(i).equals(title)) {
+				return i;
+			}
+		}
+
+		return null;
+	}
+
 
 	private class ButtonTabComponent extends JPanel {
 
@@ -42,7 +67,7 @@ public class MyJTabbedPane extends JTabbedPane {
 		public ButtonTabComponent(final JTabbedPane pane) {
 			super(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 			if (pane == null) {
-				throw new NullPointerException("TabbedPane está nulo!");
+				throw new NullPointerException("TabbedPane estÃ¡ nulo!");
 			}
 			this.pane = pane;
 			setOpaque(false);
@@ -90,6 +115,7 @@ public class MyJTabbedPane extends JTabbedPane {
 				int i = pane.indexOfTabComponent(ButtonTabComponent.this);
 				if (i != -1) {
 					pane.remove(i);
+					listName.remove(i);
 				}
 			}
 
@@ -100,7 +126,7 @@ public class MyJTabbedPane extends JTabbedPane {
 					g2.translate(1, 1);
 				}
 				g2.setStroke(new BasicStroke(1));
-				g2.setColor(Color.BLUE);
+				g2.setColor(Color.BLACK);
 				if (getModel().isRollover()) {
 					g2.setColor(Color.MAGENTA);
 				}
