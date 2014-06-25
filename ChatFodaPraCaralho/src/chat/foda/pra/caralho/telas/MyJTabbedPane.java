@@ -35,7 +35,8 @@ public class MyJTabbedPane extends JTabbedPane {
 	}
 	
 	public void addTabWithButtonClose(String title, JComponent component) {
-		indexTab = encontra(title);
+		indexTab = getIndexTitle(title);
+		
 		if (indexTab == null) {
 			this.addTab(title, component);
 			int index = this.getTabCount() - 1;
@@ -48,7 +49,7 @@ public class MyJTabbedPane extends JTabbedPane {
 		}
 	}
 
-	public Integer encontra(String title) {
+	public Integer getIndexTitle(String title) {
 		for (int i = 0; i < listName.size(); i++) {
 			if (listName.get(i).equals(title)) {
 				return i;
