@@ -27,38 +27,49 @@ import javax.swing.plaf.basic.BasicButtonUI;
 public class MyJTabbedPane extends JTabbedPane {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> listName;
+	private ArrayList<String> listTitle;
 	private Integer indexTab;
-	
+
 	public MyJTabbedPane() {
-		listName = new ArrayList<>();
+		listTitle = new ArrayList<>();
 	}
-	
+
 	public void addTabWithButtonClose(String title, JComponent component) {
 		indexTab = getIndexTitle(title);
-		
+
 		if (indexTab == null) {
 			this.addTab(title, component);
 			int index = this.getTabCount() - 1;
 			this.setTabComponentAt(index, new ButtonTabComponent(this));
-			listName.add(title);
-			this.getTitleAt(index);
+			listTitle.add(title);
 			this.setSelectedIndex(index);
 		} else {
 			this.setSelectedIndex(indexTab);
 		}
 	}
 
+	public void addNewTab(String title, JComponent component) {
+		indexTab = getIndexTitle(title);
+
+		if (indexTab == null) {
+			this.addTab(title, component);
+			int index = this.getTabCount() - 1;
+			listTitle.add(title);
+			this.setSelectedIndex(index);
+		} else {
+			this.setSelectedIndex(indexTab);
+		}
+	}
+	
 	public Integer getIndexTitle(String title) {
-		for (int i = 0; i < listName.size(); i++) {
-			if (listName.get(i).equals(title)) {
+		for (int i = 0; i < listTitle.size(); i++) {
+			if (listTitle.get(i).equals(title)) {
 				return i;
 			}
 		}
 
 		return null;
 	}
-
 
 	private class ButtonTabComponent extends JPanel {
 
@@ -116,7 +127,7 @@ public class MyJTabbedPane extends JTabbedPane {
 				int i = pane.indexOfTabComponent(ButtonTabComponent.this);
 				if (i != -1) {
 					pane.remove(i);
-					listName.remove(i);
+					listTitle.remove(i);
 				}
 			}
 

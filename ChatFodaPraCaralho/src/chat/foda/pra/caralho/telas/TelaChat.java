@@ -70,7 +70,7 @@ public class TelaChat {
 				jbtEnviar,
 				new GridConstraints()
 						.setAnchor(GridConstraints.EAST)
-						.setInsets(5, 0, 5, 5)
+						.setInsets(5, 5, 5, 5)
 						.setFill(GridConstraints.BOTH)
 						.setGridWeight(0, 0.1)
 						.setOccupiedSize(GridConstraints.REMAINDER,

@@ -323,7 +323,7 @@ public class TelaCliente extends JFrame {
 		if (chat != null) {
 			telaChat.setChat(chat);
 			chatList.add(telaChat);
-			jtpChat.addTabWithButtonClose(nomeAmigo, telaChat.getChatPanel());
+			jtpChat.addNewTab(nomeAmigo, telaChat.getChatPanel());
 		} else {
 			JOptionPane.showMessageDialog(this,
 					"O usuário selecionado não está logado", "Conexão",
@@ -338,7 +338,7 @@ public class TelaCliente extends JFrame {
 		telaChat.setChat(chat);
 
 		chatList.add(telaChat);
-		jtpChat.addTabWithButtonClose(nomeAmigo, telaChat.getChatPanel());
+		jtpChat.addNewTab(nomeAmigo, telaChat.getChatPanel());
 	}
 
 	public DefaultListModel<String> getListaAmigos() {
