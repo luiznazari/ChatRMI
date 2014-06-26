@@ -53,7 +53,7 @@ public class EventosTelaServidor implements WindowListener {
 						telaServidor.escreverNoConsole("Conexão - Erro ao finalizar.");
 					}
 				}
-			}, 0, 1000);
+			}, 20000, 1000);
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 			this.telaServidor.escreverNoConsole("Conexão - Erro ao finalizar.");

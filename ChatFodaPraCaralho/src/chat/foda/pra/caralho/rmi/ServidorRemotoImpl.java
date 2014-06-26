@@ -81,8 +81,13 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 
 	@Override
 	public void logout(ArrayList<Integer> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
-		for(Integer codigo : codigos) {
-			fecharChat(codigo, cliente, nome);
+		//Fecha todos os chats do usuário
+		try {
+			for(Integer codigo : codigos) {
+				fecharChat(codigo, cliente, nome);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		clientesConectados.remove(nome);
 		telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
@@ -165,6 +170,28 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	public void fecharChat(Integer codigo, ClienteRemoto cliente, String nome) throws RemoteException {
 		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codigo);
 		
+		switch(clientesNoChat.size()) {
+		
+		case 1: {
+			chatsAbertos.remove(codigo);
+			break;
+		}
+		case 2: {
+			for (ClienteRemoto cliente2 : clientesNoChat) {
+				cliente2.desativarChat(codigo);
+			}
+			break;
+		}
+		default: {
+			clientesNoChat.remove(cliente);
+			for (ClienteRemoto cliente2 : clientesNoChat) {
+				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+			}
+			break;
+		}
+		
+		}
+		/*
 		if (clientesNoChat.size() < 3) {
 			for (ClienteRemoto cliente2 : clientesNoChat) {
 				cliente2.desativarChat(codigo);
@@ -176,6 +203,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
 			}
 		}
+		*/
 	}
 
 	@Override
