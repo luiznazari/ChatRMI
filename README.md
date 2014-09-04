@@ -3,12 +3,21 @@
 <h2>Trabalho acadêmico</h2>
 
 <strong>Descrição do projeto:</strong>
-Sistema de chat básico que permite conversação entre usuários.
+<p>
+  Sistema de chat básico que permite conversação entre usuários.<br>
+  Por ser um projeto que trabalha com conexões remotas via RMI, é necessário gerar as classes STUBs.<br>
+  Para isto, se necessário, via terminal ou prompt de comando, entrar no diretório da pasta "bin" na raiz do projeto e executar os comandos:
+    <ul>
+      <li>rmic chat.foda.pra.caralho.rmi.ClienteRemotoImpl</li>
+      <li>rmic chat.foda.pra.caralho.rmi.ServidorRemotoImpl</li>
+    </ul>
+</p>
 
 <hr>
 <h3>Versão 1.0</h3>
 
 -> Projeto final da disciplina de Programação Orientada a Objetos (T.A.D.S. - Unoesc Xanxerê / 3º Período)
+<br>
 -> O mesmo resultou na nota máxima da matéria.
 
 <strong>Funções</strong>
