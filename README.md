@@ -12,6 +12,14 @@
       <li>rmic chat.foda.pra.caralho.rmi.ServidorRemotoImpl</li>
     </ul>
 </p>
+<p>
+  <strong>Autores:</strong>
+  <ul>
+      <li>Alessandro Beleboni Belini</li>
+      <li>Luiz Felipe Nazari</li>
+    </ul>
+  
+</p>
 
 <hr>
 <h3>Versão 1.0</h3>
