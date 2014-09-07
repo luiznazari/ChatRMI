@@ -3,7 +3,7 @@ package chat.foda.pra.caralho.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import chat.foda.pra.caralho.modelo.Chat;
+import chat.foda.pra.caralho.models.Chat;
 import chat.foda.pra.caralho.telas.TelaCliente;
 
 /**

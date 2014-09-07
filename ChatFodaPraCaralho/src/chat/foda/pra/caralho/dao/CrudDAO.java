@@ -1,0 +1,21 @@
+package chat.foda.pra.caralho.dao;
+
+import java.util.List;
+
+import chat.foda.pra.caralho.jdbc.Entidade;
+
+public interface CrudDAO<T extends Entidade> {
+	
+	void save(T entidade);
+	
+	void delete(T entidade);
+	
+	void delete(Long codigo);
+	
+	void update(T entidade);
+	
+	List<T> findAll();
+	
+	T findOne(Long codigo);
+	
+}

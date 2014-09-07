@@ -1,4 +1,4 @@
-package chat.foda.pra.caralho.modelo;
+package chat.foda.pra.caralho.models;
 
 import java.io.Serializable;
 

@@ -1,48 +1,54 @@
-package chat.foda.pra.caralho.modelo;
+package chat.foda.pra.caralho.models;
 
 import java.io.Serializable;
 
-public abstract class Pessoa implements Serializable {
+import org.joda.time.LocalDate;
+
+import chat.foda.pra.caralho.jdbc.Entidade;
+
+public class Pessoa implements Entidade, Serializable {
 	private static final long serialVersionUID = 6514736075986784511L;
 	
+	private Long codigo;
+	
 	private String cpf;
+	
 	private String email;
-	private Integer idade;
-	private String telefone;
+	
+	private LocalDate dataNascimento;
+	
 	private String nomeCompleto;
+	
+	public Pessoa() {}
+	
+	public Pessoa(Long codigo) {
+		this.codigo = codigo;
+	}
+	
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+	
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
 	
 	public String getCpf() {
 		return cpf;
 	}
-
+	
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-
+	
 	public String getEmail() {
 		return email;
 	}
-
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public Integer getIdade() {
-		return idade;
-	}
-
-	public void setIdade(Integer idade) {
-		this.idade = idade;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
+	
 	public String getPrimeiroNome() {
 		try {
 			return this.nomeCompleto.substring(0, nomeCompleto.indexOf(" "));
@@ -54,8 +60,19 @@ public abstract class Pessoa implements Serializable {
 	public String getNomeCompleto() {
 		return nomeCompleto;
 	}
-
+	
 	public void setNomeCompleto(String nomeCompleto) {
 		this.nomeCompleto = nomeCompleto;
 	}
+	
+	@Override
+	public Long getCodigo() {
+		return codigo;
+	}
+	
+	@Override
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
+	}
+	
 }

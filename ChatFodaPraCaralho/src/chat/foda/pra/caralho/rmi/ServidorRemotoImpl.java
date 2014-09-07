@@ -9,14 +9,15 @@ import java.util.Map;
 
 import org.joda.time.LocalTime;
 
-import chat.foda.pra.caralho.bancoDados.GerenciadorDoBanco;
-import chat.foda.pra.caralho.modelo.Chat;
-import chat.foda.pra.caralho.modelo.Usuario;
-import chat.foda.pra.caralho.modelo.UsuarioLogado;
+import chat.foda.pra.caralho.dao.PessoaDAO;
+import chat.foda.pra.caralho.dao.factory.DaoFactory;
+import chat.foda.pra.caralho.models.Chat;
+import chat.foda.pra.caralho.models.Usuario;
+import chat.foda.pra.caralho.models.UsuarioLogado;
 import chat.foda.pra.caralho.telas.TelaServidor;
 
 public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorRemoto {
-
+	
 	/**
 	 * Classe que implementa as ações do Servidor
 	 * 
@@ -24,14 +25,20 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	 */
 	private static final long serialVersionUID = -8382898850011577230L;
 	
-	private GerenciadorDoBanco banco = new GerenciadorDoBanco("BancoDeDados");
 	private TelaServidor telaServidor;
+	
 	private Map<String, ClienteRemoto> clientesConectados = new HashMap<String, ClienteRemoto>();
-	private Map<Integer, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Integer, ArrayList<ClienteRemoto>>();
-	private Integer autoIncrementChatId = 0;
+	
+	private Map<Long, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Long, ArrayList<ClienteRemoto>>();
+	
+	private Long autoIncrementChatId = 0;
+	
+	private PessoaDAO pessoaDAO;
 	
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
+		
+		pessoaDAO = DaoFactory.get().pessoaDao();
 	}
 	
 	public void setTelaServidor(TelaServidor telaServidor) {
@@ -43,13 +50,13 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	public void enviarMensagemParaTodosClientes(String mensagem) throws RemoteException {
-		for(ClienteRemoto cliente : clientesConectados.values()) {
+		for (ClienteRemoto cliente : clientesConectados.values()) {
 			cliente.enviarParaTodos(mensagem);
-		}		
+		}
 	}
 	
 	@Override
-	public void enviarMensagemParaServidor(Integer chatCodigo, String mensagem) throws RemoteException {
+	public void enviarMensagemParaServidor(Long chatCodigo, String mensagem) throws RemoteException {
 		for (ClienteRemoto cliente : chatsAbertos.get(chatCodigo)) {
 			cliente.enviarMensagem(chatCodigo, mensagem);
 		}
@@ -69,7 +76,8 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
 				clientesConectados.put(usuario.getNomeCompleto(), cliente);
-				telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
+				telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '"
+				        + usuarioLogado.getUsuario().getNomeCompleto() + "' se conectou.");
 				telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 				banco.fechar();
 				return usuarioLogado;
@@ -78,12 +86,12 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.fechar();
 		return null;
 	}
-
+	
 	@Override
-	public void logout(ArrayList<Integer> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
-		//Fecha todos os chats do usuário
+	public void logout(ArrayList<Long> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
+		// Fecha todos os chats do usuário
 		try {
-			for(Integer codigo : codigos) {
+			for (Long codigo : codigos) {
 				fecharChat(codigo, cliente, nome);
 			}
 		} catch (Exception e) {
@@ -114,7 +122,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		banco.remover(banco.getUsuario(nome));
 		banco.fechar();
 	}
-
+	
 	@Override
 	public synchronized boolean adicionaAmigo(Usuario usuario, String nomeAmigo) throws RemoteException {
 		banco.abrir();
@@ -160,52 +168,54 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 				return null;
 			}
 			
-			chatsAbertos.put(novoChat.getCodigo(), new ArrayList<ClienteRemoto>(
-					Arrays.asList(clientesConectados.get(solicitante.getNomeCompleto()), clienteAmigo)));
+			chatsAbertos.put(
+			        novoChat.getCodigo(),
+			        new ArrayList<ClienteRemoto>(Arrays.asList(clientesConectados.get(solicitante.getNomeCompleto()),
+			                clienteAmigo)));
 			return novoChat;
 		}
 		return null;
 	}
 	
-	public void fecharChat(Integer codigo, ClienteRemoto cliente, String nome) throws RemoteException {
+	public void fecharChat(Long codigo, ClienteRemoto cliente, String nome) throws RemoteException {
 		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codigo);
 		
-		switch(clientesNoChat.size()) {
+		switch (clientesNoChat.size()) {
 		
-		case 1: {
-			chatsAbertos.remove(codigo);
-			break;
-		}
-		case 2: {
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.desativarChat(codigo);
+			case 1: {
+				chatsAbertos.remove(codigo);
+				break;
 			}
-			break;
-		}
-		default: {
-			clientesNoChat.remove(cliente);
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+			case 2: {
+				for (ClienteRemoto cliente2 : clientesNoChat) {
+					cliente2.desativarChat(codigo);
+				}
+				break;
 			}
-			break;
-		}
-		
+			default: {
+				clientesNoChat.remove(cliente);
+				for (ClienteRemoto cliente2 : clientesNoChat) {
+					cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+				}
+				break;
+			}
+			
 		}
 		/*
-		if (clientesNoChat.size() < 3) {
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.desativarChat(codigo);
-			}
-			chatsAbertos.remove(codigo);
-		} else {
-			clientesNoChat.remove(cliente);
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
-			}
-		}
-		*/
+		 * if (clientesNoChat.size() < 3) {
+		 * for (ClienteRemoto cliente2 : clientesNoChat) {
+		 * cliente2.desativarChat(codigo);
+		 * }
+		 * chatsAbertos.remove(codigo);
+		 * } else {
+		 * clientesNoChat.remove(cliente);
+		 * for (ClienteRemoto cliente2 : clientesNoChat) {
+		 * cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+		 * }
+		 * }
+		 */
 	}
-
+	
 	@Override
 	public synchronized void atualizarNickname(String nomeUsuario, String novoNickname) throws RemoteException {
 		banco.abrir();
