@@ -12,6 +12,7 @@ import org.joda.time.LocalTime;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
 import chat.foda.pra.caralho.models.Chat;
+import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 import chat.foda.pra.caralho.models.UsuarioLogado;
 import chat.foda.pra.caralho.telas.TelaServidor;
@@ -103,7 +104,15 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException {
 		boolean b;
 		if (usuarioDAO.findOneByNomePessoa(nome) == null) {
-			usuarioDAO.save(new Usuario(nome, senha));
+			Pessoa pessoa = new Pessoa();
+			pessoa.setNomeCompleto(nome);
+			pessoa.setEmail(nome + "@teste.com");
+			
+			Usuario usuario = new Usuario();
+			usuario.setSenha(senha);
+			usuario.setPessoa(pessoa);
+			
+			usuarioDAO.save(usuario);
 			b = true;
 		} else {
 			b = false;

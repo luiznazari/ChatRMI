@@ -14,11 +14,11 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	private final String findByCodigo = "select * from usuario where codigo = ?";
 	
-	private final String findByNomePessoa = "select * from usuario u join pessoa p on u.codpessoa = p.codigo where p.nomeCompleto = ?";
+	private final String findByNomePessoa = "select * from usuario u join pessoa p on u.codpessoa = p.codigo where p.nome_completo = ?";
 	
 	private final String save = "insert into usuario(senha, nickname, codPessoa) values (?, ?, ?)";
 	
-	private final String update = "update pessoa set senha = ?, nickname = ?, codPessoa = ? where codigo = ?";
+	private final String update = "update usuario set senha = ?, nickname = ?, codPessoa = ? where codigo = ?";
 	
 	private final String deleteByCodigo = "delete from usuario where codigo = ?";
 	
@@ -30,9 +30,9 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	@Override
 	public void save(Usuario entidade) {
-		QueryUtil.sqlParam(save, entidade.getSenha(), entidade.getNickName(), entidade.getPessoa().getCodigo().toString());
-		
 		pessoaDAO.save(entidade.getPessoa());
+		
+		QueryUtil.sqlParam(save, entidade.getSenha(), entidade.getNickName(), entidade.getPessoa().getCodigo().toString());
 	}
 	
 	@Override

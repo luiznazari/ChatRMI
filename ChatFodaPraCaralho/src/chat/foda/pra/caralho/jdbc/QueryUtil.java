@@ -33,7 +33,8 @@ public class QueryUtil extends ConexaoUtil {
 				System.out.println("Erro ao dar ROLLBACK");
 				e1.printStackTrace();
 			}
-			System.err.println("Erro ao executar SQL: " + sql + "\n" + e.getStackTrace());
+			System.err.println("Erro ao executar SQL: " + sql + "\n");
+			e.printStackTrace();
 		}
 	}
 	
@@ -54,7 +55,8 @@ public class QueryUtil extends ConexaoUtil {
 				System.out.println("Erro ao dar ROLLBACK");
 				e1.printStackTrace();
 			}
-			System.err.println("Erro ao executar SQL: " + sql + "\n" + e.getStackTrace());
+			System.err.println("Erro ao executar SQL: " + sql + "\n");
+			e.printStackTrace();
 		}
 	}
 	
@@ -69,7 +71,7 @@ public class QueryUtil extends ConexaoUtil {
 			
 			result = prepared.executeQuery();
 		} catch (SQLException e) {
-			System.err.println("Erro ao executar Query: " + sql + "\n" + e.getStackTrace());
+			System.err.println("Erro ao executar Query: " + sql + "\n");
 			e.printStackTrace();
 		}
 	}
