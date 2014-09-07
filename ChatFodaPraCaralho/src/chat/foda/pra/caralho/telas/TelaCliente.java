@@ -144,7 +144,7 @@ public class TelaCliente extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
-				if (!cliente.getUsuarioLogado().getUsuario().getNomeCompleto().equals(nomeAmigo)
+				if (!cliente.getUsuarioLogado().getUsuario().getPessoa().getNomeCompleto().equals(nomeAmigo)
 				        && !dlmAmigos.contains(nomeAmigo)) {
 					try {
 						if (cliente.getService().adicionaAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo)) {
@@ -272,7 +272,7 @@ public class TelaCliente extends JFrame {
 						nickName = novoNickname;
 						jlbNomeUsuario.setText(novoNickname);
 					}
-					cliente.getService().atualizarNickname(cliente.getUsuarioLogado().getUsuario().getNomeCompleto(),
+					cliente.getService().atualizarNickname(cliente.getUsuarioLogado().getUsuario().getPessoa().getNomeCompleto(),
 					        novoNickname);
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -341,7 +341,7 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public void enviarParaChat(Integer chatCodigo, String mensagem) {
+	public void enviarParaChat(Long chatCodigo, String mensagem) {
 		for (TelaChat tc : chatList) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
 				tc.recebeMensagem(mensagem);
@@ -350,7 +350,7 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public void desativarChat(Integer chatCodigo) {
+	public void desativarChat(Long chatCodigo) {
 		for (TelaChat tc : chatList) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
 				tc.desativaChat("O amigo se desconectou.");

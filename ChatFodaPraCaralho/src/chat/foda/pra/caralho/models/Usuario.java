@@ -6,7 +6,7 @@ import java.util.Set;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 
-public class Usuario extends Pessoa implements Serializable, Entidade {
+public class Usuario implements Serializable, Entidade {
 	private static final long serialVersionUID = -5591108295576221784L;
 	
 	private Long codigo;
@@ -26,8 +26,8 @@ public class Usuario extends Pessoa implements Serializable, Entidade {
 	}
 	
 	public Usuario(String nomeCompleto, String senha) {
-		this.setNomeCompleto(nomeCompleto);
 		this.setSenha(senha);
+		this.pessoa.setNomeCompleto(nomeCompleto);
 	}
 	
 	public void adicionaAmigo(String nome) {

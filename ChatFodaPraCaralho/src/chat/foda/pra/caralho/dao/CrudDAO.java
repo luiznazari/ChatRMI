@@ -10,8 +10,6 @@ public interface CrudDAO<T extends Entidade> {
 	
 	void delete(T entidade);
 	
-	void delete(Long codigo);
-	
 	void update(T entidade);
 	
 	List<T> findAll();

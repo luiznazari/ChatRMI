@@ -28,12 +28,7 @@ public class PessoaJDBC implements PessoaDAO {
 	
 	@Override
 	public void delete(Pessoa entidade) {
-		delete(entidade.getCodigo());
-	}
-	
-	@Override
-	public void delete(Long codigo) {
-		QueryUtil.sqlParam(deleteByCodigo, codigo.toString());
+		QueryUtil.sqlParam(deleteByCodigo, entidade.getCodigo().toString());
 	}
 	
 	@Override

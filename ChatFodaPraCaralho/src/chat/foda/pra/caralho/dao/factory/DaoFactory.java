@@ -1,6 +1,7 @@
 package chat.foda.pra.caralho.dao.factory;
 
 import chat.foda.pra.caralho.dao.PessoaDAO;
+import chat.foda.pra.caralho.dao.UsuarioDAO;
 
 public class DaoFactory {
 	
@@ -19,6 +20,10 @@ public class DaoFactory {
 	
 	public PessoaDAO pessoaDao() {
 		return daoFactory.pessoaDao();
+	}
+	
+	public UsuarioDAO usuarioDAO() {
+		return daoFactory.usuarioDAO();
 	}
 	
 }
