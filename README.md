@@ -52,4 +52,4 @@
     <li>Não permite que seja adicionado mais de dois usuário em um mesmo chat (o sistema já suporta este recurso) apenas não é aplicado;</li>
     <li>Utilização precária do banco de dados.</li>
   </ul>
-<hr>
+ <hr>
