@@ -13,8 +13,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -25,7 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -35,9 +36,6 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaCliente extends JFrame {
 
-	/**
-	 * @author luiznazari
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JMenuBar jmbMenuBar;
@@ -64,12 +62,14 @@ public class TelaCliente extends JFrame {
 	private ClienteRmi cliente;
 	private String nickName;
 
-	private MyJTabbedPane jtpChat;
-
 	private JPanel jpnAreaChat;
+	private JDesktopPane jdpDesktopChat;
+	private JInternalFrame jifTelaChat;
+
 	private Dimension minDimensao;
 
 	public TelaCliente(ClienteRmi cliente) {
+
 		this.cliente = cliente;
 		this.cliente.getClienteService().setTelaCliente(this);
 		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
@@ -239,12 +239,22 @@ public class TelaCliente extends JFrame {
 		return pnlUsuario;
 	}
 
+	private JInternalFrame getTalkFrame(String nome, JComponent componente) {
+		jifTelaChat = new JInternalFrame(nome, true, true, true, true);
+
+		jifTelaChat.setSize(300, 300);
+		jifTelaChat.setVisible(true);
+		
+		jifTelaChat.add(componente);
+
+		return jifTelaChat;
+	}
+
 	private JPanel getChatPanel() {
 		jpnAreaChat = new JPanel(new BorderLayout());
 		jpnAreaChat.setMinimumSize(new Dimension(minDimensao));
-		jpnAreaChat.setBorder(new EmptyBorder(5, 5, 5, 5));
-		jtpChat = new MyJTabbedPane();
-		jpnAreaChat.add(jtpChat, BorderLayout.CENTER);
+		jdpDesktopChat = new JDesktopPane();
+		jpnAreaChat.add(jdpDesktopChat, BorderLayout.CENTER);
 
 		return jpnAreaChat;
 	}
@@ -323,7 +333,8 @@ public class TelaCliente extends JFrame {
 		if (chat != null) {
 			telaChat.setChat(chat);
 			chatList.add(telaChat);
-			jtpChat.addNewTab(nomeAmigo, telaChat.getChatPanel());
+			jdpDesktopChat.add(this.getTalkFrame(nomeAmigo,
+					telaChat.getChatPanel()));
 		} else {
 			JOptionPane.showMessageDialog(this,
 					"O usuário selecionado não está logado", "Conexão",
@@ -338,7 +349,8 @@ public class TelaCliente extends JFrame {
 		telaChat.setChat(chat);
 
 		chatList.add(telaChat);
-		jtpChat.addNewTab(nomeAmigo, telaChat.getChatPanel());
+		jdpDesktopChat
+				.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
 	}
 
 	public DefaultListModel<String> getListaAmigos() {
@@ -366,7 +378,7 @@ public class TelaCliente extends JFrame {
 			}
 		}
 	}
-	
+
 	public void desativarChat(Integer chatCodigo) {
 		for (TelaChat tc : chatList) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
@@ -375,13 +387,13 @@ public class TelaCliente extends JFrame {
 			}
 		}
 	}
-	
+
 	public void desativarTodosChats() {
 		for (TelaChat tc : chatList) {
 			tc.desativaChat("O servidor está offline.");
 		}
 	}
-	
+
 	public ArrayList<Integer> getCodigosChat() {
 		ArrayList<Integer> codigos = new ArrayList<Integer>();
 		for (TelaChat tc : chatList) {
@@ -389,7 +401,7 @@ public class TelaCliente extends JFrame {
 		}
 		return codigos;
 	}
-	
+
 	public ClienteRmi getCliente() {
 		return this.cliente;
 	}

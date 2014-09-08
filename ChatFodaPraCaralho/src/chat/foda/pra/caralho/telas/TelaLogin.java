@@ -161,9 +161,11 @@ public class TelaLogin extends JFrame {
 						.setGridWeight(1, 0));
 
 		jlbLink = new JLabel("Clique aqui!");
-		pnlMain.add(jlbLink,
+		pnlMain.add(
+				jlbLink,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
-						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
+						.setInsets(5)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1)
 						.setGridWeight(1, 0));
 
 		actions();
@@ -180,7 +182,7 @@ public class TelaLogin extends JFrame {
 		jlbId = new JLabel("ID:");
 		pnlLogin.add(jlbId,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-				.setInsets(5));
+						.setInsets(5));
 
 		jtfId = new JTextField();
 		pnlLogin.add(
@@ -192,9 +194,9 @@ public class TelaLogin extends JFrame {
 						.setGridWeight(1, 0));
 
 		jlbSenha = new JLabel("Senha:");
-		pnlLogin.add(
-				jlbSenha,new GridConstraints().setAnchor(GridConstraints.EAST)
-				.setInsets(5));
+		pnlLogin.add(jlbSenha,
+				new GridConstraints().setAnchor(GridConstraints.EAST)
+						.setInsets(5));
 
 		jpfSenha = new JPasswordField();
 		pnlLogin.add(
@@ -280,7 +282,8 @@ public class TelaLogin extends JFrame {
 		});
 	}
 
-	public static void main(String[] args) throws UnknownHostException, ConnectException {
+	public static void main(String[] args) throws UnknownHostException,
+			ConnectException {
 		try {
 			UIManager.setLookAndFeel(new WebLookAndFeel());
 		} catch (UnsupportedLookAndFeelException e1) {
