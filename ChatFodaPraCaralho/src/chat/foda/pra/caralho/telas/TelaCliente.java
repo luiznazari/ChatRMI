@@ -13,11 +13,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
-<<<<<<< HEAD
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
-=======
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -37,15 +34,10 @@ import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.models.Chat;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
+/**
+ * @author luiznazari
+ */
 public class TelaCliente extends JFrame {
-<<<<<<< HEAD
-
-=======
-	
-	/**
-	 * @author luiznazari
-	 */
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 	private static final long serialVersionUID = 1L;
 	
 	private JMenuBar jmbMenuBar;
@@ -87,23 +79,17 @@ public class TelaCliente extends JFrame {
 	private ClienteRmi cliente;
 	
 	private String nickName;
-<<<<<<< HEAD
-
+	
 	private JPanel jpnAreaChat;
+	
 	private JDesktopPane jdpDesktopChat;
+	
 	private JInternalFrame jifTelaChat;
-
-=======
 	
-	private MyJTabbedPane jtpChat;
-	
-	private JPanel jpnAreaChat;
-	
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 	private Dimension minDimensao;
 	
 	public TelaCliente(ClienteRmi cliente) {
-
+		
 		this.cliente = cliente;
 		this.cliente.getClienteService().setTelaCliente(this);
 		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
@@ -250,35 +236,24 @@ public class TelaCliente extends JFrame {
 		
 		return pnlUsuario;
 	}
-<<<<<<< HEAD
-
+	
 	private JInternalFrame getTalkFrame(String nome, JComponent componente) {
 		jifTelaChat = new JInternalFrame(nome, true, true, true, true);
-
+		
 		jifTelaChat.setSize(300, 300);
 		jifTelaChat.setVisible(true);
 		
 		jifTelaChat.add(componente);
-
+		
 		return jifTelaChat;
 	}
-
+	
 	private JPanel getChatPanel() {
 		jpnAreaChat = new JPanel(new BorderLayout());
 		jpnAreaChat.setMinimumSize(new Dimension(minDimensao));
 		jdpDesktopChat = new JDesktopPane();
 		jpnAreaChat.add(jdpDesktopChat, BorderLayout.CENTER);
-
-=======
-	
-	private JPanel getChatPanel() {
-		jpnAreaChat = new JPanel(new BorderLayout());
-		jpnAreaChat.setMinimumSize(new Dimension(minDimensao));
-		jpnAreaChat.setBorder(new EmptyBorder(5, 5, 5, 5));
-		jtpChat = new MyJTabbedPane();
-		jpnAreaChat.add(jtpChat, BorderLayout.CENTER);
 		
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 		return jpnAreaChat;
 	}
 	
@@ -348,8 +323,7 @@ public class TelaCliente extends JFrame {
 		if (chat != null) {
 			telaChat.setChat(chat);
 			chatList.add(telaChat);
-			jdpDesktopChat.add(this.getTalkFrame(nomeAmigo,
-					telaChat.getChatPanel()));
+			jdpDesktopChat.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
 		} else {
 			JOptionPane.showMessageDialog(this, "O usuário selecionado não está logado", "Conexão",
 			        JOptionPane.INFORMATION_MESSAGE);
@@ -363,8 +337,7 @@ public class TelaCliente extends JFrame {
 		telaChat.setChat(chat);
 		
 		chatList.add(telaChat);
-		jdpDesktopChat
-				.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
+		jdpDesktopChat.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
 	}
 	
 	public DefaultListModel<String> getListaAmigos() {
@@ -390,13 +363,8 @@ public class TelaCliente extends JFrame {
 			}
 		}
 	}
-<<<<<<< HEAD
-
-	public void desativarChat(Integer chatCodigo) {
-=======
 	
 	public void desativarChat(Long chatCodigo) {
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 		for (TelaChat tc : chatList) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
 				tc.desativaChat("O amigo se desconectou.");
@@ -404,27 +372,21 @@ public class TelaCliente extends JFrame {
 			}
 		}
 	}
-
+	
 	public void desativarTodosChats() {
 		for (TelaChat tc : chatList) {
 			tc.desativaChat("O servidor está offline.");
 		}
 	}
-<<<<<<< HEAD
-
-	public ArrayList<Integer> getCodigosChat() {
-		ArrayList<Integer> codigos = new ArrayList<Integer>();
-=======
 	
 	public ArrayList<Long> getCodigosChat() {
 		ArrayList<Long> codigos = new ArrayList<>();
->>>>>>> 321153dc24427158ca2854f9227f3c91cd2e4600
 		for (TelaChat tc : chatList) {
 			codigos.add(tc.getChat().getCodigo());
 		}
 		return codigos;
 	}
-
+	
 	public ClienteRmi getCliente() {
 		return this.cliente;
 	}
