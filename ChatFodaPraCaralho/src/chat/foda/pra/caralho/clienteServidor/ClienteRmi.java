@@ -2,7 +2,7 @@ package chat.foda.pra.caralho.clienteServidor;
 
 import java.rmi.Naming;
 
-import chat.foda.pra.caralho.modelo.UsuarioLogado;
+import chat.foda.pra.caralho.models.UsuarioLogado;
 import chat.foda.pra.caralho.rmi.ClienteRemotoImpl;
 import chat.foda.pra.caralho.rmi.ServidorRemoto;
 import chat.foda.pra.caralho.telas.TelaCliente;

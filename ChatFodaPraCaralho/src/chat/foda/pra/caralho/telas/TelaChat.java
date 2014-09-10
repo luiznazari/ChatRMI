@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import chat.foda.pra.caralho.modelo.Chat;
+import chat.foda.pra.caralho.models.Chat;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 public class TelaChat {

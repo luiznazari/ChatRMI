@@ -1,27 +1,33 @@
-package chat.foda.pra.caralho.modelo;
+package chat.foda.pra.caralho.models;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Usuario extends Pessoa implements Serializable {
+import chat.foda.pra.caralho.jdbc.Entidade;
+
+public class Usuario implements Serializable, Entidade {
 	private static final long serialVersionUID = -5591108295576221784L;
 	
-	private Integer codigo;
-	private String senha;
-	private String nickName;
-	private Set<String> amigos;
-
-	public Usuario(){		
-	}
+	private Long codigo;
 	
-	public Usuario(Integer codigo){
+	private Pessoa pessoa;
+	
+	private String senha;
+	
+	private String nickName;
+	
+	private Set<String> amigos;
+	
+	public Usuario() {}
+	
+	public Usuario(Long codigo) {
 		this.codigo = codigo;
 	}
 	
 	public Usuario(String nomeCompleto, String senha) {
-		this.setNomeCompleto(nomeCompleto);
 		this.setSenha(senha);
+		this.pessoa.setNomeCompleto(nomeCompleto);
 	}
 	
 	public void adicionaAmigo(String nome) {
@@ -41,30 +47,32 @@ public class Usuario extends Pessoa implements Serializable {
 		return true;
 	}
 	
-	public void setCodigo(Integer codigo) {
+	@Override
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 	
-	public Integer getCodigo() {
+	@Override
+	public Long getCodigo() {
 		return codigo;
 	}
-
+	
 	public String getSenha() {
 		return senha;
 	}
-
+	
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 	
 	public String getNickName() {
 		if (this.nickName == null) {
-			return super.getPrimeiroNome();
+			return pessoa.getPrimeiroNome();
 		}
 		
 		return this.nickName;
 	}
-
+	
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
@@ -72,8 +80,17 @@ public class Usuario extends Pessoa implements Serializable {
 	public Set<String> getAmigos() {
 		return amigos;
 	}
-
+	
 	public void setAmigos(Set<String> amigos) {
 		this.amigos = amigos;
 	}
+	
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+	
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+	
 }

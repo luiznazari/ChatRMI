@@ -28,7 +28,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
-import chat.foda.pra.caralho.modelo.UsuarioLogado;
+import chat.foda.pra.caralho.models.UsuarioLogado;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 import com.alee.laf.WebLookAndFeel;
