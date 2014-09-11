@@ -9,7 +9,7 @@ public abstract class ConexaoUtil {
 	protected static Connection conexao;
 	
 	static {
-		String url = "jdbc:mysql://localhost/chatfodapracaralho";
+		String url = "jdbc:mysql://localhost/chatFodaPraCaralho";
 		String usuario = "root";
 		String senha = "meuessequeele";
 		

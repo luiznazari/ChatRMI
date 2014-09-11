@@ -17,6 +17,8 @@ public class Usuario implements Serializable, Entidade {
 	
 	private String nickName;
 	
+	private String email;
+	
 	private Set<String> amigos;
 	
 	public Usuario() {}
@@ -91,6 +93,14 @@ public class Usuario implements Serializable, Entidade {
 	
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

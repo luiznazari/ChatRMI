@@ -10,14 +10,11 @@ public class QueryUtil extends ConexaoUtil {
 	
 	private static ResultSet result;
 	
-	private static final String createSchema = "create schema if not exists `chatFodaPraCaralho`";
+	private static final String createPessoa = "create table if not exists `chatFodaPraCaralho`.`pessoa`(codigo bigint not null primary key auto_increment, nome_completo varchar(45), cpf varchar(15), data_nascimento date)";
 	
-	private static final String createPessoa = "create table if not exists `chatFodaPraCaralho`.`pessoa`(codigo bigint not null primary key auto_increment, nome_completo varchar(45), cpf varchar(15), email varchar(45) not null unique key, data_nascimento date)";
-	
-	private static final String createUsuario = "create table if not exists `chatFodaPraCaralho`.`usuario`(codigo bigint not null primary key auto_increment, senha varchar(45) not null, nickname varchar(45), codPessoa bigint not null, foreign key (codpessoa) references pessoa(codigo))";
+	private static final String createUsuario = "create table if not exists `chatFodaPraCaralho`.`usuario`(codigo bigint not null primary key auto_increment, email varchar(45) not null unique key, senha varchar(45) not null, nickname varchar(45), codPessoa bigint not null, foreign key (codpessoa) references pessoa(codigo))";
 	
 	public static void criaBaseSeNaoExiste() {
-		sql(createSchema);
 		sql(createPessoa);
 		sql(createUsuario);
 	}

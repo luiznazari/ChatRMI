@@ -13,8 +13,6 @@ public class Pessoa implements Entidade, Serializable {
 	
 	private String cpf;
 	
-	private String email;
-	
 	private LocalDate dataNascimento;
 	
 	private String nomeCompleto;
@@ -39,14 +37,6 @@ public class Pessoa implements Entidade, Serializable {
 	
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	
 	public String getPrimeiroNome() {

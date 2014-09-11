@@ -14,16 +14,16 @@ public class PessoaJDBC implements PessoaDAO {
 	
 	private final String findByCodigo = "select * from pessoa p where p.codigo = ?";
 	
-	private final String save = "insert into pessoa(nome_completo, cpf, email, data_nascimento) values (?, ?, ?, ?)";
+	private final String save = "insert into pessoa(nome_completo, cpf, data_nascimento) values (?, ?, ?)";
 	
-	private final String update = "update pessoa set nome_completo = ?, cpf = ?, email = ?, data_nascimento = ? where codigo = ?";
+	private final String update = "update pessoa set nome_completo = ?, cpf = ?, data_nascimento = ? where codigo = ?";
 	
 	private final String deleteByCodigo = "delete from pessoa p where p.codigo = ?";
 	
 	@Override
 	public void save(Pessoa entidade) {
-		QueryUtil.sqlParam(save, entidade.getNomeCompleto(), entidade.getCpf(), entidade.getEmail(),
-		        (entidade.getDataNascimento() == null ? null : entidade.getDataNascimento().toString("yyyy-MM-dd")));
+		QueryUtil.sqlParam(save, entidade.getNomeCompleto(), entidade.getCpf(), (entidade.getDataNascimento() == null ? null
+		        : entidade.getDataNascimento().toString("yyyy-MM-dd")));
 	}
 	
 	@Override
@@ -33,9 +33,8 @@ public class PessoaJDBC implements PessoaDAO {
 	
 	@Override
 	public void update(Pessoa entidade) {
-		QueryUtil.sqlParam(update, entidade.getNomeCompleto(), entidade.getCpf(), entidade.getEmail(), (entidade
-		        .getDataNascimento() == null ? null : entidade.getDataNascimento().toString("yyyy-MM-dd")), entidade.getCodigo()
-		        .toString());
+		QueryUtil.sqlParam(update, entidade.getNomeCompleto(), entidade.getCpf(), (entidade.getDataNascimento() == null ? null
+		        : entidade.getDataNascimento().toString("yyyy-MM-dd")), entidade.getCodigo().toString());
 	}
 	
 	@Override
@@ -52,7 +51,7 @@ public class PessoaJDBC implements PessoaDAO {
 		QueryUtil.queryParam(findByCodigo, codigo.toString());
 		List<String> valores;
 		
-		valores = QueryUtil.lerResult("nome_completo", "cpf", "email", "data_nascimento");
+		valores = QueryUtil.lerResult("nome_completo", "cpf", "data_nascimento");
 		if (valores.size() == 0) {
 			return null;
 		}
@@ -60,8 +59,7 @@ public class PessoaJDBC implements PessoaDAO {
 		Pessoa pessoa = new Pessoa(codigo);
 		pessoa.setNomeCompleto(valores.get(0));
 		pessoa.setCpf(valores.get(1));
-		pessoa.setEmail(valores.get(2));
-		pessoa.setDataNascimento(new LocalDate(valores.get(3)));
+		pessoa.setDataNascimento(new LocalDate(valores.get(2)));
 		
 		return pessoa;
 	}

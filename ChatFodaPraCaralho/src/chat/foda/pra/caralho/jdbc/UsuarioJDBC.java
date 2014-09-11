@@ -16,9 +16,9 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	private final String findByNomePessoa = "select * from usuario u join pessoa p on u.codpessoa = p.codigo where p.nome_completo = ?";
 	
-	private final String save = "insert into usuario(senha, nickname, codPessoa) values (?, ?, ?)";
+	private final String save = "insert into usuario(email, senha, nickname, codPessoa) values (?, ?, ?, ?)";
 	
-	private final String update = "update usuario set senha = ?, nickname = ?, codPessoa = ? where codigo = ?";
+	private final String update = "update usuario set email = ?, senha = ?, nickname = ?, codPessoa = ? where codigo = ?";
 	
 	private final String deleteByCodigo = "delete from usuario where codigo = ?";
 	
@@ -30,9 +30,19 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	@Override
 	public void save(Usuario entidade) {
-		pessoaDAO.save(entidade.getPessoa());
-		
-		QueryUtil.sqlParam(save, entidade.getSenha(), entidade.getNickName(), entidade.getPessoa().getCodigo().toString());
+		try {
+			Pessoa pessoa = pessoaDAO.save(entidade.getPessoa());
+			
+			QueryUtil.sqlParam(save, entidade.getEmail(), entidade.getSenha(), entidade.getNickName(), entidade.getPessoa()
+			        .getCodigo().toString());
+		} catch (NullPointerException e) {
+			if (pessoa.getCodigo != null) {
+				pessoaDAO.delete(pessoa);
+			}
+			if (usuario.getCodigo != null) {
+				this.delete(usuario);
+			}
+		}
 	}
 	
 	@Override
@@ -45,8 +55,8 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	@Override
 	public void update(Usuario entidade) {
-		QueryUtil.sqlParam(update, entidade.getSenha(), entidade.getNickName(), entidade.getPessoa().getCodigo().toString(),
-		        entidade.getCodigo().toString());
+		QueryUtil.sqlParam(update, entidade.getEmail(), entidade.getSenha(), entidade.getNickName(), entidade.getPessoa()
+		        .getCodigo().toString(), entidade.getCodigo().toString());
 		
 		pessoaDAO.update(entidade.getPessoa());
 	}
@@ -62,16 +72,17 @@ public class UsuarioJDBC implements UsuarioDAO {
 		QueryUtil.queryParam(findByCodigo, codigo.toString());
 		List<String> valores;
 		
-		valores = QueryUtil.lerResult("senha", "nickname", "codpessoa");
+		valores = QueryUtil.lerResult("email", "senha", "nickname", "codpessoa");
 		if (valores.size() == 0) {
 			return null;
 		}
 		
-		Pessoa pessoa = pessoaDAO.findOne(Long.valueOf(valores.get(2)));
+		Pessoa pessoa = pessoaDAO.findOne(Long.valueOf(valores.get(3)));
 		
 		Usuario usuario = new Usuario(codigo);
-		usuario.setSenha(valores.get(0));
-		usuario.setNickName(valores.get(1));
+		usuario.setEmail(valores.get(0));
+		usuario.setSenha(valores.get(1));
+		usuario.setNickName(valores.get(2));
 		usuario.setPessoa(pessoa);
 		
 		return usuario;
@@ -82,16 +93,17 @@ public class UsuarioJDBC implements UsuarioDAO {
 		QueryUtil.queryParam(findByNomePessoa, nomePessoa);
 		List<String> valores;
 		
-		valores = QueryUtil.lerResult("codigo", "senha", "nickname", "codpessoa");
+		valores = QueryUtil.lerResult("codigo", "email", "senha", "nickname", "codpessoa");
 		if (valores.size() == 0) {
 			return null;
 		}
 		
-		Pessoa pessoa = pessoaDAO.findOne(Long.valueOf(valores.get(3)));
+		Pessoa pessoa = pessoaDAO.findOne(Long.valueOf(valores.get(4)));
 		
 		Usuario usuario = new Usuario(Long.valueOf(valores.get(0)));
-		usuario.setSenha(valores.get(1));
-		usuario.setNickName(valores.get(2));
+		usuario.setEmail(valores.get(1));
+		usuario.setSenha(valores.get(2));
+		usuario.setNickName(valores.get(3));
 		usuario.setPessoa(pessoa);
 		
 		return usuario;

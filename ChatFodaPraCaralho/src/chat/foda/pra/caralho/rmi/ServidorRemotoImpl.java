@@ -106,9 +106,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		if (usuarioDAO.findOneByNomePessoa(nome) == null) {
 			Pessoa pessoa = new Pessoa();
 			pessoa.setNomeCompleto(nome);
-			pessoa.setEmail(nome + "@teste.com");
 			
 			Usuario usuario = new Usuario();
+			usuario.setEmail(nome + "@teste.com");
 			usuario.setSenha(senha);
 			usuario.setPessoa(pessoa);
 			
