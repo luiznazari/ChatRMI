@@ -6,7 +6,7 @@ import chat.foda.pra.caralho.jdbc.Entidade;
 
 public interface CrudDAO<T extends Entidade> {
 	
-	void save(T entidade);
+	T save(T entidade);
 	
 	void delete(T entidade);
 	

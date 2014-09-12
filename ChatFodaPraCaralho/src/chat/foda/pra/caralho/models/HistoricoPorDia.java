@@ -2,7 +2,7 @@ package chat.foda.pra.caralho.models;
 
 import java.util.List;
 
-import java.time.LocalDate;
+import org.joda.time.LocalDate;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 

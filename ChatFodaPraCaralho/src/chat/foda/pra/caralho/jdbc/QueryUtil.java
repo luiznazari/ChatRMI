@@ -14,6 +14,9 @@ public class QueryUtil extends ConexaoUtil {
 	
 	private static final String createUsuario = "create table if not exists `chatFodaPraCaralho`.`usuario`(codigo bigint not null primary key auto_increment, email varchar(45) not null unique key, senha varchar(45) not null, nickname varchar(45), codPessoa bigint not null, foreign key (codpessoa) references pessoa(codigo))";
 	
+	/**
+	 * Cria as tabelas da aplicação caso não existam
+	 */
 	public static void criaBaseSeNaoExiste() {
 		sql(createPessoa);
 		sql(createUsuario);
@@ -35,7 +38,7 @@ public class QueryUtil extends ConexaoUtil {
 		}
 	}
 	
-	public static void sqlParam(String sql, String... params) {
+	public static PreparedStatement sqlParam(String sql, String... params) {
 		try {
 			PreparedStatement prepared = conexao.prepareStatement(sql);
 			
@@ -45,6 +48,8 @@ public class QueryUtil extends ConexaoUtil {
 			
 			prepared.executeUpdate();
 			conexao.commit();
+			
+			return prepared;
 		} catch (SQLException e) {
 			try {
 				conexao.rollback();
@@ -55,13 +60,28 @@ public class QueryUtil extends ConexaoUtil {
 			System.err.println("Erro ao executar SQL: " + sql + "\n");
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
-	// Usa statements com parâmetros
+	public static Long sqlParamReturnKey(String sql, String... params) throws SQLException {
+		PreparedStatement stmt = sqlParam(sql, params);
+		return getUltimoAutoIncrementDaSessao(stmt, stmt.getResultSet());
+	}
+	
+	private static Long getUltimoAutoIncrementDaSessao(PreparedStatement stmt, ResultSet result) throws SQLException {
+		result = stmt.executeQuery("SELECT LAST_INSERT_ID()");
+		
+		if (result.next()) {
+			return result.getLong(1);
+		}
+		return null;
+	}
+	
 	public static void queryParam(String sql, String... params) {
 		try {
 			PreparedStatement prepared = conexao.prepareStatement(sql);
-			// TODO CallableStatement
+			
 			for (int i = 1; i <= params.length; i++) {
 				prepared.setString(i, params[i - 1]);
 			}
@@ -83,7 +103,7 @@ public class QueryUtil extends ConexaoUtil {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao recuperar colunas do ResultSet");
+			System.err.println("Erro ao recuperar colunas do ResultSet");
 			e.printStackTrace();
 			return null;
 		}

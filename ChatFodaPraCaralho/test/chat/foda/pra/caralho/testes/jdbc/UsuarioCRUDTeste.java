@@ -1,13 +1,16 @@
 package chat.foda.pra.caralho.testes.jdbc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import java.time.LocalDate;
-
+import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
 import chat.foda.pra.caralho.models.Pessoa;
@@ -15,15 +18,18 @@ import chat.foda.pra.caralho.models.Usuario;
 
 public class UsuarioCRUDTeste {
 	
-	private UsuarioDAO usuarioDAO;
+	private static UsuarioDAO usuarioDAO;
+	
+	private static PessoaDAO pessoaDAO;
 	
 	private Usuario usuario;
 	
 	private Pessoa pessoa;
 	
 	@BeforeClass
-	public void criaConexaoBanco() {
+	public static void criaConexaoBanco() {
 		usuarioDAO = DaoFactory.get().usuarioDAO();
+		pessoaDAO = DaoFactory.get().pessoaDao();
 	}
 	
 	@Before
@@ -36,8 +42,13 @@ public class UsuarioCRUDTeste {
 		usuario = new Usuario();
 		usuario.setSenha("123");
 		usuario.setNickName("Nick Teste 1");
-		usuario.setEmail("usuario1@teste.com");
+		usuario.setEmail("usuario1_@teste.com");
 		usuario.setPessoa(pessoa);
+	}
+	
+	@After
+	public void removeAmbiente() {
+		usuarioDAO.delete(usuario);
 	}
 	
 	/**
@@ -45,8 +56,24 @@ public class UsuarioCRUDTeste {
 	 * Se ocorrer erro no processo, não pode salvar os dados do Usuário nem da Pessoa relacionada ao usuário
 	 */
 	@Test
-	public void testeSalvar() {
-		assertEquals(0, 0);
+	public void salvaPessoaSemSalvarUsuario() {
+		usuario.setEmail(null); // Vai causar erro ao salvar usuário após salvar pessoa
+		
+		usuarioDAO.save(usuario);
+		
+		assertNull(usuario.getCodigo());
+		assertEquals(null, pessoaDAO.findOne(usuario.getPessoa().getCodigo()));
+	}
+	
+	/**
+	 * Salva pessoa e usuário corretamente no banco de dados
+	 */
+	@Test
+	public void salvaPessoaEUsuario() {
+		usuarioDAO.save(usuario);
+		
+		assertNotNull(usuario.getCodigo());
+		assertNotNull(usuario.getPessoa().getCodigo());
 	}
 	
 }

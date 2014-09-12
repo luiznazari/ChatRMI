@@ -1,5 +1,6 @@
 package chat.foda.pra.caralho.jdbc;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import chat.foda.pra.caralho.dao.PessoaDAO;
@@ -27,36 +28,39 @@ public class UsuarioJDBC implements UsuarioDAO {
 	}
 	
 	@Override
-	public void save(Usuario entidade) {
+	public Usuario save(Usuario usuario) {
+		Pessoa pessoa = null;
+		
 		try {
-			Pessoa pessoa = pessoaDAO.save(entidade.getPessoa());
+			pessoa = pessoaDAO.save(usuario.getPessoa());
 			
-			QueryUtil.sqlParam(save, entidade.getEmail(), entidade.getSenha(), entidade.getNickName(), entidade.getPessoa()
-			        .getCodigo().toString());
-		} catch (NullPointerException e) {
-			if (pessoa.getCodigo != null) {
-				pessoaDAO.delete(pessoa);
-			}
-			if (usuario.getCodigo != null) {
-				this.delete(usuario);
-			}
+			Long codigo = QueryUtil.sqlParamReturnKey(save, usuario.getEmail(), usuario.getSenha(), usuario.getNickName(),
+			        usuario.getPessoa().getCodigo().toString());
+			
+			usuario.setCodigo(codigo);
+		} catch (SQLException | NullPointerException e) {
+			pessoaDAO.delete(pessoa);
 		}
+		
+		return usuario;
 	}
 	
 	@Override
-	public void delete(Usuario entidade) {
-		QueryUtil.sqlParam(deleteByCodigo, entidade.getCodigo().toString());
-		
-		pessoaDAO.delete(entidade.getPessoa());
+	public void delete(Usuario usuario) {
+		if (usuario.getCodigo() != null) {
+			QueryUtil.sqlParam(deleteByCodigo, usuario.getCodigo().toString());
+			
+			pessoaDAO.delete(usuario.getPessoa());
+		}
 		
 	}
 	
 	@Override
-	public void update(Usuario entidade) {
-		QueryUtil.sqlParam(update, entidade.getEmail(), entidade.getSenha(), entidade.getNickName(), entidade.getPessoa()
-		        .getCodigo().toString(), entidade.getCodigo().toString());
+	public void update(Usuario usuario) {
+		QueryUtil.sqlParam(update, usuario.getEmail(), usuario.getSenha(), usuario.getNickName(), usuario.getPessoa().getCodigo()
+		        .toString(), usuario.getCodigo().toString());
 		
-		pessoaDAO.update(entidade.getPessoa());
+		pessoaDAO.update(usuario.getPessoa());
 	}
 	
 	@Override
