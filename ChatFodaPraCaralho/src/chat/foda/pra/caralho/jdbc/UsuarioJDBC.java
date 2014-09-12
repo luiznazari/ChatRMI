@@ -10,8 +10,6 @@ import chat.foda.pra.caralho.models.Usuario;
 
 public class UsuarioJDBC implements UsuarioDAO {
 	
-	private final String findAll = "select * from usuario";
-	
 	private final String findByCodigo = "select * from usuario where codigo = ?";
 	
 	private final String findByNomePessoa = "select * from usuario u join pessoa p on u.codpessoa = p.codigo where p.nome_completo = ?";

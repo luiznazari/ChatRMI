@@ -61,7 +61,7 @@ public class QueryUtil extends ConexaoUtil {
 	public static void queryParam(String sql, String... params) {
 		try {
 			PreparedStatement prepared = conexao.prepareStatement(sql);
-			
+			// TODO CallableStatement
 			for (int i = 1; i <= params.length; i++) {
 				prepared.setString(i, params[i - 1]);
 			}

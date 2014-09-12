@@ -1,4 +1,4 @@
-package chat.foda.pra.caralho.testes;
+package chat.foda.pra.caralho.testes.jdbc;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,13 +28,16 @@ public class UsuarioCRUDTeste {
 	
 	@Before
 	public void criaAmbiente() {
-		Pessoa pessoa = new Pessoa();
+		pessoa = new Pessoa();
 		pessoa.setNomeCompleto("Pessoa Teste 1");
 		pessoa.setCpf("123456");
-		pessoa.setDataNascimento(LocalDate.now());
+		pessoa.setDataNascimento(LocalDate.now().minusYears(1));
 		
-		Usuario usuario = new Usuario();
-		
+		usuario = new Usuario();
+		usuario.setSenha("123");
+		usuario.setNickName("Nick Teste 1");
+		usuario.setEmail("usuario1@teste.com");
+		usuario.setPessoa(pessoa);
 	}
 	
 	/**

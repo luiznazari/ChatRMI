@@ -1,16 +1,13 @@
 package chat.foda.pra.caralho.jdbc;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.joda.time.LocalDate;
 
 import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.models.Pessoa;
 
 public class PessoaJDBC implements PessoaDAO {
-	
-	private final String findAll = "select * from pessoa";
 	
 	private final String findByCodigo = "select * from pessoa p where p.codigo = ?";
 	
@@ -23,7 +20,7 @@ public class PessoaJDBC implements PessoaDAO {
 	@Override
 	public void save(Pessoa entidade) {
 		QueryUtil.sqlParam(save, entidade.getNomeCompleto(), entidade.getCpf(), (entidade.getDataNascimento() == null ? null
-		        : entidade.getDataNascimento().toString("yyyy-MM-dd")));
+		        : entidade.getDataNascimento().toString()));
 	}
 	
 	@Override
@@ -34,7 +31,7 @@ public class PessoaJDBC implements PessoaDAO {
 	@Override
 	public void update(Pessoa entidade) {
 		QueryUtil.sqlParam(update, entidade.getNomeCompleto(), entidade.getCpf(), (entidade.getDataNascimento() == null ? null
-		        : entidade.getDataNascimento().toString("yyyy-MM-dd")), entidade.getCodigo().toString());
+		        : entidade.getDataNascimento().toString()), entidade.getCodigo().toString());
 	}
 	
 	@Override
@@ -59,8 +56,7 @@ public class PessoaJDBC implements PessoaDAO {
 		Pessoa pessoa = new Pessoa(codigo);
 		pessoa.setNomeCompleto(valores.get(0));
 		pessoa.setCpf(valores.get(1));
-		pessoa.setDataNascimento(new LocalDate(valores.get(2)));
-		
+		pessoa.setDataNascimento(LocalDate.parse(valores.get(2)));
 		return pessoa;
 	}
 	

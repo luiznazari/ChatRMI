@@ -2,12 +2,11 @@ package chat.foda.pra.caralho.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
@@ -76,7 +75,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
 				clientesConectados.put(usuario.getPessoa().getNomeCompleto(), cliente);
-				telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '"
+				telaServidor.escreverNoConsole("[" + LocalTime.now() + "] O usuário '"
 				        + usuarioLogado.getUsuario().getPessoa().getNomeCompleto() + "' se conectou.");
 				telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 				return usuarioLogado;
@@ -96,7 +95,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			e.printStackTrace();
 		}
 		clientesConectados.remove(nome);
-		telaServidor.escreverNoConsole("[" + new LocalTime() + "] O usuário '" + nome + "' se desconectou.");
+		telaServidor.escreverNoConsole("[" + LocalTime.now() + "] O usuário '" + nome + "' se desconectou.");
 		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 	}
 	
