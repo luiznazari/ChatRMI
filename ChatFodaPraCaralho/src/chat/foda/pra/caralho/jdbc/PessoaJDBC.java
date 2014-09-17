@@ -2,6 +2,7 @@ package chat.foda.pra.caralho.jdbc;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -10,6 +11,8 @@ import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.models.Pessoa;
 
 public class PessoaJDBC implements PessoaDAO {
+	
+	private final String findAll = "select * from pessoa where codigo > ?";
 	
 	private final String findByCodigo = "select * from pessoa p where p.codigo = ?";
 	
@@ -51,8 +54,12 @@ public class PessoaJDBC implements PessoaDAO {
 	@Override
 	public List<Pessoa> findAll() {
 		List<Pessoa> pessoas = new ArrayList<>();
+		QueryUtil.queryParam(findAll, "0");
 		
-		// TODO
+		List<HashMap<String, String>> listaValores = QueryUtil.lerAllResult("codigo", "nome_completo", "cpf", "data_nascimento");
+		for (HashMap<String, String> valores : listaValores) {
+			pessoas.add(criaPessoa(valores));
+		}
 		
 		return pessoas;
 	}
@@ -60,17 +67,22 @@ public class PessoaJDBC implements PessoaDAO {
 	@Override
 	public Pessoa findOne(Long codigo) {
 		QueryUtil.queryParam(findByCodigo, codigo.toString());
-		List<String> valores;
+		HashMap<String, String> valores;
 		
-		valores = QueryUtil.lerResult("nome_completo", "cpf", "data_nascimento");
+		valores = QueryUtil.lerResult("codigo", "nome_completo", "cpf", "data_nascimento");
 		if (valores.size() == 0) {
 			return null;
 		}
 		
-		Pessoa pessoa = new Pessoa(codigo);
-		pessoa.setNomeCompleto(valores.get(0));
-		pessoa.setCpf(valores.get(1));
-		pessoa.setDataNascimento(new LocalDate(valores.get(2)));
+		return criaPessoa(valores);
+	}
+	
+	private Pessoa criaPessoa(HashMap<String, String> valores) {
+		Pessoa pessoa = new Pessoa(Long.valueOf(valores.get("codigo")));
+		pessoa.setNomeCompleto(valores.get("nome_completo"));
+		pessoa.setCpf(valores.get("cpf"));
+		pessoa.setDataNascimento(new LocalDate(valores.get("data_nascimento")));
+		
 		return pessoa;
 	}
 }

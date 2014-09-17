@@ -1,6 +1,5 @@
 package chat.foda.pra.caralho.testes.jdbc;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -62,7 +61,7 @@ public class UsuarioCRUDTeste {
 		usuarioDAO.save(usuario);
 		
 		assertNull(usuario.getCodigo());
-		assertEquals(null, pessoaDAO.findOne(usuario.getPessoa().getCodigo()));
+		assertNull(pessoaDAO.findOne(usuario.getPessoa().getCodigo()));
 	}
 	
 	/**
@@ -76,4 +75,13 @@ public class UsuarioCRUDTeste {
 		assertNotNull(usuario.getPessoa().getCodigo());
 	}
 	
+	@Test
+	public void deletaPessoaEUsuario() {
+		usuarioDAO.save(usuario);
+		
+		usuarioDAO.delete(usuario);
+		
+		assertNull(pessoaDAO.findOne(pessoa.getCodigo()));
+		assertNull(usuarioDAO.findOne(usuario.getCodigo()));
+	}
 }
