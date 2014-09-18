@@ -11,7 +11,7 @@ public abstract class ConexaoUtil {
 	static {
 		String url = "jdbc:mysql://localhost/chatFodaPraCaralho";
 		String usuario = "root";
-		String senha = "meuessequeele";
+		String senha = "root";
 		
 		try {
 			conexao = DriverManager.getConnection(url, usuario, senha);

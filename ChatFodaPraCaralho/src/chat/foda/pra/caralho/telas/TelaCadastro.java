@@ -17,9 +17,6 @@ import javax.swing.border.EmptyBorder;
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
-/**
- * @author luiznazari
- */
 public class TelaCadastro extends JDialog {
 	private static final long serialVersionUID = 8945739412692393477L;
 	
