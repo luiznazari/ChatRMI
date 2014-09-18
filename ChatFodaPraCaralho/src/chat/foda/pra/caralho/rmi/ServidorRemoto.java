@@ -15,7 +15,7 @@ import chat.foda.pra.caralho.models.UsuarioLogado;
  */
 public interface ServidorRemoto extends Remote {
 	
-	public UsuarioLogado login(ClienteRemoto cliente, String nome, String senha) throws RemoteException;
+	public UsuarioLogado login(ClienteRemoto cliente, String email, String senha) throws RemoteException;
 	
 	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException;
 	
