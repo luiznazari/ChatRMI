@@ -40,9 +40,17 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 public class TelaCliente extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
+	/* - Elementos da Tela - */
+	
 	private JMenuBar jmbMenuBar;
 	
 	private JMenu jmnArquivo;
+	
+	private JMenu jmnConta;
+	
+	private JMenuItem jmiTrocarSenha;
+	
+	private JMenuItem jmiRemoverConta;
 	
 	private JMenuItem jmiSair;
 	
@@ -73,6 +81,8 @@ public class TelaCliente extends JFrame {
 	private JScrollPane jspAmigos;
 	
 	private DefaultListModel<String> dlmAmigos;
+	
+	/* --------------------- */
 	
 	private ArrayList<TelaChat> chatList;
 	
@@ -113,6 +123,13 @@ public class TelaCliente extends JFrame {
 		jmnArquivo = new JMenu("Arquivo");
 		jmbMenuBar.add(jmnArquivo);
 		
+		jmnConta = new JMenu("Conta");
+		jmiTrocarSenha = new JMenuItem("Trocar senha");
+		jmnConta.add(jmiTrocarSenha);
+		jmiRemoverConta = new JMenuItem("Remover Conta");
+		jmnConta.add(jmiRemoverConta);
+		jmnArquivo.add(jmnConta);
+		
 		jmiSair = new JMenuItem("Sair");
 		jmnArquivo.add(jmiSair);
 		
@@ -144,44 +161,41 @@ public class TelaCliente extends JFrame {
 			}
 		});
 		
+		jmiTrocarSenha.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+		jmiRemoverConta.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int remover = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover sua conta?");
+				
+				if (remover == JOptionPane.YES_OPTION) {
+					try {
+						cliente.getService().removerUsuario(cliente.getUsuarioLogado().getUsuario());
+						dispose();
+					} catch (RemoteException e) {
+						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover usuário");
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
-				if (!cliente.getUsuarioLogado().getUsuario().getPessoa().getNomeCompleto().equals(nomeAmigo)
-				        && !dlmAmigos.contains(nomeAmigo)) {
-					try {
-						if (cliente.getService().adicionaAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo)) {
-							dlmAmigos.addElement(nomeAmigo);
-						} else {
-							JOptionPane.showMessageDialog(null, "Usuário não cadastrado.");
-						}
-					} catch (RemoteException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar novo amigo.");
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Nome digitado inválido ou amigo já adicionado.");
-				}
+				
 			}
 		});
 		
 		jmiRemoverAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String nomeAmigo = JOptionPane.showInputDialog(null, "Digite o nome do amigo:");
-				if (nomeAmigo != null && dlmAmigos.contains(nomeAmigo)) {
-					try {
-						cliente.getService().removerAmigo(cliente.getUsuarioLogado().getUsuario(), nomeAmigo);
-						dlmAmigos.removeElement(nomeAmigo);
-						JOptionPane.showMessageDialog(null, "Amigo removido com sucesso!");
-					} catch (RemoteException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover amigo.");
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Amigo não encontrado");
-				}
+				
 			}
 		});
 		
@@ -282,12 +296,14 @@ public class TelaCliente extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				try {
 					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:");
-					if (!novoNickname.isEmpty() && !novoNickname.equals(" ")) {
+					if (!novoNickname.isEmpty() && novoNickname.length() > 3) {
 						nickName = novoNickname;
 						jlbNomeUsuario.setText(novoNickname);
+						
+						cliente.getService().trocarNickname(cliente.getUsuarioLogado().getUsuario().getCodigo(), novoNickname);
+					} else {
+						JOptionPane.showMessageDialog(null, "Nome está vazio ou é muito curto");
 					}
-					cliente.getService().atualizarNickname(cliente.getUsuarioLogado().getUsuario().getPessoa().getNomeCompleto(),
-					        novoNickname);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Conexão - Erro ao alterar nickname");
@@ -300,21 +316,20 @@ public class TelaCliente extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting()) {
-					String nomeAmigo = jlstAmigos.getSelectedValue();
-					abrirChat(nomeAmigo);
+					// abrirChat(codigoAmigo);
 				}
 				
 			}
 		});
 	}
 	
-	public void abrirChat(String nomeAmigo) {
+	public void abrirChat(Long codigoAmigo) {
 		final TelaChat telaChat = new TelaChat(this);
 		
 		Chat chat = null;
 		
 		try {
-			chat = cliente.getService().criarChat(cliente.getUsuarioLogado().getUsuario(), nomeAmigo);
+			chat = cliente.getService().criarChat(cliente.getUsuarioLogado().getUsuario(), codigoAmigo);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Conexão - Erro ao abrir chat");
@@ -323,7 +338,7 @@ public class TelaCliente extends JFrame {
 		if (chat != null) {
 			telaChat.setChat(chat);
 			chatList.add(telaChat);
-			jdpDesktopChat.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
+			jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
 		} else {
 			JOptionPane.showMessageDialog(this, "O usuário selecionado não está logado", "Conexão",
 			        JOptionPane.INFORMATION_MESSAGE);
@@ -331,13 +346,13 @@ public class TelaCliente extends JFrame {
 		
 	}
 	
-	public void iniciarChatExistente(Chat chat, String nomeAmigo) {
+	public void iniciarChatExistente(Chat chat, Long codigoAmigo) {
 		final TelaChat telaChat = new TelaChat(this);
 		
 		telaChat.setChat(chat);
 		
 		chatList.add(telaChat);
-		jdpDesktopChat.add(this.getTalkFrame(nomeAmigo, telaChat.getChatPanel()));
+		jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
 	}
 	
 	public DefaultListModel<String> getListaAmigos() {

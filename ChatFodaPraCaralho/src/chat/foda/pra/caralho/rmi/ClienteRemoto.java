@@ -16,7 +16,7 @@ public interface ClienteRemoto extends Remote {
 	
 	public void enviarParaTodos(String mensagem) throws RemoteException;
 	
-	public void abrirChat(Chat chat, String nomeAmigo) throws RemoteException;
+	public void abrirChat(Chat chat, Long codigoAmigo) throws RemoteException;
 	
 	public void desativarChat(Long chatCodigo) throws RemoteException;
 	

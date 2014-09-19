@@ -16,9 +16,9 @@ public class PessoaJDBC implements PessoaDAO {
 	
 	private final String findByCodigo = "select * from pessoa p where p.codigo = ?";
 	
-	private final String save = "insert into pessoa(nome_completo, cpf, data_nascimento) values (?, ?, ?)";
+	private final String save = "insert into pessoa(nome_completo, data_nascimento) values (?, ?)";
 	
-	private final String update = "update pessoa set nome_completo = ?, cpf = ?, data_nascimento = ? where codigo = ?";
+	private final String update = "update pessoa set nome_completo = ?, data_nascimento = ? where codigo = ?";
 	
 	private final String deleteByCodigo = "delete from pessoa where codigo = ?";
 	
@@ -27,7 +27,7 @@ public class PessoaJDBC implements PessoaDAO {
 		Long codigo = null;
 		
 		try {
-			codigo = QueryUtil.sqlParamReturnKey(save, pessoa.getNomeCompleto(), pessoa.getCpf(),
+			codigo = QueryUtil.sqlParamReturnKey(save, pessoa.getNomeCompleto(),
 			        (pessoa.getDataNascimento() == null ? null : pessoa.getDataNascimento().toString("yyyy-MM-dd")));
 		} catch (SQLException e) {
 			delete(new Pessoa(codigo));
@@ -47,7 +47,7 @@ public class PessoaJDBC implements PessoaDAO {
 	
 	@Override
 	public void update(Pessoa pessoa) {
-		QueryUtil.sqlParam(update, pessoa.getNomeCompleto(), pessoa.getCpf(), (pessoa.getDataNascimento() == null ? null : pessoa
+		QueryUtil.sqlParam(update, pessoa.getNomeCompleto(), (pessoa.getDataNascimento() == null ? null : pessoa
 		        .getDataNascimento().toString("yyyy-MM-dd")), pessoa.getCodigo().toString());
 	}
 	
@@ -56,7 +56,7 @@ public class PessoaJDBC implements PessoaDAO {
 		List<Pessoa> pessoas = new ArrayList<>();
 		QueryUtil.queryParam(findAll, "0");
 		
-		List<HashMap<String, String>> listaValores = QueryUtil.lerAllResult("codigo", "nome_completo", "cpf", "data_nascimento");
+		List<HashMap<String, String>> listaValores = QueryUtil.lerAllResult("codigo", "nome_completo", "data_nascimento");
 		for (HashMap<String, String> valores : listaValores) {
 			pessoas.add(criaPessoa(valores));
 		}
@@ -69,7 +69,7 @@ public class PessoaJDBC implements PessoaDAO {
 		QueryUtil.queryParam(findByCodigo, codigo.toString());
 		HashMap<String, String> valores;
 		
-		valores = QueryUtil.lerResult("codigo", "nome_completo", "cpf", "data_nascimento");
+		valores = QueryUtil.lerResult("codigo", "nome_completo", "data_nascimento");
 		if (valores.size() == 0) {
 			return null;
 		}
@@ -80,7 +80,6 @@ public class PessoaJDBC implements PessoaDAO {
 	private Pessoa criaPessoa(HashMap<String, String> valores) {
 		Pessoa pessoa = new Pessoa(Long.valueOf(valores.get("codigo")));
 		pessoa.setNomeCompleto(valores.get("nome_completo"));
-		pessoa.setCpf(valores.get("cpf"));
 		pessoa.setDataNascimento(new LocalDate(valores.get("data_nascimento")));
 		
 		return pessoa;

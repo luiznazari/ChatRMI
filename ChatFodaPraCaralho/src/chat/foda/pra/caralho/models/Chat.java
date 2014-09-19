@@ -56,4 +56,14 @@ public class Chat implements Entidade, Serializable {
 		this.codigo = codigo;
 	}
 	
+	public String getNomesParticipantes() {
+		StringBuilder sBuilder = new StringBuilder();
+		
+		for (Usuario u : getUsuarios()) {
+			sBuilder.append(u.getNickName() + ", ");
+		}
+		
+		return sBuilder.toString().substring(0, sBuilder.lastIndexOf(",") - 1);
+	}
+	
 }

@@ -4,6 +4,6 @@ import chat.foda.pra.caralho.models.Usuario;
 
 public interface UsuarioDAO extends CrudDAO<Usuario> {
 	
-	Usuario findOneByNomePessoa(String nomePessoa);
+	Usuario findOneByEmail(String email);
 	
 }

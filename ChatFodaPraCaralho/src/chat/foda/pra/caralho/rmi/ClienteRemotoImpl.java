@@ -31,8 +31,8 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public void abrirChat(Chat chat, String nomeAmigo) throws RemoteException {
-		telaCliente.iniciarChatExistente(chat, nomeAmigo);
+	public void abrirChat(Chat chat, Long codigoAmigo) throws RemoteException {
+		telaCliente.iniciarChatExistente(chat, codigoAmigo);
 	}
 	
 	@Override
