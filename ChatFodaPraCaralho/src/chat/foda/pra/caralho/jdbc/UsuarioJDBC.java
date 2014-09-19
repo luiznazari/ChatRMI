@@ -17,7 +17,7 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	private final String findByCodigo = "select * from usuario where codigo = ?";
 	
-	private final String findByNomePessoa = "select * from usuario u join pessoa p on u.codpessoa = p.codigo where p.nome_completo = ?";
+	private final String findByEmail = "select * from usuario u where u.email = ?";
 	
 	private final String save = "insert into usuario(email, senha, nickname, codPessoa) values (?, ?, ?, ?)";
 	
@@ -95,8 +95,8 @@ public class UsuarioJDBC implements UsuarioDAO {
 	}
 	
 	@Override
-	public Usuario findOneByNomePessoa(String nomePessoa) {
-		QueryUtil.queryParam(findByNomePessoa, nomePessoa);
+	public Usuario findOneByEmail(String email) {
+		QueryUtil.queryParam(findByEmail, email);
 		
 		HashMap<String, String> valores;
 		
