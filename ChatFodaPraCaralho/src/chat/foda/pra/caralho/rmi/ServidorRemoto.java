@@ -32,4 +32,6 @@ public interface ServidorRemoto extends Remote {
 	public Chat criarChat(Usuario solicitante, String nomeAmigo) throws RemoteException;
 	
 	public void atualizarNickname(String nomeUsuario, String novoNickname) throws RemoteException;
+
+	boolean cadastrarUsuario(String nome, String senha, String email) throws RemoteException;
 }

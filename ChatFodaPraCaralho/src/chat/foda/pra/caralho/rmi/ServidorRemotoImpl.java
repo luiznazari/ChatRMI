@@ -101,14 +101,14 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public boolean cadastrarUsuario(String nome, String senha) throws RemoteException {
+	public boolean cadastrarUsuario(String nome, String senha, String  email) throws RemoteException {
 		boolean b;
 		if (usuarioDAO.findOneByNomePessoa(nome) == null) {
 			Pessoa pessoa = new Pessoa();
 			pessoa.setNomeCompleto(nome);
 			
 			Usuario usuario = new Usuario();
-			usuario.setEmail(nome + "@teste.com");
+			usuario.setEmail(email);
 			usuario.setSenha(senha);
 			usuario.setPessoa(pessoa);
 			

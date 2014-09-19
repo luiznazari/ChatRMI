@@ -35,9 +35,6 @@ import com.alee.laf.WebLookAndFeel;
 
 public class TelaLogin extends JFrame {
 
-	/**
-	 * @author luiznazari
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JMenuBar jmbMenuBar;
