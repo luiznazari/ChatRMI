@@ -33,11 +33,10 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 
 import com.alee.laf.WebLookAndFeel;
 
+/**
+ * @author luiznazari
+ */
 public class TelaLogin extends JFrame {
-	
-	/**
-	 * @author luiznazari
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JMenuBar jmbMenuBar;
