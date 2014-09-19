@@ -35,7 +35,6 @@ public class UsuarioCRUDTeste {
 	public void criaAmbiente() {
 		pessoa = new Pessoa();
 		pessoa.setNomeCompleto("Pessoa Teste 1");
-		pessoa.setCpf("123456");
 		pessoa.setDataNascimento(LocalDate.now().minusYears(1));
 		
 		usuario = new Usuario();
