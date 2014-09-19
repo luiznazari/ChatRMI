@@ -155,7 +155,7 @@ public class TelaLogin extends JFrame {
 		pnlLogin.setLayout(new GridBagLayout());
 		pnlLogin.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), "Login"));
 		
-		jlbId = new JLabel("ID:");
+		jlbId = new JLabel("E-mail:");
 		pnlLogin.add(jlbId, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5));
 		
 		jtfId = new JTextField();

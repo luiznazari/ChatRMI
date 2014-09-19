@@ -101,8 +101,8 @@ public class TelaCliente extends JFrame {
 	public TelaCliente(ClienteRmi cliente) {
 		
 		this.cliente = cliente;
-		// this.cliente.getClienteService().setTelaCliente(this);
-		this.nickName = "Teste"; // cliente.getUsuarioLogado().getUsuario().getNickName();
+		this.cliente.getClienteService().setTelaCliente(this);
+		this.nickName = cliente.getUsuarioLogado().getUsuario().getNickName();
 		this.chatList = new ArrayList<>();
 		this.minDimensao = new Dimension(200, 400);
 		
@@ -176,6 +176,7 @@ public class TelaCliente extends JFrame {
 				if (remover == JOptionPane.YES_OPTION) {
 					try {
 						cliente.getService().removerUsuario(cliente.getUsuarioLogado().getUsuario());
+						dispose();
 					} catch (RemoteException e) {
 						JOptionPane.showMessageDialog(null, "Conexão - Erro ao remover usuário");
 						e.printStackTrace();
