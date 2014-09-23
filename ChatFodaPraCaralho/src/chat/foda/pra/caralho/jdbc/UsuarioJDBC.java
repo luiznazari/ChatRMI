@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import chat.foda.pra.caralho.dao.AmigosDAO;
 import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
@@ -27,8 +28,11 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	private PessoaDAO pessoaDAO;
 	
+	private AmigosDAO amigosDAO;
+	
 	public UsuarioJDBC() {
 		pessoaDAO = DaoFactory.get().pessoaDao();
+		amigosDAO = DaoFactory.get().amigosDao();
 	}
 	
 	@Override
@@ -52,6 +56,8 @@ public class UsuarioJDBC implements UsuarioDAO {
 	@Override
 	public void delete(Usuario usuario) {
 		if (usuario.getCodigo() != null) {
+			amigosDAO.deleteAll(usuario.getCodigo());
+			
 			QueryUtil.sqlParam(deleteByCodigo, usuario.getCodigo().toString());
 			
 			pessoaDAO.delete(usuario.getPessoa());
@@ -111,11 +117,15 @@ public class UsuarioJDBC implements UsuarioDAO {
 	private Usuario criaUsuario(HashMap<String, String> valores) {
 		Pessoa pessoa = pessoaDAO.findOne(Long.valueOf(valores.get("codPessoa")));
 		
-		Usuario usuario = new Usuario(Long.valueOf(valores.get("codigo")));
+		Long codUsuario = Long.valueOf(valores.get("codigo"));
+		
+		Usuario usuario = new Usuario(codUsuario);
 		usuario.setEmail(valores.get("email"));
 		usuario.setSenha(valores.get("senha"));
 		usuario.setNickName(valores.get("nickname"));
 		usuario.setPessoa(pessoa);
+		
+		usuario.setAmigos(amigosDAO.findAllByCodUsuario(codUsuario));
 		
 		return usuario;
 	}

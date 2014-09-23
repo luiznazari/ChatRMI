@@ -19,7 +19,7 @@ public class Usuario implements Serializable, Entidade {
 	
 	private String email;
 	
-	private Set<String> amigos;
+	private Set<Usuario> amigos;
 	
 	public Usuario() {}
 	
@@ -32,20 +32,20 @@ public class Usuario implements Serializable, Entidade {
 		this.pessoa.setNomeCompleto(nomeCompleto);
 	}
 	
-	public void adicionaAmigo(String nome) {
+	public void adicionaAmigo(Usuario usuario) {
 		if (this.amigos == null) {
-			this.amigos = new HashSet<String>();
+			this.amigos = new HashSet<Usuario>();
 		}
 		
-		this.amigos.add(nome);
+		this.amigos.add(usuario);
 	}
 	
-	public boolean removeAmigo(String nome) {
+	public boolean removeAmigo(Usuario usuario) {
 		if (this.amigos == null) {
 			return false;
 		}
 		
-		this.amigos.remove(nome);
+		this.amigos.remove(usuario);
 		return true;
 	}
 	
@@ -79,11 +79,14 @@ public class Usuario implements Serializable, Entidade {
 		this.nickName = nickName;
 	}
 	
-	public Set<String> getAmigos() {
+	public Set<Usuario> getAmigos() {
+		if (amigos == null) {
+			amigos = new HashSet<Usuario>();
+		}
 		return amigos;
 	}
 	
-	public void setAmigos(Set<String> amigos) {
+	public void setAmigos(Set<Usuario> amigos) {
 		this.amigos = amigos;
 	}
 	

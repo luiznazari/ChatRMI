@@ -15,12 +15,15 @@ public class QueryUtil extends ConexaoUtil {
 	
 	private static final String createUsuario = "create table if not exists `chatFodaPraCaralho`.`usuario`(codigo bigint not null primary key auto_increment, email varchar(45) not null unique key, senha varchar(45) not null, nickname varchar(45), codPessoa bigint not null, foreign key (codpessoa) references pessoa(codigo))";
 	
+	private static final String createAmigos = "create table if not exists `chatFodaPraCaralho`.`amigos`(codUsuario bigint not null, codAmigo bigint not null, primary key (codUsuario, codAmigo), foreign key (codUsuario) references usuario(codigo), foreign key (codAmigo) references usuario(codigo))";
+	
 	/**
 	 * Cria as tabelas da aplicação caso não existam.
 	 */
 	public static void criaBaseSeNaoExiste() {
 		sql(createPessoa);
 		sql(createUsuario);
+		sql(createAmigos);
 	}
 	
 	/**

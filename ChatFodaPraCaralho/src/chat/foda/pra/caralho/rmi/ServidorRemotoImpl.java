@@ -37,7 +37,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
 		
-		usuarioDAO = DaoFactory.get().usuarioDAO();
+		usuarioDAO = DaoFactory.get().usuarioDao();
 	}
 	
 	public void setTelaServidor(TelaServidor telaServidor) {
