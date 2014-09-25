@@ -32,7 +32,6 @@ public class Log {
 			FileWriter fw = new FileWriter(log, true);
 			BufferedWriter bw = new BufferedWriter(fw);
 
-			System.out.print("Usuario: ");
 			bw.write(texto);
 			bw.newLine();
 			
