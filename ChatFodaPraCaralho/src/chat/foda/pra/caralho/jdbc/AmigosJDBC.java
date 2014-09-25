@@ -17,7 +17,11 @@ public class AmigosJDBC implements AmigosDAO {
 	
 	private final String deleteOne = "delete from amigos where codUsuario = ? and codAmigo = ?";
 	
-	private final String findAllByCodUsuario = "select u.codigo, u.codPessoa , p.nome_completo from usuario u inner join pessoa p on u.codPessoa = p.codigo where u.codigo in (select codAmigo from amigos where codUsuario = ?)";
+	private final String findOne = "select u.codigo, u.nickname, u.codPessoa , p.nome_completo from usuario u inner join pessoa p on u.codPessoa = p.codigo where u.codigo = ?";
+	
+	private final String findAllByCodUsuario = "select u.codigo, u.nickname, u.codPessoa , p.nome_completo from usuario u inner join pessoa p on u.codPessoa = p.codigo where u.codigo in (select codAmigo from amigos where codUsuario = ?)";
+	
+	private final String findAllDesconhecidos = "select u.codigo, u.nickname, u.codPessoa , p.nome_completo from usuario u inner join pessoa p on u.codPessoa = p.codigo where u.codigo not in (select codAmigo from amigos where codUsuario = ?) and u.codigo != ?";
 	
 	@Override
 	public void save(Long codUsuario, Long codAmigo) {
@@ -36,12 +40,28 @@ public class AmigosJDBC implements AmigosDAO {
 	}
 	
 	@Override
+	public Usuario findOne(Long codAmigo) {
+		QueryUtil.queryParam(findOne, codAmigo.toString());
+		
+		return criaAmigo(QueryUtil.lerResult("codigo", "nickname", "codPessoa", "nome_completo"));
+	}
+	
+	@Override
 	public Set<Usuario> findAllByCodUsuario(Long codUsuario) {
+		return criaSetAmigos(findAllByCodUsuario, codUsuario.toString());
+	}
+	
+	@Override
+	public Set<Usuario> findAllDesconhecidosByCodUsiario(Long codUsuario) {
+		return criaSetAmigos(findAllDesconhecidos, codUsuario.toString(), codUsuario.toString());
+	}
+	
+	private Set<Usuario> criaSetAmigos(String sql, String... param) {
 		Set<Usuario> amigos = new HashSet<>();
 		
-		QueryUtil.queryParam(findAllByCodUsuario, codUsuario.toString());
+		QueryUtil.queryParam(sql, param);
 		
-		List<HashMap<String, String>> listaValores = QueryUtil.lerAllResult("codigo", "codPessoa", "nome_completo");
+		List<HashMap<String, String>> listaValores = QueryUtil.lerAllResult("codigo", "nickname", "codPessoa", "nome_completo");
 		for (HashMap<String, String> val : listaValores) {
 			amigos.add(criaAmigo(val));
 		}
@@ -51,6 +71,7 @@ public class AmigosJDBC implements AmigosDAO {
 	
 	private Usuario criaAmigo(HashMap<String, String> valores) {
 		Usuario usuario = new Usuario(Long.valueOf(valores.get("codigo")));
+		usuario.setNickName(valores.get("nickname"));
 		usuario.setPessoa(new Pessoa(Long.valueOf(valores.get("codPessoa"))));
 		usuario.getPessoa().setNomeCompleto(valores.get("nome_completo"));
 		

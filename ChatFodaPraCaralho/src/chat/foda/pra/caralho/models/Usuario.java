@@ -27,9 +27,9 @@ public class Usuario implements Serializable, Entidade {
 		this.codigo = codigo;
 	}
 	
-	public Usuario(String nomeCompleto, String senha) {
-		this.setSenha(senha);
-		this.pessoa.setNomeCompleto(nomeCompleto);
+	public Usuario(Long codigo, String nickname) {
+		this.codigo = codigo;
+		this.nickName = nickname;
 	}
 	
 	public void adicionaAmigo(Usuario usuario) {
@@ -106,4 +106,8 @@ public class Usuario implements Serializable, Entidade {
 		this.email = email;
 	}
 	
+	@Override
+	public String toString() {
+		return this.getNickName();
+	}
 }

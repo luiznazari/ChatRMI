@@ -156,12 +156,12 @@ public class UsuarioCRUDTeste {
 		}
 		
 		Usuario toTest = amigosDoUsuarioDoBanco.get(usuarioAmigo1.getCodigo());
-		assertEquals(usuarioAmigo1.getCodigo(), toTest.getCodigo());
+		assertEquals(usuarioAmigo1.getNickName(), toTest.getNickName());
 		assertEquals(usuarioAmigo1.getPessoa().getCodigo(), toTest.getPessoa().getCodigo());
 		assertEquals(usuarioAmigo1.getPessoa().getNomeCompleto(), toTest.getPessoa().getNomeCompleto());
 		
 		toTest = amigosDoUsuarioDoBanco.get(usuarioAmigo2.getCodigo());
-		assertEquals(usuarioAmigo2.getCodigo(), toTest.getCodigo());
+		assertEquals(usuarioAmigo2.getNickName(), toTest.getNickName());
 		assertEquals(usuarioAmigo2.getPessoa().getCodigo(), toTest.getPessoa().getCodigo());
 		assertEquals(usuarioAmigo2.getPessoa().getNomeCompleto(), toTest.getPessoa().getNomeCompleto());
 	}
