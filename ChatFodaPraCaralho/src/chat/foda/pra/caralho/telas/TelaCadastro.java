@@ -4,9 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,15 +18,18 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.MaskFormatter;
 
 import org.joda.time.LocalDate;
-
-import com.alee.laf.WebLookAndFeel;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
+
+import com.alee.laf.WebLookAndFeel;
 
 public class TelaCadastro extends JDialog {
 	private static final long serialVersionUID = 8945739412692393477L;
@@ -37,7 +42,7 @@ public class TelaCadastro extends JDialog {
 	private JTextField jtfNome;
 
 	private JLabel jlbDataNasc;
-	private JTextField jtfDataNasc;
+	private JFormattedTextField jffDataNasc;
 
 	private JLabel jlbSenha;
 	private JPasswordField jpfSenha;
@@ -58,7 +63,7 @@ public class TelaCadastro extends JDialog {
 		setTitle("Cadastrar Conta");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(getMain());
-		setSize(350, 311);
+		setSize(400, 331);
 		setLocationRelativeTo(null);
 		setModal(true);
 		setResizable(false);
@@ -139,9 +144,14 @@ public class TelaCadastro extends JDialog {
 				new GridConstraints().setAnchor(GridConstraints.EAST)
 						.setInsets(5));
 
-		jtfDataNasc = new JTextField();
+		try {
+			jffDataNasc = new JFormattedTextField(new MaskFormatter(
+					"##/##/####"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		jpnPessoa.add(
-				jtfDataNasc,
+				jffDataNasc,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5)
 						.setOccupiedSize(GridConstraints.REMAINDER, 1)
@@ -202,19 +212,29 @@ public class TelaCadastro extends JDialog {
 						.getPassword());
 				String email = jtfEmail.getText();
 
+				String dataNasc = null;
+				if (jffDataNasc.isEditValid()) {
+					dataNasc = jffDataNasc.getText();
+				}
+
 				if (!nome.isEmpty() && !senha.isEmpty() && !email.isEmpty()) {
 					if (senha.equals(confirmaSenha)) {
 						try {
 							Pessoa pessoa = new Pessoa();
 							pessoa.setNomeCompleto(nome);
-							pessoa.setDataNascimento(LocalDate.now());
-							
+							if (dataNasc != null) {
+								pessoa.setDataNascimento(LocalDate.parse(
+										dataNasc,
+										DateTimeFormat.forPattern("dd/MM/yyyy")));
+							}
+
 							Usuario usuario = new Usuario();
 							usuario.setEmail(email);
 							usuario.setSenha(senha);
 							usuario.setPessoa(pessoa);
-							
-							if (getCliente().getService().cadastrarUsuario(usuario)) {
+
+							if (getCliente().getService().cadastrarUsuario(
+									usuario)) {
 								JOptionPane.showMessageDialog(null,
 										"Cadastro efetuado com sucesso!");
 								dispose();
@@ -232,8 +252,9 @@ public class TelaCadastro extends JDialog {
 								"As senhas não conferem.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"Nome ou senha inválidos ou vazios!");
+					JOptionPane
+							.showMessageDialog(null,
+									"Campos nome, senha ou e-mail podem estarem vazios ou serem inválidos!");
 				}
 			}
 		});

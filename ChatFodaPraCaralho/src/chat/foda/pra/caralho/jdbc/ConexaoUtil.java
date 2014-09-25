@@ -4,14 +4,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import chat.foda.pra.caralho.telas.TelaAutorizacaoBanco;
+
 public abstract class ConexaoUtil {
 	
 	protected static Connection conexao;
 	
 	static {
 		String url = "jdbc:mysql://localhost/chatFodaPraCaralho";
-		String usuario = "root";
-		String senha = "meuessequeele";
+		
+		if (!Log.existeLog()) {
+			TelaAutorizacaoBanco auth = new TelaAutorizacaoBanco();
+			Log.criarArqLog();
+			Log.escrever(auth.getUsuario());
+			Log.escrever(auth.getSenha());
+		}
+		
+		String usuario = Log.ler()[0], senha = Log.ler()[1];
 		
 		try {
 			conexao = DriverManager.getConnection(url, usuario, senha);
