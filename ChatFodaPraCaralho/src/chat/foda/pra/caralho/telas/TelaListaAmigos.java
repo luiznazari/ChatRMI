@@ -16,38 +16,40 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.models.Usuario;
-
-import com.alee.laf.WebLookAndFeel;
 
 public class TelaListaAmigos {
 	
-	private static JDialog jdgJanelaAmigos;
+	/* - Elementos da Tela - */
 	
-	private static JPanel jpnPrincipal;
+	private JDialog jdgJanelaAmigos;
 	
-	private static JLabel jlbLista;
+	private JPanel jpnPrincipal;
 	
-	private static JList<Usuario> jlstUsuarios;
+	private JLabel jlbLista;
 	
-	private static DefaultListModel<Usuario> dlmUsuarios;
+	private JList<Usuario> jlstUsuarios;
 	
-	private static JScrollPane jspUsuarios;
+	private DefaultListModel<Usuario> dlmUsuarios;
 	
-	private static JPanel jpnBotoes;
+	private JScrollPane jspUsuarios;
 	
-	private static JButton jbtAdicionar;
+	private JPanel jpnBotoes;
 	
-	private static JButton jbtCancelar;
+	private JButton jbtAdicionar;
 	
-	private static ClienteRmi cliente;
+	private JButton jbtCancelar;
 	
-	public static void getTela(ClienteRmi cliente) {
-		TelaListaAmigos.cliente = cliente;
+	private TelaCliente telaCliente;
+	
+	/* --------------------- */
+	
+	private Usuario amigoToAdd;
+	
+	public TelaListaAmigos(TelaCliente telaCliente) {
+		this.telaCliente = telaCliente;
 		
 		jdgJanelaAmigos = new JDialog();
 		
@@ -61,7 +63,7 @@ public class TelaListaAmigos {
 		jdgJanelaAmigos.setVisible(true);
 	}
 	
-	public static JPanel getPanel() {
+	public JPanel getPanel() {
 		jpnPrincipal = new JPanel(new BorderLayout());
 		jpnPrincipal.setBorder(new EmptyBorder(10, 5, 5, 5));
 		
@@ -81,7 +83,7 @@ public class TelaListaAmigos {
 		return jpnPrincipal;
 	}
 	
-	private static JPanel getPanelBotoes() {
+	private JPanel getPanelBotoes() {
 		jpnBotoes = new JPanel(new FlowLayout());
 		
 		jbtCancelar = new JButton("Cancelar");
@@ -100,19 +102,21 @@ public class TelaListaAmigos {
 		jbtAdicionar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// return jlstUsuarios.getSelectedValue();
+				setAmigoToAdd(jlstUsuarios.getSelectedValue());
+				jdgJanelaAmigos.dispose();
 			}
 		});
 		
 		return jpnBotoes;
 	}
 	
-	private static DefaultListModel<Usuario> getListaUsuarios() {
+	private DefaultListModel<Usuario> getListaUsuarios() {
 		dlmUsuarios = new DefaultListModel<Usuario>();
 		
 		Set<Usuario> desconhecidos;
 		try {
-			desconhecidos = cliente.getService().getUsuariosDesconhecidos(cliente.getUsuarioLogado().getUsuario().getCodigo());
+			desconhecidos = telaCliente.getCliente().getService()
+			        .getUsuariosDesconhecidos(telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
 			
 			for (Usuario u : desconhecidos) {
 				dlmUsuarios.addElement(u);
@@ -132,13 +136,12 @@ public class TelaListaAmigos {
 		return dlmUsuarios;
 	}
 	
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(new WebLookAndFeel());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		TelaListaAmigos.getTela(null);
+	public Usuario getAmigoToAdd() {
+		return amigoToAdd;
 	}
+	
+	public void setAmigoToAdd(Usuario amigoToAdd) {
+		this.amigoToAdd = amigoToAdd;
+	}
+	
 }

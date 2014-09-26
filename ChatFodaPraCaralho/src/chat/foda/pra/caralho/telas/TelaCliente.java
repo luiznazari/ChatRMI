@@ -188,19 +188,18 @@ public class TelaCliente extends JFrame {
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				TelaListaAmigos.getTela(cliente);
-				/*
-				 * try {
-				 * Usuario amigo = new Usuario(0l, "Temp");
-				 * TelaListaAmigos.getTela(cliente);
-				 * cliente.getService().adicionaAmigo(usuario.getCodigo(), amigo.getCodigo());
-				 * usuario.adicionaAmigo(amigo);
-				 * dlmAmigos.addElement(amigo);
-				 * } catch (RemoteException e) {
-				 * e.printStackTrace();
-				 * JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
-				 * }
-				 */
+				try {
+					TelaListaAmigos telaAmigos = new TelaListaAmigos(getTela());
+					Usuario amigo = telaAmigos.getAmigoToAdd();
+					
+					cliente.getService().adicionaAmigo(usuario.getCodigo(), amigo.getCodigo());
+					usuario.adicionaAmigo(amigo);
+					dlmAmigos.addElement(amigo);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
+				}
+				
 			}
 		});
 		
@@ -306,7 +305,7 @@ public class TelaCliente extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:");
+					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:", usuario.getNickName());
 					if (!novoNickname.isEmpty() && novoNickname.length() > 3) {
 						usuario.setNickName(novoNickname);
 						jlbNomeUsuario.setText(novoNickname);
@@ -323,14 +322,15 @@ public class TelaCliente extends JFrame {
 		});
 		
 		jlstAmigos.addListSelectionListener(new ListSelectionListener() {
-			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				Usuario u = jlstAmigos.getSelectedValue();
-				System.out.println(u.getCodigo() + " | " + u.getNickName() + " | " + u.getPessoa().getCodigo() + " | "
-				        + u.getPessoa().getNomeCompleto());
+				Usuario amigoToChat = jlstAmigos.getSelectedValue();
+				jlstAmigos.clearSelection();
+				
 				if (e.getValueIsAdjusting()) {
 					// abrirChat(codigoAmigo);
+					System.out.println(amigoToChat.getCodigo() + " | " + amigoToChat.getNickName() + " | "
+					        + amigoToChat.getPessoa().getCodigo() + " | " + amigoToChat.getPessoa().getNomeCompleto());
 				}
 				
 			}
@@ -415,6 +415,10 @@ public class TelaCliente extends JFrame {
 			codigos.add(tc.getChat().getCodigo());
 		}
 		return codigos;
+	}
+	
+	public TelaCliente getTela() {
+		return this;
 	}
 	
 	public ClienteRmi getCliente() {
