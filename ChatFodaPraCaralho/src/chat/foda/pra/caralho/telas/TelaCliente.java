@@ -198,6 +198,8 @@ public class TelaCliente extends JFrame {
 				} catch (RemoteException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
+				} catch (NullPointerException e) {
+					// Usuário clicou em cancelar e não retornou um usuário.
 				}
 				
 			}
@@ -306,18 +308,28 @@ public class TelaCliente extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				try {
 					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:", usuario.getNickName());
-					if (!novoNickname.isEmpty() && novoNickname.length() > 3) {
+					
+					String temp = novoNickname.toLowerCase();
+					if (temp.equals("pinto") || temp.equals("pênis") || temp.equals("penis") || temp.equals("caralho")
+					        || temp.equals("saco") || temp.equals("pau")) {
+						JOptionPane.showMessageDialog(null, "Erro, seu '" + temp
+						        + "' é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.");
+						
+					} else if (novoNickname.length() > 3) {
+						
 						usuario.setNickName(novoNickname);
 						jlbNomeUsuario.setText(novoNickname);
 						
 						cliente.getService().trocarNickname(usuario.getCodigo(), novoNickname);
+						
 					} else {
-						JOptionPane.showMessageDialog(null, "Nome está vazio ou é muito curto");
+						JOptionPane.showMessageDialog(null, "O Nickname '" + novoNickname
+						        + "' é muito curto.\nTamanho mínimo: 4 caracteres.");
 					}
 				} catch (RemoteException e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Conexão - Erro ao alterar nickname");
-				} catch (NullPointerException e) {}
+				}
 			}
 		});
 		
