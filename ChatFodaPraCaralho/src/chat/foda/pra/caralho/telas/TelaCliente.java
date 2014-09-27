@@ -309,13 +309,7 @@ public class TelaCliente extends JFrame {
 				try {
 					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:", usuario.getNickName());
 					
-					String temp = novoNickname.toLowerCase();
-					if (temp.equals("pinto") || temp.equals("pênis") || temp.equals("penis") || temp.equals("caralho")
-					        || temp.equals("saco") || temp.equals("pau")) {
-						JOptionPane.showMessageDialog(null, "Erro, seu '" + temp
-						        + "' é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.");
-						
-					} else if (novoNickname.length() > 3) {
+					if (isValidNick(novoNickname) && novoNickname.length() > 3) {
 						
 						usuario.setNickName(novoNickname);
 						jlbNomeUsuario.setText(novoNickname);
@@ -427,6 +421,36 @@ public class TelaCliente extends JFrame {
 			codigos.add(tc.getChat().getCodigo());
 		}
 		return codigos;
+	}
+	
+	public boolean isValidNick(String nick) {
+		nick = nick.toLowerCase();
+		
+		String[] nomesObscenosMasc = new String[] {
+		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
+		};
+		String[] nomesObscenosFem = new String[] {
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "cu", "ânus", "anus"
+		};
+		
+		boolean masc = containsString(nick, nomesObscenosMasc,
+		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.");
+		
+		boolean fem = containsString(nick, nomesObscenosFem,
+		        "está pegando fogo.\nAconselhamos a utilização de um extintor e tente novamente mais tarde.");
+		
+		return !(masc || fem);
+	}
+	
+	private boolean containsString(String toCompare, String[] strings, String msg) {
+		for (String s : strings) {
+			if (s.contains(s)) {
+				JOptionPane.showMessageDialog(null, "Erro, seu(sua) '" + s + "' " + msg);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public TelaCliente getTela() {
