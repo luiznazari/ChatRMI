@@ -309,16 +309,18 @@ public class TelaCliente extends JFrame {
 				try {
 					String novoNickname = JOptionPane.showInputDialog(null, "Digite o novo nickname:", usuario.getNickName());
 					
-					if (isValidNick(novoNickname) && novoNickname.length() > 3) {
-						
-						usuario.setNickName(novoNickname);
-						jlbNomeUsuario.setText(novoNickname);
-						
-						cliente.getService().trocarNickname(usuario.getCodigo(), novoNickname);
-						
-					} else {
-						JOptionPane.showMessageDialog(null, "O Nickname '" + novoNickname
-						        + "' é muito curto.\nTamanho mínimo: 4 caracteres.");
+					if (isValidNick(novoNickname)) {
+						if (novoNickname.length() > 3) {
+							
+							usuario.setNickName(novoNickname);
+							jlbNomeUsuario.setText(novoNickname);
+							
+							cliente.getService().trocarNickname(usuario.getCodigo(), novoNickname);
+							
+						} else {
+							JOptionPane.showMessageDialog(null, "O Nickname '" + novoNickname
+							        + "' é muito curto.\nTamanho mínimo: 4 caracteres.");
+						}
 					}
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -436,15 +438,23 @@ public class TelaCliente extends JFrame {
 		boolean masc = containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.");
 		
+		if (masc) {
+			return false;
+		}
+		
 		boolean fem = containsString(nick, nomesObscenosFem,
 		        "está pegando fogo.\nAconselhamos a utilização de um extintor e tente novamente mais tarde.");
 		
-		return !(masc || fem);
+		if (fem) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private boolean containsString(String toCompare, String[] strings, String msg) {
 		for (String s : strings) {
-			if (s.contains(s)) {
+			if (toCompare.contains(s)) {
 				JOptionPane.showMessageDialog(null, "Erro, seu(sua) '" + s + "' " + msg);
 				return true;
 			}
