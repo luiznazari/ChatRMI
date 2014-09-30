@@ -15,6 +15,14 @@ public class Log {
 		return log.exists();
 	}
 
+	public static boolean removerArqLog() {
+		if (log.delete()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static boolean criarArqLog() {
 		try {
 			if (log.createNewFile()) {
@@ -34,7 +42,7 @@ public class Log {
 
 			bw.write(texto);
 			bw.newLine();
-			
+
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
