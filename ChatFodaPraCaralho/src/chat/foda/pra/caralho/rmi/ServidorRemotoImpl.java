@@ -5,9 +5,11 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.LocalTime;
 
+import chat.foda.pra.caralho.dao.AmigosDAO;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
 import chat.foda.pra.caralho.models.Chat;
@@ -26,7 +28,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	private TelaServidor telaServidor;
 	
-	private Map<String, ClienteRemoto> clientesConectados = new HashMap<String, ClienteRemoto>();
+	private Map<Long, ClienteRemoto> clientesConectados = new HashMap<>();
 	
 	private Map<Long, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Long, ArrayList<ClienteRemoto>>();
 	
@@ -34,10 +36,13 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	private UsuarioDAO usuarioDAO;
 	
+	private AmigosDAO amigosDAO;
+	
 	public ServidorRemotoImpl() throws RemoteException {
 		super();
 		
-		usuarioDAO = DaoFactory.get().usuarioDAO();
+		usuarioDAO = DaoFactory.get().usuarioDao();
+		amigosDAO = DaoFactory.get().amigosDao();
 	}
 	
 	public void setTelaServidor(TelaServidor telaServidor) {
@@ -68,12 +73,12 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public synchronized UsuarioLogado login(ClienteRemoto cliente, String email, String senha) throws RemoteException {
+	public UsuarioLogado login(ClienteRemoto cliente, String email, String senha) throws RemoteException {
 		Usuario usuario = usuarioDAO.findOneByEmail(email);
 		if (usuario != null && !clientesConectados.containsKey(usuario.getCodigo())) {
 			if (usuario.getSenha().equals(senha)) {
 				UsuarioLogado usuarioLogado = new UsuarioLogado(usuario);
-				clientesConectados.put(usuario.getPessoa().getNomeCompleto(), cliente);
+				clientesConectados.put(usuario.getCodigo(), cliente);
 				telaServidor.escreverNoConsole("[" + LocalTime.now() + "] O usuário '"
 				        + usuarioLogado.getUsuario().getPessoa().getNomeCompleto() + "' se conectou.");
 				telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
@@ -114,17 +119,22 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public synchronized boolean adicionaAmigo(Usuario usuario, Long codigoAmigo) throws RemoteException {
-		return false;
+	public void adicionaAmigo(Long codUsuario, Long codAmigo) throws RemoteException {
+		amigosDAO.save(codUsuario, codAmigo);
 	}
 	
 	@Override
-	public void removerAmigo(Usuario usuario, Long codigoAmigo) throws RemoteException {
-		
+	public void removerAmigo(Long codUsuario, Long codAmigo) throws RemoteException {
+		amigosDAO.deleteOne(codUsuario, codAmigo);
 	}
 	
 	@Override
-	public Chat criarChat(Usuario solicitante, Long codigoAmigo) {
+	public Set<Usuario> getUsuariosDesconhecidos(Long codUsuario) throws RemoteException {
+		return amigosDAO.findAllDesconhecidosByCodUsiario(codUsuario);
+	}
+	
+	@Override
+	public Chat criarChat(Usuario solicitante, Long codAmigo) {
 		
 		return null;
 	}
@@ -147,7 +157,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public synchronized void trocarNickname(Long codigo, String novoNickname) throws RemoteException {
+	public void trocarNickname(Long codigo, String novoNickname) throws RemoteException {
 		Usuario usuario = usuarioDAO.findOne(codigo);
 		usuario.setNickName(novoNickname);
 		usuarioDAO.update(usuario);

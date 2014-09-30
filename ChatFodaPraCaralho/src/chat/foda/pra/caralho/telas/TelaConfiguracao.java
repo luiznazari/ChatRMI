@@ -5,13 +5,17 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import classes.Fodas.Pra.Caralho.GridConstraints;
@@ -19,7 +23,7 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 public class TelaConfiguracao extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer porta;
 	private String ip;
 
@@ -29,10 +33,9 @@ public class TelaConfiguracao extends JDialog {
 	private JLabel jlbPorta;
 
 	private JComboBox<Integer> jcbPorta;
-	private JComboBox<String> jcbIP;
+	private JTextField jtfIP;
 
 	private DefaultComboBoxModel<Integer> dcbmPorta;
-	private DefaultComboBoxModel<String> dcbmIP;
 
 	private JButton jbtOK;
 	private JButton jbtCancelar;
@@ -48,6 +51,22 @@ public class TelaConfiguracao extends JDialog {
 		setVisible(true);
 	}
 
+	public String getLocalIP() {
+		String ip = null;
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			JOptionPane
+					.showMessageDialog(
+							this,
+							"Não foi possível encontrar seu IP local,\nPor favor, verifique sua conexão.",
+							"Endereco de IP", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+
+		return ip;
+	}
+
 	public JPanel getMainPane() {
 		jpnMain = new JPanel(new GridBagLayout());
 		jpnMain.setBorder(new EmptyBorder(10, 5, 5, 5));
@@ -56,17 +75,8 @@ public class TelaConfiguracao extends JDialog {
 		jpnMain.add(jlbIP, new GridConstraints()
 				.setAnchor(GridConstraints.EAST).setInsets(5));
 
-		String[] opcoes = { "10.0.0.104", "172.18.33.52", "192.168.1.100",
-				"192.168.1.101", "192.168.1.102", "192.168.1.25",
-				"172.18.33.99" };
-		dcbmIP = new DefaultComboBoxModel<>();
-		for (String v : opcoes) {
-			dcbmIP.addElement(v);
-		}
-
-		jcbIP = new JComboBox<>(dcbmIP);
-		jcbIP.setEditable(true);
-		jpnMain.add(jcbIP,
+		jtfIP = new JTextField(this.getLocalIP());
+		jpnMain.add(jtfIP,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.HORIZONTAL)
 						.setOccupiedSize(GridConstraints.REMAINDER, 1)
@@ -98,10 +108,12 @@ public class TelaConfiguracao extends JDialog {
 		jbtOK.setPreferredSize(new Dimension(73, 25));
 		jbtOK.requestFocusInWindow();
 		jpnBotoes.add(jbtOK, BorderLayout.EAST);
-		
-		jpnMain.add(jpnBotoes,
+
+		jpnMain.add(
+				jpnBotoes,
 				new GridConstraints().setAnchor(GridConstraints.EAST)
-						.setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
+						.setInsets(5)
+						.setOccupiedSize(GridConstraints.REMAINDER, 1));
 
 		actionButton();
 		return jpnMain;
@@ -115,7 +127,7 @@ public class TelaConfiguracao extends JDialog {
 				try {
 					setPorta(Integer.parseInt(jcbPorta.getSelectedItem()
 							.toString()));
-					setIp(jcbIP.getSelectedItem().toString());
+					setIp(jtfIP.getText());
 					dispose();
 				} catch (Exception e) {
 				}

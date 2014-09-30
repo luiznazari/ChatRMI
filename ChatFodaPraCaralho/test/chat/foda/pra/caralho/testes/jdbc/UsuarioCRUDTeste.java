@@ -1,7 +1,11 @@
 package chat.foda.pra.caralho.testes.jdbc;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -9,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import chat.foda.pra.caralho.dao.AmigosDAO;
 import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 import chat.foda.pra.caralho.dao.factory.DaoFactory;
@@ -21,14 +26,21 @@ public class UsuarioCRUDTeste {
 	
 	private static PessoaDAO pessoaDAO;
 	
+	private static AmigosDAO amigosDAO;
+	
 	private Usuario usuario;
+	
+	private Usuario usuarioAmigo1;
+	
+	private Usuario usuarioAmigo2;
 	
 	private Pessoa pessoa;
 	
 	@BeforeClass
 	public static void criaConexaoBanco() {
-		usuarioDAO = DaoFactory.get().usuarioDAO();
+		usuarioDAO = DaoFactory.get().usuarioDao();
 		pessoaDAO = DaoFactory.get().pessoaDao();
+		amigosDAO = DaoFactory.get().amigosDao();
 	}
 	
 	@Before
@@ -42,11 +54,41 @@ public class UsuarioCRUDTeste {
 		usuario.setNickName("Nick Teste 1");
 		usuario.setEmail("usuario1_@teste.com");
 		usuario.setPessoa(pessoa);
+		
+		Pessoa pessoaAmiga1 = new Pessoa();
+		pessoaAmiga1.setNomeCompleto("Pessoa Amiga Teste 1");
+		
+		usuarioAmigo1 = new Usuario();
+		usuarioAmigo1.setEmail("usuarioAmigo1_@teste.com");
+		usuarioAmigo1.setSenha("123");
+		usuarioAmigo1.setPessoa(pessoaAmiga1);
+		
+		usuarioDAO.save(usuarioAmigo1);
+		
+		usuario.adicionaAmigo(usuarioAmigo1);
+	}
+	
+	public void criaOutroAmigo() {
+		Pessoa pessoaAmiga2 = new Pessoa();
+		pessoaAmiga2.setNomeCompleto("Pessoa Amiga Teste 2");
+		
+		usuarioAmigo2 = new Usuario();
+		usuarioAmigo2.setEmail("usuarioAmigo2_@teste.com");
+		usuarioAmigo2.setSenha("123");
+		usuarioAmigo2.setPessoa(pessoaAmiga2);
+		
+		usuarioDAO.save(usuarioAmigo2);
+		
+		usuario.adicionaAmigo(usuarioAmigo2);
 	}
 	
 	@After
 	public void removeAmbiente() {
 		usuarioDAO.delete(usuario);
+		usuarioDAO.delete(usuarioAmigo1);
+		if (usuarioAmigo2 != null) {
+			usuarioDAO.delete(usuarioAmigo2);
+		}
 	}
 	
 	/**
@@ -82,5 +124,45 @@ public class UsuarioCRUDTeste {
 		
 		assertNull(pessoaDAO.findOne(pessoa.getCodigo()));
 		assertNull(usuarioDAO.findOne(usuario.getCodigo()));
+	}
+	
+	@Test
+	public void deletaPessoaEUsuarioEAmigos() {
+		usuarioDAO.save(usuario);
+		amigosDAO.save(usuario.getCodigo(), usuarioAmigo1.getCodigo());
+		
+		usuarioDAO.delete(usuario);
+		
+		assertNull(pessoaDAO.findOne(usuario.getPessoa().getCodigo()));
+		assertNull(usuarioDAO.findOne(usuario.getCodigo()));
+		assertEquals(0, amigosDAO.findAllByCodUsuario(usuario.getCodigo()).size());
+	}
+	
+	@Test
+	public void salvaERetornaAmigos() {
+		usuarioDAO.save(usuario);
+		criaOutroAmigo();
+		amigosDAO.save(usuario.getCodigo(), usuarioAmigo1.getCodigo());
+		amigosDAO.save(usuario.getCodigo(), usuarioAmigo2.getCodigo());
+		
+		Usuario usuarioDoBanco = usuarioDAO.findOne(usuario.getCodigo());
+		
+		assertEquals(2, usuarioDoBanco.getAmigos().size());
+		
+		Map<Long, Usuario> amigosDoUsuarioDoBanco = new HashMap<>();
+		// Precisa ter um for, pois o HashSet não tem um .get
+		for (Usuario u : usuarioDoBanco.getAmigos()) {
+			amigosDoUsuarioDoBanco.put(u.getCodigo(), u);
+		}
+		
+		Usuario toTest = amigosDoUsuarioDoBanco.get(usuarioAmigo1.getCodigo());
+		assertEquals(usuarioAmigo1.getNickName(), toTest.getNickName());
+		assertEquals(usuarioAmigo1.getPessoa().getCodigo(), toTest.getPessoa().getCodigo());
+		assertEquals(usuarioAmigo1.getPessoa().getNomeCompleto(), toTest.getPessoa().getNomeCompleto());
+		
+		toTest = amigosDoUsuarioDoBanco.get(usuarioAmigo2.getCodigo());
+		assertEquals(usuarioAmigo2.getNickName(), toTest.getNickName());
+		assertEquals(usuarioAmigo2.getPessoa().getCodigo(), toTest.getPessoa().getCodigo());
+		assertEquals(usuarioAmigo2.getPessoa().getNomeCompleto(), toTest.getPessoa().getNomeCompleto());
 	}
 }
