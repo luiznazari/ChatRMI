@@ -67,6 +67,7 @@ public class TelaServidor extends JFrame {
 		TelaConfiguracao config = new TelaConfiguracao();
 		String ip = config.getIp();
 		Integer porta = config.getPorta();
+		
 		try {
 			servidor = new ServidorRmi(ip, porta);
 			servidor.getService().setTelaServidor(this);

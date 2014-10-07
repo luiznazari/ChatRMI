@@ -6,7 +6,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -15,7 +19,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import classes.Fodas.Pra.Caralho.GridConstraints;
@@ -33,9 +36,10 @@ public class TelaConfiguracao extends JDialog {
 	private JLabel jlbPorta;
 
 	private JComboBox<Integer> jcbPorta;
-	private JTextField jtfIP;
+	private JComboBox<String> jcbIP;
 
 	private DefaultComboBoxModel<Integer> dcbmPorta;
+	private DefaultComboBoxModel<String> dcbmIP;
 
 	private JButton jbtOK;
 	private JButton jbtCancelar;
@@ -51,20 +55,26 @@ public class TelaConfiguracao extends JDialog {
 		setVisible(true);
 	}
 
-	public String getLocalIP() {
-		String ip = null;
+	public List<String> getEnderecos() {
+		List<String> enderecos = null;
 		try {
-			ip = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
+			enderecos = new ArrayList<>();
+			for (NetworkInterface interfaces : Collections
+					.list(NetworkInterface.getNetworkInterfaces())) {
+				ArrayList<InetAddress> inetAddress = Collections
+						.list(interfaces.getInetAddresses());
+				enderecos.add(inetAddress.get(inetAddress.size() - 1)
+						.getHostAddress());
+			}
+		} catch (SocketException e) {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							"Não foi possível encontrar seu IP local,\nPor favor, verifique sua conexão.",
+							"Não foi possível encontrar seu endereço de IP,\nPor favor, verifique sua conexão.",
 							"Endereco de IP", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
 		}
 
-		return ip;
+		return enderecos;
 	}
 
 	public JPanel getMainPane() {
@@ -75,8 +85,13 @@ public class TelaConfiguracao extends JDialog {
 		jpnMain.add(jlbIP, new GridConstraints()
 				.setAnchor(GridConstraints.EAST).setInsets(5));
 
-		jtfIP = new JTextField(this.getLocalIP());
-		jpnMain.add(jtfIP,
+		dcbmIP = new DefaultComboBoxModel<>();
+		for (String e : this.getEnderecos()) {
+			dcbmIP.addElement(e);
+		}
+
+		jcbIP = new JComboBox<>(dcbmIP);
+		jpnMain.add(jcbIP,
 				new GridConstraints().setAnchor(GridConstraints.WEST)
 						.setInsets(5).setFill(GridConstraints.HORIZONTAL)
 						.setOccupiedSize(GridConstraints.REMAINDER, 1)
@@ -127,7 +142,7 @@ public class TelaConfiguracao extends JDialog {
 				try {
 					setPorta(Integer.parseInt(jcbPorta.getSelectedItem()
 							.toString()));
-					setIp(jtfIP.getText());
+					setIp(jcbIP.getSelectedItem().toString());
 					dispose();
 				} catch (Exception e) {
 				}
