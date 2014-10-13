@@ -10,7 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
@@ -89,7 +91,7 @@ public class TelaCliente extends JFrame {
 	
 	private JInternalFrame jifTelaChat;
 	
-	private Dimension minDimensao;
+	private Dimension minDimensao = new Dimension(200, 400);
 	
 	/* --------------------- */
 	
@@ -97,14 +99,13 @@ public class TelaCliente extends JFrame {
 	
 	private Usuario usuario;
 	
-	private ArrayList<TelaChat> chatList = new ArrayList<>();;
+	private Map<Long, TelaChat> chatMap = new HashMap<>();
 	
 	public TelaCliente(ClienteRmi cliente) {
 		
 		this.cliente = cliente;
 		this.cliente.getClienteService().setTelaCliente(this);
 		this.usuario = cliente.getUsuarioLogado().getUsuario();
-		this.minDimensao = new Dimension(200, 400);
 		
 		setTitle(usuario.getNickName());
 		setContentPane(getMainPanel());
@@ -188,20 +189,7 @@ public class TelaCliente extends JFrame {
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					TelaListaAmigos telaAmigos = new TelaListaAmigos(getTela());
-					Usuario amigo = telaAmigos.getAmigoToAdd();
-					
-					cliente.getService().adicionaAmigo(usuario.getCodigo(), amigo.getCodigo());
-					usuario.adicionaAmigo(amigo);
-					dlmAmigos.addElement(amigo);
-				} catch (RemoteException e) {
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
-				} catch (NullPointerException e) {
-					// Usuário clicou em cancelar e não retornou um usuário.
-				}
-				
+				abreTelaAddAmigo(new TelaListaAmigos(getTela()));
 			}
 		});
 		
@@ -335,23 +323,21 @@ public class TelaCliente extends JFrame {
 				Usuario amigoToChat = jlstAmigos.getSelectedValue();
 				jlstAmigos.clearSelection();
 				
-				if (e.getValueIsAdjusting()) {
-					// abrirChat(codigoAmigo);
-					System.out.println(amigoToChat.getCodigo() + " | " + amigoToChat.getNickName() + " | "
-					        + amigoToChat.getPessoa().getCodigo() + " | " + amigoToChat.getPessoa().getNomeCompleto());
+				if (e.getValueIsAdjusting() && amigoToChat != null) {
+					abrirChat(amigoToChat);
 				}
 				
 			}
 		});
 	}
 	
-	public void abrirChat(Long codigoAmigo) {
+	private void abrirChat(Usuario amigo) {
 		final TelaChat telaChat = new TelaChat(this);
 		
 		Chat chat = null;
 		
 		try {
-			chat = cliente.getService().criarChat(usuario, codigoAmigo);
+			chat = cliente.getService().criarChat(usuario, amigo);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Conexão - Erro ao abrir chat");
@@ -359,7 +345,7 @@ public class TelaCliente extends JFrame {
 		
 		if (chat != null) {
 			telaChat.setChat(chat);
-			chatList.add(telaChat);
+			chatMap.put(telaChat.getChat().getCodigo(), telaChat);
 			jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
 		} else {
 			JOptionPane.showMessageDialog(this, "O usuário selecionado não está logado", "Conexão",
@@ -368,13 +354,44 @@ public class TelaCliente extends JFrame {
 		
 	}
 	
-	public void iniciarChatExistente(Chat chat, Long codigoAmigo) {
+	public void iniciarChatExistente(Chat chat) {
 		final TelaChat telaChat = new TelaChat(this);
 		
 		telaChat.setChat(chat);
 		
-		chatList.add(telaChat);
+		chatMap.put(telaChat.getChat().getCodigo(), telaChat);
 		jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
+		
+	}
+	
+	// TODO Otimizar função colocando botão de adicionar na TelaChat
+	// Criar um evento (Runnable) para não parar a tela do usuário solicitante enquanto aguarda resposta
+	private void adicionaAmigosDoChat(Set<Usuario> usuariosToAdd) {
+		for (Usuario u : usuariosToAdd) {
+			if (dlmAmigos.contains(u) || u.equals(this.getUsuario())) {
+				usuariosToAdd.remove(u);
+			}
+		}
+		
+		if (!usuariosToAdd.isEmpty()) {
+			abreTelaAddAmigo(new TelaListaAmigos(getTela(), usuariosToAdd));
+		}
+		
+	}
+	
+	private void abreTelaAddAmigo(TelaListaAmigos telaListaAmigos) {
+		try {
+			Usuario amigo = telaListaAmigos.getAmigoToAdd();
+			
+			cliente.getService().adicionaAmigo(usuario.getCodigo(), amigo.getCodigo());
+			usuario.adicionaAmigo(amigo);
+			dlmAmigos.addElement(amigo);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
+		} catch (NullPointerException e) {
+			// Usuário clicou em cancelar e não retornou um usuário.
+		}
 	}
 	
 	public DefaultListModel<Usuario> getListaAmigos() {
@@ -388,13 +405,13 @@ public class TelaCliente extends JFrame {
 	}
 	
 	public void enviarParaTodos(String mensagem) {
-		for (TelaChat tc : chatList) {
+		for (TelaChat tc : chatMap.values()) {
 			tc.recebeMensagem(mensagem);
 		}
 	}
 	
 	public void enviarParaChat(Long chatCodigo, String mensagem) {
-		for (TelaChat tc : chatList) {
+		for (TelaChat tc : chatMap.values()) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
 				tc.recebeMensagem(mensagem);
 				break;
@@ -403,49 +420,42 @@ public class TelaCliente extends JFrame {
 	}
 	
 	public void desativarChat(Long chatCodigo) {
-		for (TelaChat tc : chatList) {
-			if (tc.getChat().getCodigo().equals(chatCodigo)) {
-				tc.desativaChat("O amigo se desconectou.");
-				break;
-			}
-		}
+		chatMap.get(chatCodigo).desativaChat("O amigo se desconectou.");
 	}
 	
 	public void desativarTodosChats() {
-		for (TelaChat tc : chatList) {
+		for (TelaChat tc : chatMap.values()) {
 			tc.desativaChat("O servidor está offline.");
 		}
 	}
 	
-	public ArrayList<Long> getCodigosChat() {
-		ArrayList<Long> codigos = new ArrayList<>();
-		for (TelaChat tc : chatList) {
-			codigos.add(tc.getChat().getCodigo());
-		}
-		return codigos;
+	public Set<Long> getCodigosChat() {
+		return chatMap.keySet();
 	}
 	
 	public boolean isValidNick(String nick) {
 		nick = nick.toLowerCase();
 		
+		if (nick.equals("avisos do servidor")) {
+			JOptionPane.showMessageDialog(null, "Este nickname é inválido!");
+			return false;
+		}
+		
 		String[] nomesObscenosMasc = new String[] {
 		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
 		};
+		
 		String[] nomesObscenosFem = new String[] {
 		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "cu", "ânus", "anus"
 		};
 		
-		boolean masc = containsString(nick, nomesObscenosMasc,
-		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.");
-		
-		if (masc) {
+		if (containsString(nick, nomesObscenosMasc,
+		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {
 			return false;
 		}
 		
-		boolean fem = containsString(nick, nomesObscenosFem,
-		        "está pegando fogo.\nAconselhamos a utilização de um extintor e tente novamente mais tarde.");
-		
-		if (fem) {
+		if (containsString(nick, nomesObscenosFem,
+		        "está pegando fogo.\nAconselhamos a utilização de um extintor e tente novamente mais tarde.")) {
 			return false;
 		}
 		

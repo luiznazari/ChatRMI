@@ -30,7 +30,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	
 	private Map<Long, ClienteRemoto> clientesConectados = new HashMap<>();
 	
-	private Map<Long, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<Long, ArrayList<ClienteRemoto>>();
+	private Map<Long, ArrayList<ClienteRemoto>> chatsAbertos = new HashMap<>();
 	
 	private Long autoIncrementChatId = 0l;
 	
@@ -59,10 +59,16 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	/**
+	 * Envia mensagem para todos os clientes que possuem o chat com o código especificado
+	 * 
+	 * @param codChat
+	 * @param mensagem
+	 */
 	@Override
-	public void enviarMensagemParaServidor(Long chatCodigo, String mensagem) throws RemoteException {
-		for (ClienteRemoto cliente : chatsAbertos.get(chatCodigo)) {
-			cliente.enviarMensagem(chatCodigo, mensagem);
+	public void enviarMensagemParaAmigos(Long codChat, String mensagem) throws RemoteException {
+		for (ClienteRemoto cliente : chatsAbertos.get(codChat)) {
+			cliente.enviarMensagem(codChat, mensagem);
 		}
 	}
 	
@@ -89,7 +95,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public void logout(ArrayList<Long> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
+	public void logout(Set<Long> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
 		// Fecha todos os chats do usuário
 		try {
 			for (Long codigo : codigos) {
@@ -134,9 +140,28 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public Chat criarChat(Usuario solicitante, Long codAmigo) {
-		
-		return null;
+	public Chat criarChat(Usuario solicitante, Usuario amigo) {
+		try {
+			ClienteRemoto amigoCliente = clientesConectados.get(amigo.getCodigo());
+			
+			Chat chat = new Chat(autoIncrementChatId++);
+			chat.adicionaUsuario(solicitante);
+			chat.adicionaUsuario(amigo);
+			
+			ArrayList<ClienteRemoto> participantes = new ArrayList<>();
+			participantes.add(clientesConectados.get(solicitante.getCodigo()));
+			participantes.add(amigoCliente);
+			
+			amigoCliente.abrirChat(chat);
+			chatsAbertos.put(chat.getCodigo(), participantes);
+			return chat;
+		} catch (RemoteException e) {
+			telaServidor.escreverNoConsole("Ocorreu um erro ao abrir o char para os usuários: "
+			        + solicitante.getPessoa().getNomeCompleto() + ", " + amigo.getPessoa().getNomeCompleto() + ".");
+			return null;
+		} catch (NullPointerException e) {
+			return null;
+		}
 	}
 	
 	public void fecharChat(Long codigo, ClienteRemoto cliente, String nome) throws RemoteException {

@@ -175,7 +175,7 @@ public class TelaServidor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String mensagem = jtaMensagem.getText();
 				try {
-					servidor.getService().enviarMensagemParaTodosClientes("Aviso do Servidor: " + mensagem);
+					servidor.getService().enviarMensagemParaTodosClientes("Avisos do Servidor: " + mensagem);
 					escreverNoConsole("[" + LocalTime.now() + "] Mensagem enviada com sucesso!");
 					jtaMensagem.setText("");
 				} catch (RemoteException e1) {

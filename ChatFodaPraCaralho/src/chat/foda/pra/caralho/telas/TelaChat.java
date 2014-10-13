@@ -122,7 +122,7 @@ public class TelaChat {
 			try {
 				telaPai.getCliente()
 				        .getService()
-				        .enviarMensagemParaServidor(this.getChat().getCodigo(),
+				        .enviarMensagemParaAmigos(this.getChat().getCodigo(),
 				                telaPai.getUsuario().getNickName() + ": " + mensagem);
 				
 			} catch (RemoteException e) {

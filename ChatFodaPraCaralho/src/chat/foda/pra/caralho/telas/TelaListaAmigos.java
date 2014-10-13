@@ -48,11 +48,26 @@ public class TelaListaAmigos {
 	
 	private Usuario amigoToAdd;
 	
+	/**
+	 * Utilizado apenas quando a tela é instanciada com uma lista pré-definida de usuários.
+	 */
+	private Set<Usuario> amigosToAdd;
+	
 	public TelaListaAmigos(TelaCliente telaCliente) {
 		this.telaCliente = telaCliente;
 		
-		jdgJanelaAmigos = new JDialog();
+		criaJDialog();
+	}
+	
+	public TelaListaAmigos(TelaCliente telaCliente, Set<Usuario> usuarios) {
+		this.telaCliente = telaCliente;
+		this.amigosToAdd = usuarios;
 		
+		criaJDialog();
+	}
+	
+	private void criaJDialog() {
+		jdgJanelaAmigos = new JDialog();
 		jdgJanelaAmigos.setTitle("Adicionar amigo");
 		jdgJanelaAmigos.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		jdgJanelaAmigos.setContentPane(getPanel());
@@ -63,7 +78,7 @@ public class TelaListaAmigos {
 		jdgJanelaAmigos.setVisible(true);
 	}
 	
-	public JPanel getPanel() {
+	private JPanel getPanel() {
 		jpnPrincipal = new JPanel(new BorderLayout());
 		jpnPrincipal.setBorder(new EmptyBorder(10, 5, 5, 5));
 		
@@ -113,24 +128,26 @@ public class TelaListaAmigos {
 	private DefaultListModel<Usuario> getListaUsuarios() {
 		dlmUsuarios = new DefaultListModel<Usuario>();
 		
-		Set<Usuario> desconhecidos;
-		try {
-			desconhecidos = telaCliente.getCliente().getService()
-			        .getUsuariosDesconhecidos(telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
-			
-			for (Usuario u : desconhecidos) {
-				dlmUsuarios.addElement(u);
+		// Caso não haja uma predefinição de usuários, pede ao servidor.
+		if (amigosToAdd == null) {
+			try {
+				amigosToAdd = telaCliente.getCliente().getService()
+				        .getUsuariosDesconhecidos(telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
+				
+				if (amigosToAdd.isEmpty()) {
+					dlmUsuarios.addElement(new Usuario(0l, "Nenhum usuário encontrado."));
+					jlstUsuarios.setEnabled(false);
+					jbtAdicionar.setEnabled(false);
+				}
+			} catch (RemoteException e) {
+				jdgJanelaAmigos.dispose();
+				JOptionPane.showMessageDialog(null, "Conexão - Erro ao listar usuários.");
+				e.printStackTrace();
 			}
-		} catch (RemoteException e) {
-			jdgJanelaAmigos.dispose();
-			JOptionPane.showMessageDialog(null, "Conexão - Erro ao listar usuários.");
-			e.printStackTrace();
 		}
 		
-		if (dlmUsuarios.isEmpty()) {
-			dlmUsuarios.addElement(new Usuario(0l, "Nenhum usuário encontrado."));
-			jlstUsuarios.setEnabled(false);
-			jbtAdicionar.setEnabled(false);
+		for (Usuario u : amigosToAdd) {
+			dlmUsuarios.addElement(u);
 		}
 		
 		return dlmUsuarios;

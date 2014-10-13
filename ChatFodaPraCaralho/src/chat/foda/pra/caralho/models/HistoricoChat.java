@@ -1,49 +1,47 @@
 package chat.foda.pra.caralho.models;
 
-import java.util.List;
-
 import org.joda.time.LocalDate;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 
-public class HistoricoPorDia implements Entidade {
+public class HistoricoChat implements Entidade {
 	
 	private Long codigo;
 	
 	private LocalDate data;
 	
-	private List<String> conversas;
+	private String conversa;
 	
 	private Chat chat;
 	
-	public HistoricoPorDia() {}
+	public HistoricoChat() {}
 	
 	public Chat getChat() {
 		return chat;
+	}
+	
+	public String getConversa() {
+		return conversa;
+	}
+	
+	public void setConversa(String conversa) {
+		this.conversa = conversa;
 	}
 	
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	
-	public void setConversas(List<String> conversas) {
-		this.conversas = conversas;
-	}
-	
 	public void setChat(Chat chat) {
 		this.chat = chat;
 	}
 	
-	public HistoricoPorDia(Long codigo) {
+	public HistoricoChat(Long codigo) {
 		this.codigo = codigo;
 	}
 	
 	public LocalDate getData() {
 		return data;
-	}
-	
-	public List<String> getConversas() {
-		return conversas;
 	}
 	
 	@Override

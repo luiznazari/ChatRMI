@@ -110,4 +110,19 @@ public class Usuario implements Serializable, Entidade {
 	public String toString() {
 		return this.getNickName();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		
+		if (!(obj instanceof Usuario)) {
+			return false;
+		}
+		
+		Usuario toCompare = ( Usuario ) obj;
+		
+		return this.getCodigo().equals(toCompare.getCodigo());
+	}
 }
