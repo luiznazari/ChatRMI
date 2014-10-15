@@ -26,9 +26,9 @@ public class EventosTelaCliente implements WindowListener {
 		
 		try {
 			cliente.getService().logout(telaCliente.getCodigosChat(), cliente.getClienteService(),
-			        cliente.getUsuarioLogado().getUsuario().getPessoa().getNomeCompleto());
+			        cliente.getUsuarioLogado().getUsuario());
 		} catch (RemoteException e1) {
-			
+			e1.printStackTrace();
 		} finally {
 			System.exit(0);
 		}

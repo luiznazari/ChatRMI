@@ -49,10 +49,19 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		this.telaServidor = telaServidor;
 	}
 	
+	/**
+	 * @return Quantidade de usuários conectados.
+	 */
 	public Integer getNumeroUsuariosLogados() {
 		return clientesConectados.size();
 	}
 	
+	/**
+	 * Envia uma mensagem para todos os chats abertos de todos os clientes.
+	 * 
+	 * @param mensagem
+	 * @throws RemoteException
+	 */
 	public void enviarMensagemParaTodosClientes(String mensagem) throws RemoteException {
 		for (ClienteRemoto cliente : clientesConectados.values()) {
 			cliente.enviarParaTodos(mensagem);
@@ -72,6 +81,12 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	/**
+	 * Percorre todos os clientes, inativando todos os chats para os mesmos. Utilizado apenas quando o servidor irá ser
+	 * desligado.
+	 * 
+	 * @throws RemoteException
+	 */
 	public void encerrarServicos() throws RemoteException {
 		for (ClienteRemoto cliente : clientesConectados.values()) {
 			cliente.desativarTodosChats();
@@ -95,17 +110,19 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	@Override
-	public void logout(Set<Long> codigos, ClienteRemoto cliente, String nome) throws RemoteException {
+	public void logout(Set<Long> codigosChats, ClienteRemoto cliente, Usuario usuario) throws RemoteException {
 		// Fecha todos os chats do usuário
 		try {
-			for (Long codigo : codigos) {
-				fecharChat(codigo, cliente, nome);
+			for (Long codigo : codigosChats) {
+				// TODO trocar nome por código
+				fecharChat(codigo, cliente, usuario.getPessoa().getNomeCompleto());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		clientesConectados.remove(nome);
-		telaServidor.escreverNoConsole("[" + LocalTime.now() + "] O usuário '" + nome + "' se desconectou.");
+		clientesConectados.remove(usuario.getCodigo());
+		telaServidor.escreverNoConsole("[" + LocalTime.now() + "] O usuário '" + usuario.getPessoa().getNomeCompleto()
+		        + "' se desconectou.");
 		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 	}
 	
@@ -164,18 +181,32 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
-	public void fecharChat(Long codigo, ClienteRemoto cliente, String nome) throws RemoteException {
-		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codigo);
+	/**
+	 * Fecha e/ou desativa os chats onde o usuário que está deslogando participa.
+	 * Se há mais de dois usuários no chat, o mesmo não é excluído, apenas retira o usuário deslogado.
+	 * 
+	 * @param codChat
+	 * @param cliente
+	 *            ClienteRemoto do usuário que deslogou
+	 * @param nome
+	 *            Nome do usuário que deslogou
+	 * @throws RemoteException
+	 */
+	public void fecharChat(Long codChat, ClienteRemoto cliente, String nome) throws RemoteException {
+		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codChat);
+		clientesNoChat.remove(cliente);
 		
 		if (clientesNoChat.size() < 3) {
 			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.desativarChat(codigo);
+				cliente2.desativarChat(codChat);
 			}
-			chatsAbertos.remove(codigo);
+			
+			// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar
+			// apenas para quando há um usuário restante (logado)
+			chatsAbertos.remove(codChat);
 		} else {
-			clientesNoChat.remove(cliente);
 			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.enviarMensagem(codigo, "O usuário " + nome + " saiu da conversa.");
+				cliente2.enviarMensagem(codChat, "O usuário " + nome + " saiu da conversa.");
 			}
 		}
 		

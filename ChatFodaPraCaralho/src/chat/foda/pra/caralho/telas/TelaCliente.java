@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -429,8 +430,14 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
+	/**
+	 * BUGFIX: Preciso retornar como um new HashSet pois o Set retornado pelo método keyset() do HashMap não é
+	 * serializável, não podendo ser passado por um canal.
+	 * 
+	 * @return Lista de códigos dos chats abertos para este usuário
+	 */
 	public Set<Long> getCodigosChat() {
-		return chatMap.keySet();
+		return new HashSet<Long>(chatMap.keySet());
 	}
 	
 	public boolean isValidNick(String nick) {
@@ -442,13 +449,14 @@ public class TelaCliente extends JFrame {
 		}
 		
 		String[] nomesObscenosMasc = new String[] {
-		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
+		    "pinto", "penis", "pênis", "caralho", "saco"
 		};
 		
 		String[] nomesObscenosFem = new String[] {
-		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "cu", "ânus", "anus"
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus"
 		};
 		
+		// TODO pau, cu
 		if (containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {
 			return false;
