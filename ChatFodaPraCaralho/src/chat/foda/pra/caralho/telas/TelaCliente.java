@@ -166,7 +166,7 @@ public class TelaCliente extends JFrame {
 		jmiTrocarSenha.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				new TelaCadastro(cliente, false, false, false);
 			}
 		});
 		
@@ -448,13 +448,9 @@ public class TelaCliente extends JFrame {
 			return false;
 		}
 		
-		String[] nomesObscenosMasc = new String[] {
-		    "pinto", "penis", "pênis", "caralho", "saco"
-		};
+		String[] nomesObscenosMasc = new String[] { "pinto", "penis", "pênis", "caralho", "saco" };
 		
-		String[] nomesObscenosFem = new String[] {
-		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus"
-		};
+		String[] nomesObscenosFem = new String[] { "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus" };
 		
 		// TODO pau, cu
 		if (containsString(nick, nomesObscenosMasc,
