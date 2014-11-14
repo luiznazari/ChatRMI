@@ -114,9 +114,11 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		// Fecha todos os chats do usuário
 		try {
 			for (Long codigo : codigosChats) {
-				// TODO trocar nome por código
 				fecharChat(codigo, cliente, usuario.getPessoa().getNomeCompleto());
 			}
+		} catch (NullPointerException e) {
+			// TODO ver por que está recebendo NPE ao fechar chat/servidor
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

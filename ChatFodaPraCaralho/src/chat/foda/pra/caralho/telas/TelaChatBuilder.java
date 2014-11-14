@@ -1,5 +1,6 @@
 package chat.foda.pra.caralho.telas;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,11 @@ import java.rmi.RemoteException;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,11 +23,18 @@ import javax.swing.JTextArea;
 import chat.foda.pra.caralho.models.Chat;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
-public class TelaChat {
+/**
+ * @author luiznazari
+ */
+public class TelaChatBuilder {
 	
-	/**
-	 * @author luiznazari
-	 */
+	private JMenuBar jmbMenuBar;
+	
+	private JMenu jmnParticipantes;
+	
+	private JMenuItem jmiConvidar;
+	
+	private JMenuItem jmiAdicionarAmigo;
 	
 	private JPanel pnlMain;
 	
@@ -39,9 +52,52 @@ public class TelaChat {
 	
 	private TelaCliente telaPai;
 	
-	public TelaChat(TelaCliente telaPai) {
+	public TelaChatBuilder(TelaCliente telaPai, Chat chat) {
 		this.telaPai = telaPai;
+		setChat(chat);
+	}
+	
+	public JInternalFrame getInternalFrame() {
+		JInternalFrame jif = new JInternalFrame("dass", true, true, true, true);
 		
+		jif.setJMenuBar(getMenu());
+		jif.setContentPane(getPainelPrincipal());
+		jif.setSize(300, 300);
+		jif.setVisible(true);
+		
+		return jif;
+	}
+	
+	private JMenuBar getMenu() {
+		jmbMenuBar = new JMenuBar();
+		jmnParticipantes = new JMenu("Participantes");
+		
+		jmiConvidar = new JMenuItem("Convidar");
+		jmnParticipantes.add(jmiConvidar);
+		jmiAdicionarAmigo = new JMenuItem("Adicionar como amigo");
+		jmnParticipantes.add(jmiAdicionarAmigo);
+		
+		acoesMenu();
+		
+		jmbMenuBar.add(jmnParticipantes);
+		return jmbMenuBar;
+	}
+	
+	private void acoesMenu() {
+		jmiConvidar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {}
+		});
+		
+		jmiAdicionarAmigo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				telaPai.adicionaAmigosDoChat(getChat());
+			}
+		});
+	}
+	
+	private JPanel getPainelPrincipal() {
 		pnlMain = new JPanel();
 		pnlMain.setLayout(new GridBagLayout());
 		
@@ -74,6 +130,7 @@ public class TelaChat {
 		
 		jtaMensagem.requestFocus();
 		
+		return pnlMain;
 	}
 	
 	private void actions() {
@@ -155,10 +212,6 @@ public class TelaChat {
 		this.jbtEnviar.setEnabled(true);
 	}
 	
-	public JPanel getChatPanel() {
-		return this.pnlMain;
-	}
-	
 	public Chat getChat() {
 		return chat;
 	}
@@ -175,4 +228,15 @@ public class TelaChat {
 		this.telaPai = client;
 	}
 	
+	public static void main(String[] args) {
+		JFrame jf = new JFrame();
+		jf.setTitle("chat");
+		jf.setContentPane(new TelaChatBuilder(null, null).getInternalFrame());
+		jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		jf.setMinimumSize(new Dimension(550, 400));
+		jf.setSize(550, 400);
+		jf.setLocationRelativeTo(null);
+		jf.setVisible(true);
+		
+	}
 }

@@ -16,10 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
@@ -90,8 +88,6 @@ public class TelaCliente extends JFrame {
 	
 	private JDesktopPane jdpDesktopChat;
 	
-	private JInternalFrame jifTelaChat;
-	
 	private Dimension minDimensao = new Dimension(200, 400);
 	
 	/* --------------------- */
@@ -100,7 +96,7 @@ public class TelaCliente extends JFrame {
 	
 	private Usuario usuario;
 	
-	private Map<Long, TelaChat> chatMap = new HashMap<>();
+	private Map<Long, TelaChatBuilder> chatMap = new HashMap<>();
 	
 	public TelaCliente(ClienteRmi cliente) {
 		
@@ -157,6 +153,7 @@ public class TelaCliente extends JFrame {
 	
 	private void getAcoesMenu() {
 		jmiSair.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -197,7 +194,7 @@ public class TelaCliente extends JFrame {
 		jmiRemoverAmigo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				abreTelaRemoveAmigo(new TelaListaAmigos(getTela(), usuario.getAmigos(), "Remover amigo"));
 			}
 		});
 		
@@ -250,17 +247,6 @@ public class TelaCliente extends JFrame {
 		                .setOccupiedSize(GridConstraints.REMAINDER, GridConstraints.REMAINDER).setGridWeight(1, 1));
 		
 		return pnlUsuario;
-	}
-	
-	private JInternalFrame getTalkFrame(String nome, JComponent componente) {
-		jifTelaChat = new JInternalFrame(nome, true, true, true, true);
-		
-		jifTelaChat.setSize(300, 300);
-		jifTelaChat.setVisible(true);
-		
-		jifTelaChat.add(componente);
-		
-		return jifTelaChat;
 	}
 	
 	private JPanel getChatPanel() {
@@ -333,8 +319,6 @@ public class TelaCliente extends JFrame {
 	}
 	
 	private void abrirChat(Usuario amigo) {
-		final TelaChat telaChat = new TelaChat(this);
-		
 		Chat chat = null;
 		
 		try {
@@ -345,9 +329,9 @@ public class TelaCliente extends JFrame {
 		}
 		
 		if (chat != null) {
-			telaChat.setChat(chat);
-			chatMap.put(telaChat.getChat().getCodigo(), telaChat);
-			jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
+			TelaChatBuilder tcBuilder = new TelaChatBuilder(this, chat);
+			chatMap.put(chat.getCodigo(), tcBuilder);
+			jdpDesktopChat.add(tcBuilder.getInternalFrame());
 		} else {
 			JOptionPane.showMessageDialog(this, "O usuário selecionado não está logado", "Conexão",
 			        JOptionPane.INFORMATION_MESSAGE);
@@ -356,37 +340,53 @@ public class TelaCliente extends JFrame {
 	}
 	
 	public void iniciarChatExistente(Chat chat) {
-		final TelaChat telaChat = new TelaChat(this);
-		
-		telaChat.setChat(chat);
+		final TelaChatBuilder telaChat = new TelaChatBuilder(this, chat);
 		
 		chatMap.put(telaChat.getChat().getCodigo(), telaChat);
-		jdpDesktopChat.add(this.getTalkFrame(chat.getNomesParticipantes(), telaChat.getChatPanel()));
+		jdpDesktopChat.add(telaChat.getInternalFrame());
 		
 	}
 	
-	// TODO Otimizar função colocando botão de adicionar na TelaChat
-	// Criar um evento (Runnable) para não parar a tela do usuário solicitante enquanto aguarda resposta
-	private void adicionaAmigosDoChat(Set<Usuario> usuariosToAdd) {
+	/**
+	 * Método chamado por um TelaChatBuilder, para adicionar participantes do chat como amigos.
+	 * 
+	 * @param usuariosToAdd
+	 */
+	public void adicionaAmigosDoChat(Chat chat) {
+		Set<Usuario> usuariosToAdd = new HashSet<>();
+		
 		for (Usuario u : usuariosToAdd) {
-			if (dlmAmigos.contains(u) || u.equals(this.getUsuario())) {
-				usuariosToAdd.remove(u);
+			if (!dlmAmigos.contains(u) && !u.equals(this.getUsuario())) {
+				usuariosToAdd.add(u);
 			}
 		}
 		
-		if (!usuariosToAdd.isEmpty()) {
-			abreTelaAddAmigo(new TelaListaAmigos(getTela(), usuariosToAdd));
-		}
+		abreTelaAddAmigo(new TelaListaAmigos(getTela(), usuariosToAdd, "Adicionar amigo"));
 		
 	}
 	
 	private void abreTelaAddAmigo(TelaListaAmigos telaListaAmigos) {
 		try {
-			Usuario amigo = telaListaAmigos.getAmigoToAdd();
+			Usuario amigo = telaListaAmigos.getSelecionado();
 			
 			cliente.getService().adicionaAmigo(usuario.getCodigo(), amigo.getCodigo());
 			usuario.adicionaAmigo(amigo);
 			dlmAmigos.addElement(amigo);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
+		} catch (NullPointerException e) {
+			// Usuário clicou em cancelar e não retornou um usuário.
+		}
+	}
+	
+	private void abreTelaRemoveAmigo(TelaListaAmigos telaListaAmigos) {
+		try {
+			Usuario amigo = telaListaAmigos.getSelecionado();
+			
+			cliente.getService().removerAmigo(usuario.getCodigo(), amigo.getCodigo());
+			usuario.removeAmigo(amigo);
+			dlmAmigos.removeElement(amigo);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
@@ -406,13 +406,13 @@ public class TelaCliente extends JFrame {
 	}
 	
 	public void enviarParaTodos(String mensagem) {
-		for (TelaChat tc : chatMap.values()) {
+		for (TelaChatBuilder tc : chatMap.values()) {
 			tc.recebeMensagem(mensagem);
 		}
 	}
 	
 	public void enviarParaChat(Long chatCodigo, String mensagem) {
-		for (TelaChat tc : chatMap.values()) {
+		for (TelaChatBuilder tc : chatMap.values()) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
 				tc.recebeMensagem(mensagem);
 				break;
@@ -425,7 +425,7 @@ public class TelaCliente extends JFrame {
 	}
 	
 	public void desativarTodosChats() {
-		for (TelaChat tc : chatMap.values()) {
+		for (TelaChatBuilder tc : chatMap.values()) {
 			tc.desativaChat("O servidor está offline.");
 		}
 	}
@@ -448,9 +448,13 @@ public class TelaCliente extends JFrame {
 			return false;
 		}
 		
-		String[] nomesObscenosMasc = new String[] { "pinto", "penis", "pênis", "caralho", "saco" };
+		String[] nomesObscenosMasc = new String[] {
+		    "pinto", "penis", "pênis", "caralho", "saco"
+		};
 		
-		String[] nomesObscenosFem = new String[] { "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus" };
+		String[] nomesObscenosFem = new String[] {
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus"
+		};
 		
 		// TODO pau, cu
 		if (containsString(nick, nomesObscenosMasc,

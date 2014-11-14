@@ -38,7 +38,7 @@ public class TelaListaAmigos {
 	
 	private JPanel jpnBotoes;
 	
-	private JButton jbtAdicionar;
+	private JButton jbtConfirmar;
 	
 	private JButton jbtCancelar;
 	
@@ -47,6 +47,8 @@ public class TelaListaAmigos {
 	/* --------------------- */
 	
 	private Usuario amigoToAdd;
+	
+	private String titulo;
 	
 	/**
 	 * Utilizado apenas quando a tela é instanciada com uma lista pré-definida de usuários.
@@ -66,9 +68,17 @@ public class TelaListaAmigos {
 		criaJDialog();
 	}
 	
+	public TelaListaAmigos(TelaCliente telaCliente, Set<Usuario> usuarios, String titulo) {
+		this.telaCliente = telaCliente;
+		this.amigosToAdd = usuarios;
+		this.titulo = titulo;
+		
+		criaJDialog();
+	}
+	
 	private void criaJDialog() {
 		jdgJanelaAmigos = new JDialog();
-		jdgJanelaAmigos.setTitle("Adicionar amigo");
+		jdgJanelaAmigos.setTitle(titulo == null ? "Adicionar amigo" : titulo);
 		jdgJanelaAmigos.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		jdgJanelaAmigos.setContentPane(getPanel());
 		jdgJanelaAmigos.setModal(true);
@@ -104,8 +114,8 @@ public class TelaListaAmigos {
 		jbtCancelar = new JButton("Cancelar");
 		jpnBotoes.add(jbtCancelar);
 		
-		jbtAdicionar = new JButton("Adicionar");
-		jpnBotoes.add(jbtAdicionar);
+		jbtConfirmar = new JButton("Confirmar");
+		jpnBotoes.add(jbtConfirmar);
 		
 		jbtCancelar.addActionListener(new ActionListener() {
 			@Override
@@ -114,7 +124,7 @@ public class TelaListaAmigos {
 			}
 		});
 		
-		jbtAdicionar.addActionListener(new ActionListener() {
+		jbtConfirmar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setAmigoToAdd(jlstUsuarios.getSelectedValue());
@@ -133,17 +143,18 @@ public class TelaListaAmigos {
 			try {
 				amigosToAdd = telaCliente.getCliente().getService()
 				        .getUsuariosDesconhecidos(telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
-				
-				if (amigosToAdd.isEmpty()) {
-					dlmUsuarios.addElement(new Usuario(0l, "Nenhum usuário encontrado."));
-					jlstUsuarios.setEnabled(false);
-					jbtAdicionar.setEnabled(false);
-				}
 			} catch (RemoteException e) {
 				jdgJanelaAmigos.dispose();
 				JOptionPane.showMessageDialog(null, "Conexão - Erro ao listar usuários.");
 				e.printStackTrace();
 			}
+		}
+		
+		// Se não encontrou nenhum amigo, desabilita os campos
+		if (amigosToAdd.isEmpty()) {
+			dlmUsuarios.addElement(new Usuario(0l, "Nenhum usuário encontrado."));
+			jlstUsuarios.setEnabled(false);
+			jbtConfirmar.setEnabled(false);
 		}
 		
 		for (Usuario u : amigosToAdd) {
@@ -153,7 +164,7 @@ public class TelaListaAmigos {
 		return dlmUsuarios;
 	}
 	
-	public Usuario getAmigoToAdd() {
+	public Usuario getSelecionado() {
 		return amigoToAdd;
 	}
 	
