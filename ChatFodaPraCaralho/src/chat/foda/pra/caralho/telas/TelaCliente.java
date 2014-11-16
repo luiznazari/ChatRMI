@@ -311,9 +311,14 @@ public class TelaCliente extends JFrame {
 				jlstAmigos.clearSelection();
 				
 				if (e.getValueIsAdjusting() && amigoToChat != null) {
-					abrirChat(amigoToChat);
+					TelaChatBuilder tcbBuilder = getChatAbertoCom(amigoToChat);
+					
+					if (tcbBuilder == null) {
+						abrirChat(amigoToChat);
+					} else {
+						tcbBuilder.getInternalFrame().requestFocus();
+					}
 				}
-				
 			}
 		});
 	}
@@ -347,15 +352,23 @@ public class TelaCliente extends JFrame {
 		
 	}
 	
+	public void atualizaTelaChat(Chat chat) {
+		chatMap.get(chat.getCodigo()).setChat(chat);
+	}
+	
+	public void atualizaTelaChatRemoveUsuario(Long codChat, Usuario usuario) {
+		chatMap.get(codChat).getChat().removeUsuario(usuario);
+	}
+	
 	/**
-	 * Método chamado por um TelaChatBuilder, para adicionar participantes do chat como amigos.
+	 * Método chamado por um TelaChatBuilder para adicionar participantes do chat como amigos.
 	 * 
-	 * @param usuariosToAdd
+	 * @param chat
 	 */
 	public void adicionaAmigosDoChat(Chat chat) {
 		Set<Usuario> usuariosToAdd = new HashSet<>();
 		
-		for (Usuario u : usuariosToAdd) {
+		for (Usuario u : chat.getUsuarios()) {
 			if (!dlmAmigos.contains(u) && !u.equals(this.getUsuario())) {
 				usuariosToAdd.add(u);
 			}
@@ -363,6 +376,39 @@ public class TelaCliente extends JFrame {
 		
 		abreTelaAddAmigo(new TelaListaAmigos(getTela(), usuariosToAdd, "Adicionar amigo"));
 		
+	}
+	
+	/**
+	 * Método chamado por um TelaChatBuilder para convidar participantes ao chat.
+	 * 
+	 * @param chat
+	 */
+	public void convidaParticipante(Chat chat) {
+		Set<Usuario> usuariosToInvite = usuario.getAmigos();
+		
+		for (Usuario u : chat.getUsuarios()) {
+			if (chat.getUsuarios().contains(u)) {
+				usuariosToInvite.remove(u);
+			}
+		}
+		
+		abreTelaConvidar(chat, new TelaListaAmigos(getTela(), usuariosToInvite, "Convidar à conversa"));
+		
+	}
+	
+	private void abreTelaConvidar(Chat chat, TelaListaAmigos telaListaAmigos) {
+		try {
+			Usuario amigo = telaListaAmigos.getSelecionado();
+			
+			if (!cliente.getService().convidarParaChat(chat, amigo)) {
+				JOptionPane.showMessageDialog(null, "O usuário não está conectado!");
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Conexão - Erro ao adicionar amigo");
+		} catch (NullPointerException e) {
+			// Usuário clicou em cancelar e não retornou um usuário.
+		}
 	}
 	
 	private void abreTelaAddAmigo(TelaListaAmigos telaListaAmigos) {
@@ -440,6 +486,17 @@ public class TelaCliente extends JFrame {
 		return new HashSet<Long>(chatMap.keySet());
 	}
 	
+	public TelaChatBuilder getChatAbertoCom(Usuario amigo) {
+		for (TelaChatBuilder tcBuilder : chatMap.values()) {
+			Set<Usuario> users = tcBuilder.getChat().getUsuarios();
+			if (users.size() == 2 && users.contains(amigo)) {
+				return tcBuilder;
+			}
+		}
+		
+		return null;
+	}
+	
 	public boolean isValidNick(String nick) {
 		nick = nick.toLowerCase();
 		
@@ -449,14 +506,13 @@ public class TelaCliente extends JFrame {
 		}
 		
 		String[] nomesObscenosMasc = new String[] {
-		    "pinto", "penis", "pênis", "caralho", "saco"
+		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
 		};
 		
 		String[] nomesObscenosFem = new String[] {
-		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus"
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus", "cu"
 		};
 		
-		// TODO pau, cu
 		if (containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {
 			return false;

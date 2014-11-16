@@ -96,6 +96,16 @@ public interface ServidorRemoto extends Remote {
 	public Chat criarChat(Usuario solicitante, Usuario amigo) throws RemoteException;
 	
 	/**
+	 * Adiciona um novo participante para um chat e atualiza os chats dos participantes atuais.
+	 * 
+	 * @param chat
+	 * @param userToInvite
+	 * @return Verdadeiro caso o usuário estiver conectado, falso caso contrário
+	 * @throws RemoteException
+	 */
+	public boolean convidarParaChat(Chat chat, Usuario userToInvite) throws RemoteException;
+	
+	/**
 	 * Troca a senha para o usuário especificado.
 	 * 
 	 * @param codUsuario

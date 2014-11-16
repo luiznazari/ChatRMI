@@ -125,4 +125,9 @@ public class Usuario implements Serializable, Entidade {
 		
 		return this.getCodigo().equals(toCompare.getCodigo());
 	}
+	
+	@Override
+	public int hashCode() {
+		return 31 * codigo.hashCode();
+	}
 }

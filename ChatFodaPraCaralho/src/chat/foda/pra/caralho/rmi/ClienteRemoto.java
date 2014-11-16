@@ -4,6 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import chat.foda.pra.caralho.models.Chat;
+import chat.foda.pra.caralho.models.Usuario;
 
 /**
  * Declaração de todos os métodos executados no Cliente, visíveis para o Servidor
@@ -53,5 +54,24 @@ public interface ClienteRemoto extends Remote {
 	 * @throws RemoteException
 	 */
 	public void desativarTodosChats() throws RemoteException;
+	
+	/**
+	 * Adiciona um participante para o chat, enviando uma mensagem para notificar e atualiza o chat e a respectiva tela
+	 * do cliente.
+	 * 
+	 * @param chat
+	 * @throws RemoteException
+	 */
+	public void atualizaChat(Chat chat, String mensagem) throws RemoteException;
+	
+	/**
+	 * Adiciona um participante para o chat, enviando uma mensagem para notificar e atualiza o chat e a respectiva tela
+	 * do cliente.
+	 * 
+	 * @param codChat
+	 * @param usuario
+	 * @throws RemoteException
+	 */
+	public void atualizaChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException;
 	
 }

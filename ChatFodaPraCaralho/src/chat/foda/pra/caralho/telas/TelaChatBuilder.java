@@ -28,6 +28,8 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
  */
 public class TelaChatBuilder {
 	
+	private JInternalFrame jif;
+	
 	private JMenuBar jmbMenuBar;
 	
 	private JMenu jmnParticipantes;
@@ -54,16 +56,18 @@ public class TelaChatBuilder {
 	
 	public TelaChatBuilder(TelaCliente telaPai, Chat chat) {
 		this.telaPai = telaPai;
-		setChat(chat);
+		this.chat = chat;
 	}
 	
 	public JInternalFrame getInternalFrame() {
-		JInternalFrame jif = new JInternalFrame("dass", true, true, true, true);
-		
-		jif.setJMenuBar(getMenu());
-		jif.setContentPane(getPainelPrincipal());
-		jif.setSize(300, 300);
-		jif.setVisible(true);
+		if (jif == null) {
+			jif = new JInternalFrame(getChat().getNomesParticipantes(), true, true, true, true);
+			
+			jif.setJMenuBar(getMenu());
+			jif.setContentPane(getPainelPrincipal());
+			jif.setSize(300, 300);
+			jif.setVisible(true);
+		}
 		
 		return jif;
 	}
@@ -86,7 +90,9 @@ public class TelaChatBuilder {
 	private void acoesMenu() {
 		jmiConvidar.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {}
+			public void actionPerformed(ActionEvent e) {
+				telaPai.convidaParticipante(getChat());
+			}
 		});
 		
 		jmiAdicionarAmigo.addActionListener(new ActionListener() {
@@ -218,6 +224,7 @@ public class TelaChatBuilder {
 	
 	public void setChat(Chat chat) {
 		this.chat = chat;
+		this.jif.setTitle(chat.getNomesParticipantes());
 	}
 	
 	public TelaCliente getClient() {

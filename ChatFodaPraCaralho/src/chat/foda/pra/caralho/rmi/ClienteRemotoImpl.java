@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import chat.foda.pra.caralho.models.Chat;
+import chat.foda.pra.caralho.models.Usuario;
 import chat.foda.pra.caralho.telas.TelaCliente;
 
 /**
@@ -43,6 +44,18 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	@Override
 	public void desativarTodosChats() throws RemoteException {
 		telaCliente.desativarTodosChats();
+	}
+	
+	@Override
+	public void atualizaChat(Chat chat, String mensagem) {
+		this.telaCliente.enviarParaChat(chat.getCodigo(), mensagem);
+		this.telaCliente.atualizaTelaChat(chat);
+	}
+	
+	@Override
+	public void atualizaChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException {
+		this.telaCliente.enviarParaChat(codChat, mensagem);
+		this.telaCliente.atualizaTelaChatRemoveUsuario(codChat, usuario);
 	}
 	
 	public TelaCliente getTelaCliente() {

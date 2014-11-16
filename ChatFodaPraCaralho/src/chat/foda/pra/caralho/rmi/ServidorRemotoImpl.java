@@ -114,7 +114,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		// Fecha todos os chats do usuário
 		try {
 			for (Long codigo : codigosChats) {
-				fecharChat(codigo, cliente, usuario.getPessoa().getNomeCompleto());
+				fecharChat(codigo, cliente, usuario);
 			}
 		} catch (NullPointerException e) {
 			// TODO ver por que está recebendo NPE ao fechar chat/servidor
@@ -183,6 +183,31 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	@Override
+	public boolean convidarParaChat(Chat chat, Usuario userToInvite) throws RemoteException {
+		ClienteRemoto cliente = clientesConectados.get(userToInvite.getCodigo());
+		if (cliente == null) {
+			return false;
+		}
+		
+		ArrayList<ClienteRemoto> clientesChat = chatsAbertos.get(chat.getCodigo());
+		
+		chat.adicionaUsuario(userToInvite);
+		for (ClienteRemoto cl : clientesChat) {
+			try {
+				cl.atualizaChat(chat, "O usuário " + userToInvite.getNickName() + " foi adicionado à conversa.");
+			} catch (RemoteException e) {
+				// Um cliente se desconectou
+			}
+		}
+		
+		clientesChat.add(cliente);
+		
+		cliente.abrirChat(chat);
+		
+		return true;
+	}
+	
 	/**
 	 * Fecha e/ou desativa os chats onde o usuário que está deslogando participa.
 	 * Se há mais de dois usuários no chat, o mesmo não é excluído, apenas retira o usuário deslogado.
@@ -194,11 +219,15 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	 *            Nome do usuário que deslogou
 	 * @throws RemoteException
 	 */
-	public void fecharChat(Long codChat, ClienteRemoto cliente, String nome) throws RemoteException {
+	public void fecharChat(Long codChat, ClienteRemoto cliente, Usuario usuario) throws RemoteException {
 		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codChat);
-		clientesNoChat.remove(cliente);
 		
-		if (clientesNoChat.size() < 3) {
+		if (clientesNoChat.size() > 2) {
+			for (ClienteRemoto cliente2 : clientesNoChat) {
+				clientesNoChat.remove(cliente);
+				cliente2.atualizaChat(codChat, usuario, "O usuário " + usuario.getNickName() + " saiu da conversa.");
+			}
+		} else {
 			for (ClienteRemoto cliente2 : clientesNoChat) {
 				cliente2.desativarChat(codChat);
 			}
@@ -206,10 +235,6 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar
 			// apenas para quando há um usuário restante (logado)
 			chatsAbertos.remove(codChat);
-		} else {
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.enviarMensagem(codChat, "O usuário " + nome + " saiu da conversa.");
-			}
 		}
 		
 	}
