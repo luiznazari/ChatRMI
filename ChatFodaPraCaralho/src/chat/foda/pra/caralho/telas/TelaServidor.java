@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.clienteServidor.ServidorRmi;
+import chat.foda.pra.caralho.telas.eventos.EventosTelaServidor;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 import com.alee.laf.WebLookAndFeel;

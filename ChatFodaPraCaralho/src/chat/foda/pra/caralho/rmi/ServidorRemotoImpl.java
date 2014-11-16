@@ -76,8 +76,14 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	 */
 	@Override
 	public void enviarMensagemParaAmigos(Long codChat, String mensagem) throws RemoteException {
-		for (ClienteRemoto cliente : chatsAbertos.get(codChat)) {
-			cliente.enviarMensagem(codChat, mensagem);
+		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codChat);
+		
+		if (clientesNoChat.size() > 1) {
+			for (ClienteRemoto cliente : clientesNoChat) {
+				cliente.enviarMensagem(codChat, mensagem);
+			}
+		} else {
+			clientesNoChat.get(0).desativarChat(codChat, "A conversa foi fechada pelo outro usuário.");
 		}
 	}
 	
@@ -229,7 +235,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 			}
 		} else {
 			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.desativarChat(codChat);
+				cliente2.desativarChat(codChat, "O amigo se desconectou.");
 			}
 			
 			// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar

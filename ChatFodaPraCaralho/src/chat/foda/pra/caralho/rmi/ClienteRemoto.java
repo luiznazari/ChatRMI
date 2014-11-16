@@ -44,9 +44,10 @@ public interface ClienteRemoto extends Remote {
 	 * mesmo, a menos que seja reativado.
 	 * 
 	 * @param codChat
+	 * @param mensagem
 	 * @throws RemoteException
 	 */
-	public void desativarChat(Long codChat) throws RemoteException;
+	public void desativarChat(Long codChat, String mensagem) throws RemoteException;
 	
 	/**
 	 * Inativa todos os chats que o cliente possui.

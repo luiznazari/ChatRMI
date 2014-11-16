@@ -34,6 +34,7 @@ import javax.swing.event.ListSelectionListener;
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.models.Chat;
 import chat.foda.pra.caralho.models.Usuario;
+import chat.foda.pra.caralho.telas.eventos.EventosTelaCliente;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
@@ -466,8 +467,8 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public void desativarChat(Long chatCodigo) {
-		chatMap.get(chatCodigo).desativaChat("O amigo se desconectou.");
+	public void desativarChat(Long chatCodigo, String mensagem) {
+		chatMap.get(chatCodigo).desativaChat(mensagem);
 	}
 	
 	public void desativarTodosChats() {

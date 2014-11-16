@@ -1,10 +1,11 @@
-package chat.foda.pra.caralho.telas;
+package chat.foda.pra.caralho.telas.eventos;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
+import chat.foda.pra.caralho.telas.TelaCliente;
 
 public class EventosTelaCliente implements WindowListener {
 	

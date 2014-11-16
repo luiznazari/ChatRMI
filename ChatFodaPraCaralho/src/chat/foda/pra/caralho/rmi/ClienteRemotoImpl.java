@@ -37,8 +37,8 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public void desativarChat(Long chatCodigo) throws RemoteException {
-		telaCliente.desativarChat(chatCodigo);
+	public void desativarChat(Long chatCodigo, String mensagem) throws RemoteException {
+		telaCliente.desativarChat(chatCodigo, mensagem);
 	}
 	
 	@Override
