@@ -233,7 +233,7 @@ public class TelaCadastro extends JDialog {
 						JOptionPane.showMessageDialog(null, "Cadastro efetuado com sucesso!");
 						dispose();
 					} else {
-						JOptionPane.showMessageDialog(null, "Nome de usuário já cadastrado!");
+						JOptionPane.showMessageDialog(null, "E-mail já cadastrado!");
 					}
 					
 				} catch (Exception ex) {

@@ -8,10 +8,16 @@ import java.awt.event.ActionListener;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +28,8 @@ import javax.swing.UIManager;
 import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.clienteServidor.ServidorRmi;
+import chat.foda.pra.caralho.jdbc.ConexaoUtil;
+import chat.foda.pra.caralho.relatorios.RelatorioUtil;
 import chat.foda.pra.caralho.telas.eventos.EventosTelaServidor;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
@@ -57,6 +65,12 @@ public class TelaServidor extends JFrame {
 	
 	private JButton jbtEnviar;
 	
+	private JMenuBar jmbMenuBar;
+	
+	private JMenu jmnRelatorios;
+	
+	private JMenuItem jmiUsuarios;
+	
 	public ServidorRmi getServidor() {
 		return this.servidor;
 	}
@@ -75,6 +89,7 @@ public class TelaServidor extends JFrame {
 			
 			jtaConsole.append("Servidor conectado em [" + ip + "] na porta " + porta + ".\n");
 			
+			setJMenuBar(getMenu());
 			addWindowListener(new EventosTelaServidor(this));
 			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			setSize(500, 300);
@@ -86,6 +101,34 @@ public class TelaServidor extends JFrame {
 			System.exit(0);
 		}
 		
+	}
+	
+	public JMenuBar getMenu() {
+		jmbMenuBar = new JMenuBar();
+		
+		jmnRelatorios = new JMenu("Relatórios");
+		jmbMenuBar.add(jmnRelatorios);
+		
+		jmiUsuarios = new JMenuItem("Usuários");
+		jmnRelatorios.add(jmiUsuarios);
+		
+		getMenuActions();
+		
+		return jmbMenuBar;
+	}
+	
+	private void getMenuActions() {
+		
+		final String jasperFile = "relatorios/relatorio_usuarios.jasper";
+		final Map<String, Object> params = new HashMap<>();
+		final Connection conn = ConexaoUtil.getConexao();
+		
+		jmiUsuarios.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				RelatorioUtil.viewReport(jasperFile, params, conn);
+			}
+		});
 	}
 	
 	private JPanel getMain() {
