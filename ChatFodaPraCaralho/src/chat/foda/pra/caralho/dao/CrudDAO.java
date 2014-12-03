@@ -4,6 +4,9 @@ import java.util.List;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public interface CrudDAO<T extends Entidade> {
 	
 	T save(T entidade);

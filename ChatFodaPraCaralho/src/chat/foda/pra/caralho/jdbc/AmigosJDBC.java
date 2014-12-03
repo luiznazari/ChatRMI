@@ -9,6 +9,9 @@ import chat.foda.pra.caralho.dao.AmigosDAO;
 import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class AmigosJDBC implements AmigosDAO {
 	
 	private final String save = "insert into amigos values (?, ?)";

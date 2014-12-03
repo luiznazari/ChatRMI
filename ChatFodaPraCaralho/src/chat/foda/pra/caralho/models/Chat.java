@@ -6,6 +6,9 @@ import java.util.Set;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class Chat implements Entidade, Serializable {
 	private static final long serialVersionUID = -6861975820907169849L;
 	

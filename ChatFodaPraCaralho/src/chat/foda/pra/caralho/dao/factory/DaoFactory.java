@@ -4,6 +4,9 @@ import chat.foda.pra.caralho.dao.AmigosDAO;
 import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.dao.UsuarioDAO;
 
+/**
+ * @author André Luiz Forcesatto
+ */
 public class DaoFactory {
 	
 	private static DaoFactory factory;

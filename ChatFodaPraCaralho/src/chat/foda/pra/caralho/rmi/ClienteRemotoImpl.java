@@ -10,7 +10,7 @@ import chat.foda.pra.caralho.telas.TelaCliente;
 /**
  * Classe que implementa as ações do Cliente
  * 
- * @author luiznazari
+ * @author Luiz Felipe Nazari
  */
 public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRemoto {
 	private static final long serialVersionUID = 6754107487405504158L;

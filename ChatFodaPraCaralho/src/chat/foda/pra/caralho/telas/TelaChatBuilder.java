@@ -25,7 +25,7 @@ import chat.foda.pra.caralho.telas.eventos.EventosTelaChatBuilder;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
- * @author luiznazari
+ * @author Luiz Felipe Nazari
  */
 public class TelaChatBuilder {
 	

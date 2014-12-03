@@ -20,6 +20,9 @@ import chat.foda.pra.caralho.dao.factory.DaoFactory;
 import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class UsuarioCRUDTeste {
 	
 	private static UsuarioDAO usuarioDAO;
@@ -92,8 +95,8 @@ public class UsuarioCRUDTeste {
 	}
 	
 	/**
-	 * Método para testar a inserção de um novo usuário no banco
-	 * Se ocorrer erro no processo, não pode salvar os dados do Usuário nem da Pessoa relacionada ao usuário
+	 * Método para testar a inserção de um novo usuário no banco.
+	 * Se ocorrer erro no processo, não pode salvar os dados do Usuário nem da Pessoa relacionada ao usuário.
 	 */
 	@Test
 	public void salvaPessoaSemSalvarUsuario() {
@@ -106,7 +109,7 @@ public class UsuarioCRUDTeste {
 	}
 	
 	/**
-	 * Salva pessoa e usuário corretamente no banco de dados
+	 * Salva pessoa e usuário corretamente no banco de dados.
 	 */
 	@Test
 	public void salvaPessoaEUsuario() {

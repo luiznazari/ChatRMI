@@ -4,6 +4,9 @@ import java.util.Set;
 
 import chat.foda.pra.caralho.models.Usuario;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public interface AmigosDAO {
 	
 	void save(Long codUsuario, Long codAmigo);

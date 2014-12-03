@@ -10,9 +10,12 @@ import org.joda.time.LocalTime;
 
 import chat.foda.pra.caralho.telas.TelaServidor;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class EventosTelaServidor implements WindowListener {
 	
-	private TelaServidor telaServidor;
+	private final TelaServidor telaServidor;
 	
 	public EventosTelaServidor(TelaServidor telaServidor) {
 		this.telaServidor = telaServidor;
@@ -28,10 +31,10 @@ public class EventosTelaServidor implements WindowListener {
 		try {
 			Timer timer = new Timer();
 			System.out.println();
-			this.telaServidor.getServidor().getService()
-			        .enviarMensagemParaTodosClientes("Avisos do Servidor: O servidor será encerrado dentro de 30 segundos.");
+			this.telaServidor.getServidor().getService().enviarMensagemParaTodosClientes(
+					"Avisos do Servidor: O servidor será encerrado dentro de 30 segundos.");
 			this.telaServidor.escreverNoConsole("[" + LocalTime.now().toString()
-			        + "] - Iniciada contagem para encerrar serviços.");
+					+ "] - Iniciada contagem para encerrar serviços.");
 			
 			timer.scheduleAtFixedRate(new TimerTask() {
 				
@@ -40,8 +43,8 @@ public class EventosTelaServidor implements WindowListener {
 				@Override
 				public void run() {
 					try {
-						telaServidor.getServidor().getService()
-						        .enviarMensagemParaTodosClientes("Avisos do Servidor: Encerrando em: " + contador);
+						telaServidor.getServidor().getService().enviarMensagemParaTodosClientes(
+								"Avisos do Servidor: Encerrando em: " + contador);
 						telaServidor.escreverNoConsole("[" + LocalTime.now().toString() + "] - Encerrando em: " + contador--);
 						
 						if (contador < 0) {

@@ -16,8 +16,11 @@ import javax.swing.border.EmptyBorder;
 
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
-@SuppressWarnings("serial")
+/**
+ * @author Alessandro Beleboni Belini
+ */
 public class TelaAutorizacaoBanco extends JDialog {
+	private static final long serialVersionUID = -2533217638022787379L;
 	
 	private JPanel jpnMain;
 	
@@ -56,17 +59,15 @@ public class TelaAutorizacaoBanco extends JDialog {
 		jpnMain.add(jlbUsuario, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5));
 		
 		jtfUsuario = new JTextField("root");
-		jpnMain.add(jtfUsuario,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.HORIZONTAL)
-		                .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+		jpnMain.add(jtfUsuario, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(
+				GridConstraints.HORIZONTAL).setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
 		jlbSenha = new JLabel("Senha: ");
 		jpnMain.add(jlbSenha, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5));
 		
 		jpfSenha = new JPasswordField();
-		jpnMain.add(jpfSenha,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.HORIZONTAL)
-		                .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+		jpnMain.add(jpfSenha, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(
+				GridConstraints.HORIZONTAL).setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
 		JPanel jpnBotoes = new JPanel(new BorderLayout(5, 5));
 		Dimension btSize = new Dimension(73, 25);
@@ -79,8 +80,8 @@ public class TelaAutorizacaoBanco extends JDialog {
 		jbtOK.setPreferredSize(btSize);
 		jpnBotoes.add(jbtOK, BorderLayout.EAST);
 		
-		jpnMain.add(jpnBotoes,
-		        new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		jpnMain.add(jpnBotoes, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1));
 		
 		this.actionButtons();
 		return jpnMain;

@@ -24,6 +24,9 @@ import javax.swing.border.EmptyBorder;
 
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
+/**
+ * @author Alessandro Beleboni Belini
+ */
 public class TelaConfiguracao extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
@@ -75,8 +78,8 @@ public class TelaConfiguracao extends JDialog {
 			}
 		} catch (SocketException e) {
 			JOptionPane.showMessageDialog(this,
-			        "Não foi possível encontrar seu endereço de IP,\nPor favor, verifique sua conexão.", "Endereco de IP",
-			        JOptionPane.ERROR_MESSAGE);
+					"Não foi possível encontrar seu endereço de IP,\nPor favor, verifique sua conexão.", "Endereco de IP",
+					JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return enderecos;
@@ -107,7 +110,7 @@ public class TelaConfiguracao extends JDialog {
 		jcbIP = new JComboBox<>(dcbmIP);
 		jcbIP.setEditable(true);
 		jpnMain.add(jcbIP, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.HORIZONTAL)
-		        .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+				.setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
 		jlbPorta = new JLabel("Porta:");
 		jpnMain.add(jlbPorta, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5));
@@ -118,7 +121,7 @@ public class TelaConfiguracao extends JDialog {
 		jcbPorta = new JComboBox<>(dcbmPorta);
 		jcbPorta.setEditable(true);
 		jpnMain.add(jcbPorta, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.BOTH)
-		        .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+				.setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
 		JPanel jpnBotoes = new JPanel(new BorderLayout(5, 5));
 		
@@ -131,8 +134,8 @@ public class TelaConfiguracao extends JDialog {
 		jbtOK.requestFocusInWindow();
 		jpnBotoes.add(jbtOK, BorderLayout.EAST);
 		
-		jpnMain.add(jpnBotoes,
-		        new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		jpnMain.add(jpnBotoes, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1));
 		
 		actionButton();
 		return jpnMain;

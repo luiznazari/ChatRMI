@@ -38,7 +38,7 @@ import chat.foda.pra.caralho.telas.eventos.EventosTelaCliente;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
- * @author luiznazari
+ * @author Luiz Felipe Nazari
  */
 public class TelaCliente extends JFrame {
 	private static final long serialVersionUID = 1L;

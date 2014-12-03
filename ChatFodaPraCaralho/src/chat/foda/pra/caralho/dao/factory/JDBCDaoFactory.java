@@ -7,6 +7,9 @@ import chat.foda.pra.caralho.jdbc.AmigosJDBC;
 import chat.foda.pra.caralho.jdbc.PessoaJDBC;
 import chat.foda.pra.caralho.jdbc.UsuarioJDBC;
 
+/**
+ * @author André Luiz Forcesatto
+ */
 public class JDBCDaoFactory implements AbstractDaoFactory {
 	
 	@Override

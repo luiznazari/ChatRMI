@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class QueryUtil extends ConexaoUtil {
 	
 	private static ResultSet result;
