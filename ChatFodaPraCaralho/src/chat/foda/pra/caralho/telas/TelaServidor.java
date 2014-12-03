@@ -37,6 +37,7 @@ import com.alee.laf.WebLookAndFeel;
 
 /**
  * @author Luiz Felipe Nazari
+ * @author Alessandro Beleboni Belini
  */
 public class TelaServidor extends JFrame {
 	
@@ -152,16 +153,22 @@ public class TelaServidor extends JFrame {
 		pnlConsole.setLayout(new GridBagLayout());
 		
 		jlbConexoes = new JLabel("Usuários on-line: ");
-		pnlConsole.add(jlbConexoes, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(
-				GridConstraints.NONE).setGridWeight(0, 0).setOccupiedSize(1, 1));
+		pnlConsole.add(
+		        jlbConexoes,
+		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.NONE)
+		                .setGridWeight(0, 0).setOccupiedSize(1, 1));
 		
 		jlbConexoesCount = new JLabel("0");
-		pnlConsole.add(jlbConexoesCount, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(
-				GridConstraints.NONE).setGridWeight(1, 0).setOccupiedSize(GridConstraints.RELATIVE, 1));
+		pnlConsole.add(
+		        jlbConexoesCount,
+		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setFill(GridConstraints.NONE)
+		                .setGridWeight(1, 0).setOccupiedSize(GridConstraints.RELATIVE, 1));
 		
 		jtbEnviarMensagem = new JToggleButton(">");
-		pnlConsole.add(jtbEnviarMensagem, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setFill(
-				GridConstraints.NONE).setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		pnlConsole.add(
+		        jtbEnviarMensagem,
+		        new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setFill(GridConstraints.NONE)
+		                .setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER, 1));
 		
 		jtaConsole = new JTextArea();
 		jtaConsole.setLineWrap(true);
@@ -173,8 +180,11 @@ public class TelaServidor extends JFrame {
 		
 		jspConsole = new JScrollPane(jtaConsole);
 		jspConsole.setAutoscrolls(true);
-		pnlConsole.add(jspConsole, new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(5).setOccupiedSize(
-				GridConstraints.REMAINDER, GridConstraints.REMAINDER).setFill(GridConstraints.BOTH).setGridWeight(1, 1));
+		pnlConsole.add(
+		        jspConsole,
+		        new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(5)
+		                .setOccupiedSize(GridConstraints.REMAINDER, GridConstraints.REMAINDER).setFill(GridConstraints.BOTH)
+		                .setGridWeight(1, 1));
 		
 		return pnlConsole;
 	}
@@ -185,20 +195,21 @@ public class TelaServidor extends JFrame {
 		
 		jlbMensagemEnviar = new JLabel("Enviar mensagem para todos:");
 		pnlMensagem.add(jlbMensagemEnviar, new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(10, 5, 15, 0)
-				.setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		        .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER, 1));
 		
 		jtaMensagem = new JTextArea();
 		jtaMensagem.setLineWrap(true);
 		jtaMensagem.setAutoscrolls(true);
 		jtaMensagem.setWrapStyleWord(true);
 		jspMensagem = new JScrollPane(jtaMensagem);
-		pnlMensagem.add(jspMensagem, new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(0, 5, 0, 0).setFill(
-				GridConstraints.BOTH).setGridWeight(1, 1).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		pnlMensagem.add(jspMensagem,
+		        new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(0, 5, 0, 0).setFill(GridConstraints.BOTH)
+		                .setGridWeight(1, 1).setOccupiedSize(GridConstraints.REMAINDER, 1));
 		
 		jbtEnviar = new JButton("Enviar");
-		pnlMensagem.add(jbtEnviar, new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(0, 5, 5, 0).setFill(
-				GridConstraints.HORIZONTAL).setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER,
-				GridConstraints.REMAINDER));
+		pnlMensagem.add(jbtEnviar,
+		        new GridConstraints().setAnchor(GridConstraints.CENTER).setInsets(0, 5, 5, 0).setFill(GridConstraints.HORIZONTAL)
+		                .setGridWeight(1, 0).setOccupiedSize(GridConstraints.REMAINDER, GridConstraints.REMAINDER));
 		
 		pnlMensagem.setVisible(false);
 		
