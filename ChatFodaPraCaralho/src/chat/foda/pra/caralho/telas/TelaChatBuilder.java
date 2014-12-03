@@ -26,6 +26,7 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
  * @author Luiz Felipe Nazari
+ * @author Alessandro Beleboni Belini
  */
 public class TelaChatBuilder {
 	
