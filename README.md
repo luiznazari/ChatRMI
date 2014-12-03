@@ -4,8 +4,8 @@
 
 <strong>Descrição do projeto:</strong>
 <p>
-  Sistema de chat básico que permite conversação entre usuários.<br>
-  Por ser um projeto que trabalha com conexões remotas via RMI, é necessário gerar as classes STUBs.<br>
+  Sistema de chat básico que permite conversação entre usuários.<br />
+  Por ser um projeto que trabalha com conexões remotas via RMI, é necessário gerar as classes STUBs.<br />
   Para isto, se necessário, via terminal ou prompt de comando, entrar no diretório da pasta "bin" na raiz do projeto e executar os comandos:
     <ul>
       <li>rmic chat.foda.pra.caralho.rmi.ClienteRemotoImpl</li>
@@ -15,8 +15,8 @@
 <p>
   <strong>Autores:</strong>
   <ul>
-      <li>Alessandro Beleboni Belini | alessandro.belini_science@hotmail.com</li>
-      <li>Luiz Felipe Nazari | luiz.nazari.42@gmail.com</li>
+      <li>Alessandro Beleboni Belini | <a href="mailto:alessandro.belini_science@hotmail.com">alessandro.belini_science@hotmail.com</a></li>
+      <li>Luiz Felipe Nazari | <a href="mailto:luiz.nazari.42@gmail.com">luiz.nazari.42@gmail.com</a></li>
     </ul>
   
 </p>
@@ -25,6 +25,7 @@
 <h3>Versão 2.0 - 03/12/2014</h3>
 
 -> Projeto final da disciplina de Programação de Aplicativos (T.A.D.S. - Unoesc Xanxerê / 4º Período)
+<br />
 -> Professor/Instrutor: André Luiz Forchesatto | andre.forchesatto@unoesc.edu.br
 
 <strong>Novas funcionalidades:</strong>
@@ -55,6 +56,7 @@
   <ul>
     <li>WebLaF não funciona perfeitamente em MACs;</li>
     <li>Não utiliza Java 8 por incompatibilidade com o WebLaF;</li>
+    <li>Rolagem automática dos componentes JTextArea não estão funcionando corretamente, provavelmente por causa do Swing ou WebLaF;</li>
     <li>Não reconecta usuários que fizeram parte da mesma conversa, quando ocorre falha na conexão, ou algum dos participantes fecha a conversa ou faz logout, por exemplo, e a conversa não for encerrada.</li>
   </ul>
 
@@ -63,8 +65,9 @@
 <br />
 
 -> Projeto final da disciplina de Programação Orientada a Objetos (T.A.D.S. - Unoesc Xanxerê / 3º Período)
+<br />
 -> Professor/Instrutor: André Luiz Forchesatto | andre.forchesatto@unoesc.edu.br
-<br>
+<br />
 -> O mesmo resultou na nota máxima da matéria.
 
 <strong>Funcionalidades:</strong>
