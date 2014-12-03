@@ -99,6 +99,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public UsuarioLogado login(ClienteRemoto cliente, String email, String senha) throws RemoteException {
 		Usuario usuario = usuarioDAO.findOneByEmail(email);
@@ -115,6 +118,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		return null;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void logout(Set<Long> codigosChats, ClienteRemoto cliente, Usuario usuario) throws RemoteException {
 		// Fecha todos os chats do usuário
@@ -123,7 +129,6 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 				fecharChat(codigo, cliente, usuario);
 			}
 		} catch (NullPointerException e) {
-			// TODO ver por que está recebendo NPE ao fechar chat/servidor
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,6 +139,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		telaServidor.atualizaContador(this.getNumeroUsuariosLogados().toString());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean cadastrarUsuario(Usuario usuario) throws RemoteException {
 		if (usuarioDAO.findOneByEmail(usuario.getEmail()) == null) {
@@ -144,26 +152,41 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		return false;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removerUsuario(Usuario usuario) throws RemoteException {
 		usuarioDAO.delete(usuario);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void adicionaAmigo(Long codUsuario, Long codAmigo) throws RemoteException {
 		amigosDAO.save(codUsuario, codAmigo);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void removerAmigo(Long codUsuario, Long codAmigo) throws RemoteException {
 		amigosDAO.deleteOne(codUsuario, codAmigo);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Set<Usuario> getUsuariosDesconhecidos(Long codUsuario) throws RemoteException {
 		return amigosDAO.findAllDesconhecidosByCodUsiario(codUsuario);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Chat criarChat(Usuario solicitante, Usuario amigo) {
 		try {
@@ -189,6 +212,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean convidarParaChat(Chat chat, Usuario userToInvite) throws RemoteException {
 		ClienteRemoto cliente = clientesConectados.get(userToInvite.getCodigo());
@@ -215,36 +241,41 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	}
 	
 	/**
-	 * Fecha e/ou desativa os chats onde o usuário que está deslogando participa.
-	 * Se há mais de dois usuários no chat, o mesmo não é excluído, apenas retira o usuário deslogado.
-	 * 
-	 * @param codChat
-	 * @param cliente
-	 *            ClienteRemoto do usuário que deslogou
-	 * @param nome
-	 *            Nome do usuário que deslogou
-	 * @throws RemoteException
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void fecharChat(Long codChat, ClienteRemoto cliente, Usuario usuario) throws RemoteException {
 		ArrayList<ClienteRemoto> clientesNoChat = chatsAbertos.get(codChat);
 		
-		if (clientesNoChat.size() > 2) {
-			for (ClienteRemoto cliente2 : clientesNoChat) {
+		switch (clientesNoChat.size()) {
+			case 1: {
+				// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar
+				// apenas para quando há um usuário restante (logado)
+				chatsAbertos.remove(codChat);
+				break;
+			}
+			case 2: {
 				clientesNoChat.remove(cliente);
-				cliente2.atualizaChat(codChat, usuario, "O usuário " + usuario.getNickName() + " saiu da conversa.");
+				
+				for (ClienteRemoto cliente2 : clientesNoChat) {
+					cliente2.desativarChat(codChat, "O amigo se desconectou.");
+				}
+				break;
 			}
-		} else {
-			for (ClienteRemoto cliente2 : clientesNoChat) {
-				cliente2.desativarChat(codChat, "O amigo se desconectou.");
+			default: {
+				clientesNoChat.remove(cliente);
+				
+				for (ClienteRemoto cliente2 : clientesNoChat) {
+					cliente2.atualizaChat(codChat, usuario, "O usuário " + usuario.getNickName() + " saiu da conversa.");
+				}
 			}
-			
-			// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar
-			// apenas para quando há um usuário restante (logado)
-			chatsAbertos.remove(codChat);
 		}
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void trocarNickname(Long codigo, String novoNickname) throws RemoteException {
 		Usuario usuario = usuarioDAO.findOne(codigo);
@@ -252,6 +283,9 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		usuarioDAO.update(usuario);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void trocarSenha(Long codigo, String novaSenha) throws RemoteException {
 		Usuario usuario = usuarioDAO.findOne(codigo);

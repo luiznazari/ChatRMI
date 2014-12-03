@@ -66,8 +66,8 @@ public interface ClienteRemoto extends Remote {
 	public void atualizaChat(Chat chat, String mensagem) throws RemoteException;
 	
 	/**
-	 * Adiciona um participante para o chat, enviando uma mensagem para notificar e atualiza o chat e a respectiva tela
-	 * do cliente.
+	 * Remove um participante do chat, enviando uma mensagem para notificar e atualiza o chat e a respectiva tela do
+	 * cliente.
 	 * 
 	 * @param codChat
 	 * @param usuario

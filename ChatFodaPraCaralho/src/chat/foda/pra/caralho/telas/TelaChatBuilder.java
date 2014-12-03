@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import chat.foda.pra.caralho.models.Chat;
+import chat.foda.pra.caralho.telas.eventos.EventosTelaChatBuilder;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
@@ -65,6 +66,8 @@ public class TelaChatBuilder {
 			
 			jif.setJMenuBar(getMenu());
 			jif.setContentPane(getPainelPrincipal());
+			jif.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+			jif.addInternalFrameListener(new EventosTelaChatBuilder(this));
 			jif.setSize(300, 300);
 			jif.setVisible(true);
 		}

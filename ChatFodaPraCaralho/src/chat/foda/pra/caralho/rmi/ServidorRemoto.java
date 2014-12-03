@@ -106,6 +106,19 @@ public interface ServidorRemoto extends Remote {
 	public boolean convidarParaChat(Chat chat, Usuario userToInvite) throws RemoteException;
 	
 	/**
+	 * Fecha e/ou desativa os chats onde o usuário que está deslogando participa.
+	 * Se há mais de dois usuários no chat, o mesmo não é excluído, apenas retira o usuário deslogado.
+	 * 
+	 * @param codChat
+	 * @param cliente
+	 *            ClienteRemoto do usuário que deslogou
+	 * @param nome
+	 *            Nome do usuário que deslogou
+	 * @throws RemoteException
+	 */
+	public void fecharChat(Long codChat, ClienteRemoto cliente, Usuario usuario) throws RemoteException;
+	
+	/**
 	 * Troca a senha para o usuário especificado.
 	 * 
 	 * @param codUsuario

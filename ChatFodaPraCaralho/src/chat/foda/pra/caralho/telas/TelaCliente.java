@@ -461,6 +461,7 @@ public class TelaCliente extends JFrame {
 	public void enviarParaChat(Long chatCodigo, String mensagem) {
 		for (TelaChatBuilder tc : chatMap.values()) {
 			if (tc.getChat().getCodigo().equals(chatCodigo)) {
+				tc.ativarChat();
 				tc.recebeMensagem(mensagem);
 				break;
 			}
@@ -498,6 +499,17 @@ public class TelaCliente extends JFrame {
 		return null;
 	}
 	
+	public void fechaChat(TelaChatBuilder tcBuilder) {
+		chatMap.remove(tcBuilder.getChat().getCodigo());
+		
+		try {
+			cliente.getService().fecharChat(tcBuilder.getChat().getCodigo(), cliente.getClienteService(), getUsuario());
+		} catch (RemoteException e) {
+			JOptionPane.showMessageDialog(null, "Conexão - Houve um erro ao sincronizar com o servidor.");
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean isValidNick(String nick) {
 		nick = nick.toLowerCase();
 		
@@ -506,10 +518,13 @@ public class TelaCliente extends JFrame {
 			return false;
 		}
 		
-		String[] nomesObscenosMasc = new String[] { "pinto", "penis", "pênis", "caralho", "saco", "pau" };
+		String[] nomesObscenosMasc = new String[] {
+		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
+		};
 		
-		String[] nomesObscenosFem = new String[] { "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus",
-		    "anus", "cu" };
+		String[] nomesObscenosFem = new String[] {
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus", "cu"
+		};
 		
 		if (containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {
