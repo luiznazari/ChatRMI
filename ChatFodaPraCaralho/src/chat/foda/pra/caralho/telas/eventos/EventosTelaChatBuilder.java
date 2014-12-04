@@ -5,9 +5,12 @@ import javax.swing.event.InternalFrameListener;
 
 import chat.foda.pra.caralho.telas.TelaChatBuilder;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class EventosTelaChatBuilder implements InternalFrameListener {
 	
-	private TelaChatBuilder tcBuilder;
+	private final TelaChatBuilder tcBuilder;
 	
 	public EventosTelaChatBuilder(TelaChatBuilder tcBuilder) {
 		this.tcBuilder = tcBuilder;

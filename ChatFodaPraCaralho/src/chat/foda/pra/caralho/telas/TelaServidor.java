@@ -35,6 +35,10 @@ import classes.Fodas.Pra.Caralho.GridConstraints;
 
 import com.alee.laf.WebLookAndFeel;
 
+/**
+ * @author Luiz Felipe Nazari
+ * @author Alessandro Beleboni Belini
+ */
 public class TelaServidor extends JFrame {
 	
 	private static final long serialVersionUID = 1L;

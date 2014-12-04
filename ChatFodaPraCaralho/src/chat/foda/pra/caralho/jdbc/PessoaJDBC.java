@@ -10,6 +10,9 @@ import org.joda.time.LocalDate;
 import chat.foda.pra.caralho.dao.PessoaDAO;
 import chat.foda.pra.caralho.models.Pessoa;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class PessoaJDBC implements PessoaDAO {
 	
 	private final String findAll = "select * from pessoa where codigo > ?";
@@ -27,8 +30,8 @@ public class PessoaJDBC implements PessoaDAO {
 		Long codigo = null;
 		
 		try {
-			codigo = QueryUtil.sqlParamReturnKey(save, pessoa.getNomeCompleto(),
-			        (pessoa.getDataNascimento() == null ? null : pessoa.getDataNascimento().toString("yyyy-MM-dd")));
+			codigo = QueryUtil.sqlParamReturnKey(save, pessoa.getNomeCompleto(), (pessoa.getDataNascimento() == null ? null
+					: pessoa.getDataNascimento().toString("yyyy-MM-dd")));
 		} catch (SQLException e) {
 			delete(new Pessoa(codigo));
 		}
@@ -48,7 +51,7 @@ public class PessoaJDBC implements PessoaDAO {
 	@Override
 	public void update(Pessoa pessoa) {
 		QueryUtil.sqlParam(update, pessoa.getNomeCompleto(), (pessoa.getDataNascimento() == null ? null : pessoa
-		        .getDataNascimento().toString("yyyy-MM-dd")), pessoa.getCodigo().toString());
+				.getDataNascimento().toString("yyyy-MM-dd")), pessoa.getCodigo().toString());
 	}
 	
 	@Override

@@ -4,6 +4,12 @@ import org.joda.time.LocalDate;
 
 import chat.foda.pra.caralho.jdbc.Entidade;
 
+/**
+ * Classe ainda não implementada nas funcionalidades do sistema.
+ * 
+ * @author Luiz Felipe Nazari
+ */
+@Deprecated
 public class HistoricoChat implements Entidade {
 	
 	private Long codigo;

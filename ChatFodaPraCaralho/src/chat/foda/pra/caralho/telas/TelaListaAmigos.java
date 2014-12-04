@@ -20,6 +20,9 @@ import javax.swing.border.EmptyBorder;
 
 import chat.foda.pra.caralho.models.Usuario;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class TelaListaAmigos {
 	
 	/* - Elementos da Tela - */
@@ -42,7 +45,7 @@ public class TelaListaAmigos {
 	
 	private JButton jbtCancelar;
 	
-	private TelaCliente telaCliente;
+	private final TelaCliente telaCliente;
 	
 	/* --------------------- */
 	
@@ -141,8 +144,8 @@ public class TelaListaAmigos {
 		// Caso não haja uma predefinição de usuários, pede ao servidor.
 		if (amigosToAdd == null) {
 			try {
-				amigosToAdd = telaCliente.getCliente().getService()
-				        .getUsuariosDesconhecidos(telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
+				amigosToAdd = telaCliente.getCliente().getService().getUsuariosDesconhecidos(
+						telaCliente.getCliente().getUsuarioLogado().getUsuario().getCodigo());
 			} catch (RemoteException e) {
 				jdgJanelaAmigos.dispose();
 				JOptionPane.showMessageDialog(null, "Conexão - Erro ao listar usuários.");

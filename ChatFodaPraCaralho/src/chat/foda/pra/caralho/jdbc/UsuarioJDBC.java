@@ -12,6 +12,9 @@ import chat.foda.pra.caralho.dao.factory.DaoFactory;
 import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class UsuarioJDBC implements UsuarioDAO {
 	
 	private final String findAll = "select * from usuario where codigo > ?";
@@ -26,9 +29,9 @@ public class UsuarioJDBC implements UsuarioDAO {
 	
 	private final String deleteByCodigo = "delete from usuario where codigo = ?";
 	
-	private PessoaDAO pessoaDAO;
+	private final PessoaDAO pessoaDAO;
 	
-	private AmigosDAO amigosDAO;
+	private final AmigosDAO amigosDAO;
 	
 	public UsuarioJDBC() {
 		pessoaDAO = DaoFactory.get().pessoaDao();
@@ -43,7 +46,7 @@ public class UsuarioJDBC implements UsuarioDAO {
 			pessoa = pessoaDAO.save(usuario.getPessoa());
 			
 			Long codigo = QueryUtil.sqlParamReturnKey(save, usuario.getEmail(), usuario.getSenha(), usuario.getNickName(),
-			        usuario.getPessoa().getCodigo().toString());
+					usuario.getPessoa().getCodigo().toString());
 			
 			usuario.setCodigo(codigo);
 		} catch (SQLException | NullPointerException e) {
@@ -68,7 +71,7 @@ public class UsuarioJDBC implements UsuarioDAO {
 	@Override
 	public void update(Usuario usuario) {
 		QueryUtil.sqlParam(update, usuario.getEmail(), usuario.getSenha(), usuario.getNickName(), usuario.getPessoa().getCodigo()
-		        .toString(), usuario.getCodigo().toString());
+				.toString(), usuario.getCodigo().toString());
 		
 		pessoaDAO.update(usuario.getPessoa());
 	}

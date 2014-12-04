@@ -6,6 +6,9 @@ import java.rmi.registry.LocateRegistry;
 import chat.foda.pra.caralho.jdbc.QueryUtil;
 import chat.foda.pra.caralho.rmi.ServidorRemotoImpl;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class ServidorRmi {
 	
 	/*

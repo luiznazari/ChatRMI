@@ -16,6 +16,9 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+/**
+ * @author Alessandro Beleboni Belini
+ */
 public class RelatorioUtil {
 	
 	/**

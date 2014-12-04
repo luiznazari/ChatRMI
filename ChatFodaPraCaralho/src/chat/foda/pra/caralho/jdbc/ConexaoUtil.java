@@ -6,10 +6,15 @@ import java.sql.SQLException;
 
 import chat.foda.pra.caralho.telas.TelaAutorizacaoBanco;
 
+/**
+ * @author Alessandro Beleboni Belini
+ * @author André Luiz Forchesatto
+ * @author Luiz Felipe Nazari
+ */
 public abstract class ConexaoUtil {
-
+	
 	protected static Connection conexao;
-
+	
 	static {
 		if (!Log.existeLog()) {
 			TelaAutorizacaoBanco auth = new TelaAutorizacaoBanco();
@@ -17,18 +22,17 @@ public abstract class ConexaoUtil {
 			Log.escrever(auth.getUsuario());
 			Log.escrever(auth.getSenha());
 		}
-
-		String url = "jdbc:mysql://localhost/chatFodaPraCaralho", usuario = Log
-				.ler()[0], senha = Log.ler()[1];
-
+		
+		String url = "jdbc:mysql://localhost/chatFodaPraCaralho", usuario = Log.ler()[0], senha = Log.ler()[1];
+		
 		try {
 			conexao = DriverManager.getConnection(url, usuario, senha);
 			conexao.setAutoCommit(false);
 		} catch (SQLException e) {
-
+			
 		}
 	}
-
+	
 	public static void fechaConexao() {
 		try {
 			conexao.close();
@@ -37,9 +41,9 @@ public abstract class ConexaoUtil {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static Connection getConexao() {
 		return conexao;
 	}
-
+	
 }

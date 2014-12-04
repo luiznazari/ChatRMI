@@ -26,6 +26,9 @@ import chat.foda.pra.caralho.models.Pessoa;
 import chat.foda.pra.caralho.models.Usuario;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
+/**
+ * @author Alessandro Beleboni Belini
+ */
 public class TelaCadastro extends JDialog {
 	private static final long serialVersionUID = 8945739412692393477L;
 	
@@ -61,13 +64,13 @@ public class TelaCadastro extends JDialog {
 	
 	private ClienteRmi cliente;
 	
-	private boolean enableFieldNome;
+	private final boolean enableFieldNome;
 	
-	private boolean enableFieldData;
+	private final boolean enableFieldData;
 	
-	private boolean enableFieldEmail;
+	private final boolean enableFieldEmail;
 	
-	private boolean telaSalvar;
+	private final boolean telaSalvar;
 	
 	private Usuario user;
 	
@@ -122,26 +125,23 @@ public class TelaCadastro extends JDialog {
 		
 		jtfEmail = new JTextField();
 		jtfEmail.setEnabled(enableFieldEmail);
-		jpnUsuario.add(jtfEmail,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
-		                .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
+		jpnUsuario.add(jtfEmail, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1).setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 		
 		jlbSenha = new JLabel("Senha: *");
 		jpnUsuario.add(jlbSenha, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(1, 1));
 		
 		jpfSenha = new JPasswordField();
-		jpnUsuario.add(jpfSenha,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
-		                .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
+		jpnUsuario.add(jpfSenha, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1).setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 		
 		jlbConfirmaSenha = new JLabel("<html><p align:right>Confirmar<br>Senha: *");
 		jpnUsuario
-		        .add(jlbConfirmaSenha, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(1, 1));
+				.add(jlbConfirmaSenha, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(1, 1));
 		
 		jpfConfirmaSenha = new JPasswordField();
-		jpnUsuario.add(jpfConfirmaSenha,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
-		                .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
+		jpnUsuario.add(jpfConfirmaSenha, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1).setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 		
 		return jpnUsuario;
 	}
@@ -155,9 +155,8 @@ public class TelaCadastro extends JDialog {
 		
 		jtfNome = new JTextField();
 		jtfNome.setEnabled(enableFieldNome);
-		jpnPessoa.add(jtfNome,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
-		                .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
+		jpnPessoa.add(jtfNome, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1).setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 		
 		jlbDataNasc = new JLabel("<html><p align:right> Data de <br>Nascimento:");
 		jpnPessoa.add(jlbDataNasc, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5));
@@ -168,9 +167,8 @@ public class TelaCadastro extends JDialog {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		jpnPessoa.add(jffDataNasc,
-		        new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1)
-		                .setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
+		jpnPessoa.add(jffDataNasc, new GridConstraints().setAnchor(GridConstraints.WEST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1).setFill(GridConstraints.HORIZONTAL).setGridWeight(1, 0));
 		
 		return jpnPessoa;
 	}
@@ -179,13 +177,11 @@ public class TelaCadastro extends JDialog {
 		jpnMain = new JPanel(new GridBagLayout());
 		jpnMain.setBorder(new EmptyBorder(10, 5, 5, 5));
 		
-		jpnMain.add(this.getPersonPane(),
-		        new GridConstraints().setInsets(5).setAnchor(GridConstraints.CENTER).setFill(GridConstraints.HORIZONTAL)
-		                .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+		jpnMain.add(this.getPersonPane(), new GridConstraints().setInsets(5).setAnchor(GridConstraints.CENTER).setFill(
+				GridConstraints.HORIZONTAL).setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
-		jpnMain.add(this.getUserPane(),
-		        new GridConstraints().setInsets(5).setAnchor(GridConstraints.CENTER).setFill(GridConstraints.HORIZONTAL)
-		                .setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
+		jpnMain.add(this.getUserPane(), new GridConstraints().setInsets(5).setAnchor(GridConstraints.CENTER).setFill(
+				GridConstraints.HORIZONTAL).setOccupiedSize(GridConstraints.REMAINDER, 1).setGridWeight(1, 0));
 		
 		JPanel jpnBotoes = new JPanel(new BorderLayout(5, 5));
 		
@@ -196,8 +192,8 @@ public class TelaCadastro extends JDialog {
 		jbtConfirmar.requestFocus();
 		jpnBotoes.add(jbtConfirmar, BorderLayout.EAST);
 		
-		jpnMain.add(jpnBotoes,
-		        new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(GridConstraints.REMAINDER, 1));
+		jpnMain.add(jpnBotoes, new GridConstraints().setAnchor(GridConstraints.EAST).setInsets(5).setOccupiedSize(
+				GridConstraints.REMAINDER, 1));
 		
 		actions();
 		

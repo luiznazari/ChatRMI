@@ -38,7 +38,8 @@ import chat.foda.pra.caralho.telas.eventos.EventosTelaCliente;
 import classes.Fodas.Pra.Caralho.GridConstraints;
 
 /**
- * @author luiznazari
+ * @author Luiz Felipe Nazari
+ * @author Alessandro Beleboni Belini
  */
 public class TelaCliente extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -554,13 +555,10 @@ public class TelaCliente extends JFrame {
 			return false;
 		}
 		
-		String[] nomesObscenosMasc = new String[] {
-		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
-		};
+		String[] nomesObscenosMasc = new String[] { "pinto", "penis", "pênis", "caralho", "saco", "pau" };
 		
-		String[] nomesObscenosFem = new String[] {
-		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus", "cu"
-		};
+		String[] nomesObscenosFem = new String[] { "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus",
+		    "anus", "cu" };
 		
 		if (containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {

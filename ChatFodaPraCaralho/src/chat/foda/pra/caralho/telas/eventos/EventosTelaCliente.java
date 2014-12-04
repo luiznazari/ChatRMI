@@ -7,9 +7,12 @@ import java.rmi.RemoteException;
 import chat.foda.pra.caralho.clienteServidor.ClienteRmi;
 import chat.foda.pra.caralho.telas.TelaCliente;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class EventosTelaCliente implements WindowListener {
 	
-	private TelaCliente telaCliente;
+	private final TelaCliente telaCliente;
 	
 	public EventosTelaCliente(TelaCliente telaCliente) {
 		this.telaCliente = telaCliente;
@@ -27,7 +30,7 @@ public class EventosTelaCliente implements WindowListener {
 		
 		try {
 			cliente.getService().logout(telaCliente.getCodigosChat(), cliente.getClienteService(),
-			        cliente.getUsuarioLogado().getUsuario());
+					cliente.getUsuarioLogado().getUsuario());
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		} finally {

@@ -22,7 +22,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 	/**
 	 * Classe que implementa as ações do Servidor
 	 * 
-	 * @author luiznazari
+	 * @author Luiz Felipe Nazari
 	 */
 	private static final long serialVersionUID = -8382898850011577230L;
 	

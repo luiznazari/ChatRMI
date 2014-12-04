@@ -9,7 +9,7 @@ import chat.foda.pra.caralho.models.Usuario;
 /**
  * Declaração de todos os métodos executados no Cliente, visíveis para o Servidor
  * 
- * @author luiznazari
+ * @author Luiz Felipe Nazari
  */
 public interface ClienteRemoto extends Remote {
 	

@@ -6,6 +6,9 @@ import chat.foda.pra.caralho.models.UsuarioLogado;
 import chat.foda.pra.caralho.rmi.ClienteRemotoImpl;
 import chat.foda.pra.caralho.rmi.ServidorRemoto;
 
+/**
+ * @author Luiz Felipe Nazari
+ */
 public class ClienteRmi {
 	
 	private ServidorRemoto service;
