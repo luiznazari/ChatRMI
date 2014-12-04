@@ -26,6 +26,8 @@
 
 <hr />
 <h3>Versão 2.0 - 03/12/2014</h3>
+<a href="https://github.com/dr-octopus/chatFodaPraCaralho/commit/1723d262ca2614da873c03f666859aa24075b709">Último commit da versão</a>
+<br />
 
 -> Projeto final da disciplina de Programação de Aplicativos (T.A.D.S. - Unoesc Xanxerê / 4º Período)
 <br />
@@ -65,7 +67,8 @@
   </ul>
 
 <hr />
-<h3>Versão 1.0 - 26/06/2014</h3> <a href="https://github.com/dr-octopus/chatFodaPraCaralho/commit/42e2e3dea82775b21b1c76126264c09abedf5721">Último commit da versão</a>
+<h3>Versão 1.0 - 26/06/2014</h3>
+<a href="https://github.com/dr-octopus/chatFodaPraCaralho/commit/42e2e3dea82775b21b1c76126264c09abedf5721">Último commit da versão</a>
 <br />
 
 -> Projeto final da disciplina de Programação Orientada a Objetos (T.A.D.S. - Unoesc Xanxerê / 3º Período)
