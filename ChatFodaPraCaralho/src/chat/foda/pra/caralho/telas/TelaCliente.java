@@ -345,12 +345,26 @@ public class TelaCliente extends JFrame {
 		
 	}
 	
+	/**
+	 * Cria uma nova janela de coversa para um chat já existente (proveniente de outro usuário). Caso já houver uma
+	 * janela de chat aberta com os mesmos usuários do chat recebido, a mesma é substituída.
+	 * 
+	 * @param chat
+	 */
 	public void iniciarChatExistente(Chat chat) {
-		final TelaChatBuilder telaChat = new TelaChatBuilder(this, chat);
+		TelaChatBuilder telaChat = getChatAbertoCom(chat.getUsuarios());
 		
-		chatMap.put(telaChat.getChat().getCodigo(), telaChat);
-		jdpDesktopChat.add(telaChat.getInternalFrame());
-		
+		if (telaChat != null) {
+			chatMap.remove(telaChat);
+			
+			telaChat.setChat(chat);
+			telaChat.ativarChat();
+			chatMap.put(chat.getCodigo(), telaChat);
+		} else {
+			telaChat = new TelaChatBuilder(this, chat);
+			chatMap.put(telaChat.getChat().getCodigo(), telaChat);
+			jdpDesktopChat.add(telaChat.getInternalFrame());
+		}
 	}
 	
 	public void atualizaTelaChat(Chat chat) {
@@ -359,6 +373,27 @@ public class TelaCliente extends JFrame {
 	
 	public void atualizaTelaChatRemoveUsuario(Long codChat, Usuario usuario) {
 		chatMap.get(codChat).getChat().removeUsuario(usuario);
+	}
+	
+	public void desativarChat(Long chatCodigo, String mensagem) {
+		chatMap.get(chatCodigo).desativaChat(mensagem);
+	}
+	
+	public void desativarTodosChats() {
+		for (TelaChatBuilder tc : chatMap.values()) {
+			tc.desativaChat("O servidor está offline.");
+		}
+	}
+	
+	public void fechaChat(TelaChatBuilder tcBuilder) {
+		chatMap.remove(tcBuilder.getChat().getCodigo());
+		
+		try {
+			cliente.getService().fecharChat(tcBuilder.getChat().getCodigo(), cliente.getClienteService(), getUsuario());
+		} catch (RemoteException e) {
+			JOptionPane.showMessageDialog(null, "Conexão - Houve um erro ao sincronizar com o servidor.");
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -442,16 +477,6 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public DefaultListModel<Usuario> getListaAmigos() {
-		dlmAmigos = new DefaultListModel<>();
-		
-		for (Usuario u : usuario.getAmigos()) {
-			dlmAmigos.addElement(u);
-		}
-		
-		return dlmAmigos;
-	}
-	
 	public void enviarParaTodos(String mensagem) {
 		for (TelaChatBuilder tc : chatMap.values()) {
 			tc.recebeMensagem(mensagem);
@@ -468,19 +493,19 @@ public class TelaCliente extends JFrame {
 		}
 	}
 	
-	public void desativarChat(Long chatCodigo, String mensagem) {
-		chatMap.get(chatCodigo).desativaChat(mensagem);
-	}
-	
-	public void desativarTodosChats() {
-		for (TelaChatBuilder tc : chatMap.values()) {
-			tc.desativaChat("O servidor está offline.");
+	public DefaultListModel<Usuario> getListaAmigos() {
+		dlmAmigos = new DefaultListModel<>();
+		
+		for (Usuario u : usuario.getAmigos()) {
+			dlmAmigos.addElement(u);
 		}
+		
+		return dlmAmigos;
 	}
 	
 	/**
-	 * BUGFIX: Preciso retornar como um new HashSet pois o Set retornado pelo método keyset() do HashMap não é
-	 * serializável, não podendo ser passado por um canal.
+	 * Preciso retornar como um 'new HashSet' pois o Set retornado pelo método keyset() do HashMap não é
+	 * serializável, não podendo ser passado por um canal do RMI.
 	 * 
 	 * @return Lista de códigos dos chats abertos para este usuário
 	 */
@@ -488,6 +513,12 @@ public class TelaCliente extends JFrame {
 		return new HashSet<Long>(chatMap.keySet());
 	}
 	
+	/**
+	 * Procura se já há um chat aberto apenas com um usuário
+	 * 
+	 * @param amigo
+	 * @return telaChatBuilder do respectivo chat
+	 */
 	public TelaChatBuilder getChatAbertoCom(Usuario amigo) {
 		for (TelaChatBuilder tcBuilder : chatMap.values()) {
 			Set<Usuario> users = tcBuilder.getChat().getUsuarios();
@@ -499,15 +530,20 @@ public class TelaCliente extends JFrame {
 		return null;
 	}
 	
-	public void fechaChat(TelaChatBuilder tcBuilder) {
-		chatMap.remove(tcBuilder.getChat().getCodigo());
-		
-		try {
-			cliente.getService().fecharChat(tcBuilder.getChat().getCodigo(), cliente.getClienteService(), getUsuario());
-		} catch (RemoteException e) {
-			JOptionPane.showMessageDialog(null, "Conexão - Houve um erro ao sincronizar com o servidor.");
-			e.printStackTrace();
+	/**
+	 * Procura se já há um chat aberto com determinados usuários
+	 * 
+	 * @param amigos
+	 * @return telaChatBuilder do respectivo chat
+	 */
+	public TelaChatBuilder getChatAbertoCom(Set<Usuario> amigos) {
+		for (TelaChatBuilder tcBuilder : chatMap.values()) {
+			if (tcBuilder.getChat().getUsuarios().equals(amigos)) {
+				return tcBuilder;
+			}
 		}
+		
+		return null;
 	}
 	
 	public boolean isValidNick(String nick) {

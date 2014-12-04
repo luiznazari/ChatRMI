@@ -53,7 +53,7 @@ public class ClienteRemotoImpl extends UnicastRemoteObject implements ClienteRem
 	}
 	
 	@Override
-	public void atualizaChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException {
+	public void removeAmigoDoChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException {
 		this.telaCliente.enviarParaChat(codChat, mensagem);
 		this.telaCliente.atualizaTelaChatRemoveUsuario(codChat, usuario);
 	}

@@ -249,8 +249,6 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 		
 		switch (clientesNoChat.size()) {
 			case 1: {
-				// TODO Quando implementar a funcionalidade de reabrir o chat, deverá ser retirado este comando e deixar
-				// apenas para quando há um usuário restante (logado)
 				chatsAbertos.remove(codChat);
 				break;
 			}
@@ -266,7 +264,7 @@ public class ServidorRemotoImpl extends UnicastRemoteObject implements ServidorR
 				clientesNoChat.remove(cliente);
 				
 				for (ClienteRemoto cliente2 : clientesNoChat) {
-					cliente2.atualizaChat(codChat, usuario, "O usuário " + usuario.getNickName() + " saiu da conversa.");
+					cliente2.removeAmigoDoChat(codChat, usuario, "O usuário " + usuario.getNickName() + " saiu da conversa.");
 				}
 			}
 		}

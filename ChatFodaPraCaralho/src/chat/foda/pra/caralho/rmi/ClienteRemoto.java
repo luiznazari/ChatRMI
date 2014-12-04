@@ -73,6 +73,6 @@ public interface ClienteRemoto extends Remote {
 	 * @param usuario
 	 * @throws RemoteException
 	 */
-	public void atualizaChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException;
+	public void removeAmigoDoChat(Long codChat, Usuario usuario, String mensagem) throws RemoteException;
 	
 }
