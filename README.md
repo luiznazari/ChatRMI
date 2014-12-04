@@ -1,4 +1,4 @@
-<h1> ChatFodaPraCaralho </h1>
+﻿<h1> ChatFodaPraCaralho </h1>
 
 <h2>Trabalho acadêmico</h2>
 
@@ -61,7 +61,7 @@
     <li>WebLaF não funciona perfeitamente em MACs;</li>
     <li>Não utiliza Java 8 por incompatibilidade com o WebLaF;</li>
     <li>Rolagem automática dos componentes JTextArea não estão funcionando corretamente, provavelmente por causa do Swing ou WebLaF;</li>
-    <li>Não reconecta usuários que fizeram parte da mesma conversa, quando ocorre falha na conexão, ou algum dos participantes fecha a conversa ou faz logout, por exemplo, e a conversa não for encerrada.</li>
+    <li>Problemas para reconectar usuários que fizeram parte da mesma conversa, quando ocorre falha na conexão, ou algum dos participantes fecha a conversa ou faz logout, por exemplo, e a conversa não for encerrada.</li>
   </ul>
 
 <hr />

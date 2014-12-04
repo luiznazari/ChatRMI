@@ -356,7 +356,7 @@ public class TelaCliente extends JFrame {
 		TelaChatBuilder telaChat = getChatAbertoCom(chat.getUsuarios());
 		
 		if (telaChat != null) {
-			chatMap.remove(telaChat);
+			chatMap.remove(telaChat.getChat().getCodigo());
 			
 			telaChat.setChat(chat);
 			telaChat.ativarChat();
@@ -555,10 +555,13 @@ public class TelaCliente extends JFrame {
 			return false;
 		}
 		
-		String[] nomesObscenosMasc = new String[] { "pinto", "penis", "pênis", "caralho", "saco", "pau" };
+		String[] nomesObscenosMasc = new String[] {
+		    "pinto", "penis", "pênis", "caralho", "saco", "pau"
+		};
 		
-		String[] nomesObscenosFem = new String[] { "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus",
-		    "anus", "cu" };
+		String[] nomesObscenosFem = new String[] {
+		    "xana", "vagina", "boceta", "buceta", "periquita", "piriquita", "ânus", "anus", "cu"
+		};
 		
 		if (containsString(nick, nomesObscenosMasc,
 		        "é muito curto.\nAconselhamos a utilização de viagra e tente novamente mais tarde.")) {
