@@ -12,6 +12,9 @@
       <li>rmic chat.foda.pra.caralho.rmi.ServidorRemotoImpl</li>
     </ul>
 </p>
+
+<a href="https://github.com/lordtecnetos/SiteFodaPraCaralho" target="_blank">Site de divulgação do aplicativo.</a>
+
 <p>
   <strong>Autores:</strong>
   <ul>
@@ -37,6 +40,7 @@
     <li>Adicionada possibilidade de adicionar usuários presentes na conversa (que ainda não sejam amigos);</li>
     <li>[Servidor] Ao iniciar pela primeira vez, pede configuração do bando de dados (login e senha) para criar a conexão (dados salvos no arquivo log.txt);</li>
     <li>[Servidor] Adicionado relatório de usuários cadastrados (Utiliza JasperReport);</li>
+    <li>[Servidor] Ao fechar o servidor, será iniciada uma contagem regressiva de 30 segundos, avisando todos os usuários que possuem alguma conversa em aberto.</li>
   </ul>
   
   <strong>Comportamentos:</strong>
