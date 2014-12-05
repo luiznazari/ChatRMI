@@ -12,6 +12,13 @@
       <li>rmic chat.foda.pra.caralho.rmi.ServidorRemotoImpl</li>
     </ul>
 </p>
+<p>
+  Classes "executáveis":
+    <ul>
+      <li>Iniciar servidor: TelaServidor.java</li>
+      <li>Iniciar um cliente: TelaLogin.java</li>
+    </ul>
+</p>
 
 <a href="https://github.com/lordtecnetos/SiteFodaPraCaralho" target="_blank">Site de divulgação do aplicativo.</a>
 
@@ -32,6 +39,8 @@
 -> Projeto final da disciplina de Programação de Aplicativos (T.A.D.S. - Unoesc Xanxerê / 4º Período)
 <br />
 -> Professor/Instrutor: André Luiz Forchesatto | andre.forchesatto@unoesc.edu.br
+<br />
+-> O mesmo resultou na nota máxima do trabalho.
 
 <strong>Novas funcionalidades:</strong>
   <ul>
@@ -75,7 +84,7 @@
 <br />
 -> Professor/Instrutor: André Luiz Forchesatto | andre.forchesatto@unoesc.edu.br
 <br />
--> O mesmo resultou na nota máxima da matéria.
+-> O mesmo resultou na nota máxima do trabalho.
 
 <strong>Funcionalidades:</strong>
   <ul>
