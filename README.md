@@ -1,4 +1,4 @@
-﻿<h1> ChatFodaPraCaralho </h1>
+﻿<h1> ChatRMI </h1>
 
 <h2>Trabalho acadêmico</h2>
 
